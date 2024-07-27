@@ -74,14 +74,8 @@ show_reading_time: false
         <form id="signupForm" onsubmit="signup(); return false;">
             <p>
                 <label>
-                    First Name:
+                    Name:
                     <input type="text" name="name" id="name" required>
-                </label>
-            </p>
-            <p>
-                <label>
-                    Last Name:
-                    <input type="text" name="lastName" id="lastName" required>
                 </label>
             </p>
             <p>
@@ -137,7 +131,6 @@ show_reading_time: false
             cache: "no-cache",
             body: {
                 name: document.getElementById("name").value,
-                last_name: document.getElementById("lastName").value,
                 uid: document.getElementById("signupUid").value,
                 password: document.getElementById("signupPassword").value,
                 kasm_server_needed: document.getElementById("kasmNeeded").checked,

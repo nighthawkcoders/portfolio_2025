@@ -6,57 +6,60 @@ menu: nav/home.html
 search_exclude: true
 show_reading_time: false
 ---
-
 <div class="profile-container">
-<div class="card">
+  <div class="card">
     <form>
-        <div>
-            <label for="newUid">Enter New UID:</label>
-            <input type="text" id="newUid" placeholder="New UID">
+      <div>
+        <label for="newUid">Enter New UID:</label>
+        <input type="text" id="newUid" placeholder="New UID">
+      </div>
+      <div>
+        <label for="newName">Enter New Name:</label>
+        <input type="text" id="newName" placeholder="New Name">
+      </div>
+      <div>
+        <label for="kasmServerNeeded">Kasm Server Needed:
+        <input type="checkbox" id="kasmServerNeeded" onclick="toggleKasmServerNeeded()">
+        </label>
+      </div>
+      <div>
+        <label for="sectionDropdown">Choose Section:</label>
+        <div class="icon-container">
+          <select id="sectionDropdown">
+            <!-- Options will be dynamically populated -->
+          </select>
+          <i class="fas fa-plus" onclick="addSection()"></i>
         </div>
-         <div>
-            <label for="newUid">Enter New Name:</label>
-            <input type="text" id="newName" placeholder="New Name">
-        </div>
-        <div>
-          <label for="kasmServerNeeded">Kasm Server Needed:</label>
-          <input type="checkbox" id="kasmServerNeeded" onclick="toggleKasmServerNeeded()">
-        </div>
-        <label for="profilePicture">Upload Profile Picture:</label>
-        <input type="file" id="profilePicture" accept="image/*" onchange="saveProfilePicture()">
-        <div class="image-container" id="profileImageBox">
-            <!-- Profile picture will be displayed here -->
-        </div>
-        <p id="profile-message" style="color: red;"></p>
-        <div>
-            <label for="sectionDropdown">Choose Section:</label>
-            <select id="sectionDropdown">
-                <!-- Options will be dynamically populated -->
-            </select>
-        </div>
-        <div>
-            <button type="button" onclick="addSection()">Add Section</button>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Abbreviation</th>
-                    <th>Name</th>
-                    <th>Year</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="profileResult">
-                <!-- Table rows will be dynamically populated -->
-            </tbody>
-        </table>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Abbreviation</th>
+            <th>Name</th>
+            <th>Year</th>
+          </tr>
+        </thead>
+        <tbody id="profileResult">
+          <!-- Table rows will be dynamically populated -->
+        </tbody>
+      </table>
+      <label for="profilePicture" class="file-icon"> Upload File <i class="fas fa-upload"></i> <!-- Replace this with your desired icon -->
+      </label>
+      <input type="file" id="profilePicture" accept="image/*" onchange="saveProfilePicture()">
+      <div class="image-container" id="profileImageBox">
+          <!-- Profile picture will be displayed here -->
+      </div>
+      <p id="profile-message" style="color: red;"></p>
     </form>
-</div>
+  </div>
 </div>
 
 <script type="module">
  // Import fetchOptions from config.js
- import { pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+import {pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+ // Import functions from config.js
+import { putUpdate, postUpdate, deleteData } from "{{site.baseurl}}/assets/js/api/profile.js";
+
 
  // Global variable to hold predefined sections
  let predefinedSections = [];
@@ -136,24 +139,15 @@ show_reading_time: false
             const abbreviationCell = document.createElement('td');
             const nameCell = document.createElement('td');
             const yearCell = document.createElement('td');
-            const actionCell = document.createElement('td');
 
             // Fill in the corresponding cells with data
             abbreviationCell.textContent = section.abbreviation;
             nameCell.textContent = section.name;
             yearCell.textContent = section.year;
 
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.onclick = function() {
-                deleteSection(section.abbreviation);
-            };
-
-            actionCell.appendChild(deleteButton);
             tr.appendChild(abbreviationCell);
             tr.appendChild(nameCell);
             tr.appendChild(yearCell);
-            tr.appendChild(actionCell);
 
             // Add the row to table
             tableBody.appendChild(tr);
@@ -162,35 +156,31 @@ show_reading_time: false
 
  // Function to save sections in the specified format
  async function saveSections() {
-  
-     const sectionAbbreviations = userSections.map(section => section.abbreviation);
+    const sectionAbbreviations = userSections.map(section => section.abbreviation);
 
-     const sectionsData = {
-         sections: sectionAbbreviations
-     };
+    const sectionsData = {
+        sections: sectionAbbreviations
+    };
 
-     const URL = pythonURI + "/api/user/section"; // Adjusted endpoint
+    const URL = pythonURI + "/api/user/section";
 
-     const options = {
-         ...fetchOptions,
-         method: 'POST',
-         body: JSON.stringify(sectionsData)
-     };
+    const options = {
+        URL,
+        body: sectionsData,
+        message: 'profile-message',
+        callback: async () => {
+            console.log('Sections saved successfully!');
+            await fetchDataAndPopulateTable();
+        }
+    };
 
-     try {
-         const response = await fetch(URL, options);
-         if (!response.ok) {
-             throw new Error(`Failed to save sections: ${response.status}`);
-         }
-         console.log('Sections saved successfully!');
-
-         // Fetch updated data and update table immediately after saving
-         await fetchDataAndPopulateTable();
-     } catch (error) {
-         console.error('Error saving sections:', error.message);
-         // Handle error display or fallback mechanism
-     }
- }
+    try {
+        await postUpdate(options);
+    } catch (error) {
+        console.error('Error saving sections:', error.message);
+        document.getElementById('profile-message').textContent = 'Error saving sections: ' + error.message;
+    }
+}
 
  // Function to fetch data from the backend and populate the table
  async function fetchDataAndPopulateTable() {
@@ -221,49 +211,98 @@ function updateTableWithData(data) {
         const abbreviationCell = document.createElement('td');
         const nameCell = document.createElement('td');
         const yearCell = document.createElement('td');
-        const actionCell = document.createElement('td');
-        const deleteButton = document.createElement('button');
 
+        
         abbreviationCell.textContent = section.abbreviation;
         nameCell.textContent = section.name;
         yearCell.textContent = section.year;
 
-        deleteButton.textContent = 'Delete';
-        deleteButton.onclick = async function() {
-            const URL = pythonURI + "/api/user/section"
+
+        const trashIcon = document.createElement('i');
+        trashIcon.className = 'fas fa-trash-alt trash-icon';
+        trashIcon.style.marginLeft = '10px';
+        abbreviationCell.appendChild(trashIcon);
+
+        trashIcon.addEventListener('click', async function (event) {
+            event.preventDefault();
+            const URL = pythonURI + "/api/user/section";
+            
             // Remove the row from the table
             tr.remove();
 
-            // Create fetch options
             const options = {
-                ...fetchOptions,
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ sections: [section.abbreviation] })
+                URL,
+                body: { sections: [section.abbreviation] },
+                message: 'profile-message',
+                callback: async () => {
+                    console.log('Section deleted successfully!');
+                    await fetchDataAndPopulateTable();
+                }
             };
 
             try {
-                const response = await fetch(URL, options);
-                if (!response.ok) {
-                    throw new Error(`Failed to delete section: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log('Success:', data);
+                await deleteData(options);
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error deleting section:', error.message);
+                document.getElementById('profile-message').textContent = 'Error deleting section: ' + error.message;
             }
-        };
+        });
 
-        actionCell.appendChild(deleteButton);
+
+       
+
+
+       yearCell.classList.add('editable'); // Make year cell editable
+       yearCell.innerHTML = `${section.year} <i class="fas fa-pencil-alt edit-icon" style="margin-left: 10px;"></i>`;
+
+        // Make the year cell editable
+        yearCell.addEventListener('click', function () {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = section.year;
+            input.className = 'edit-input';
+            yearCell.innerHTML = '';
+            yearCell.appendChild(input);
+
+            input.focus();
+
+            input.addEventListener('blur', async function () {
+                const newYear = input.value;
+                const URL = pythonURI + "/api/user/section";
+                const options = {
+                    URL,
+                    body: { section: { abbreviation: section.abbreviation, year: newYear } },
+                    message: 'profile-message',
+                    callback: async () => {
+                        console.log('Year updated successfully!');
+                        await fetchDataAndPopulateTable();
+                    }
+                };
+
+                try {
+                    await putUpdate(options);
+                } catch (error) {
+                    console.error('Error updating year:', error.message);
+                    document.getElementById('profile-message').textContent = 'Error updating year: ' + error.message;
+                }
+
+                yearCell.textContent = newYear;
+            });
+
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    input.blur();
+                }
+            });
+        });
         tr.appendChild(abbreviationCell);
         tr.appendChild(nameCell);
         tr.appendChild(yearCell);
-        tr.appendChild(actionCell);
 
         tableBody.appendChild(tr);
     });
+
+    
 }
 
  // Function to fetch user profile data
@@ -356,27 +395,27 @@ function updateTableWithData(data) {
  }
 
  // Function to send profile picture to server
- async function sendProfilePicture(base64String) {
-     const URL = pythonURI + "/api/id/pfp"; // Adjust endpoint as needed
-     const options = {
-         ...fetchOptions,
-         method: 'PUT',
-         body: JSON.stringify({ pfp: base64String })
-     };
+async function sendProfilePicture(base64String) {
+    const URL = pythonURI + "/api/id/pfp"; // Adjust endpoint as needed
 
-     try {
-         const response = await fetch(URL, options);
-         if (!response.ok) {
-             throw new Error(`Failed to upload profile picture: ${response.status}`);
-         }
-         console.log('Profile picture uploaded successfully!');
-         // Handle success response as needed
-     } catch (error) {
-         console.error('Error uploading profile picture:', error.message);
-         // Handle error display or fallback mechanism
-     }
- }
+    // Create options object for PUT request
+    const options = {
+        URL,
+        body: { pfp: base64String },
+        message: 'profile-message', // Adjust the message area as needed
+        callback: () => {
+            console.log('Profile picture uploaded successfully!');
+            // Handle success response as needed
+        }
+    };
 
+    try {
+        await putUpdate(options);
+    } catch (error) {
+        console.error('Error uploading profile picture:', error.message);
+        document.getElementById('profile-message').textContent = 'Error uploading profile picture: ' + error.message;
+    }
+}
    // Function to update UI with new UID and change placeholder
 window.updateUidField = function(newUid) {
    const uidInput = document.getElementById('newUid');
@@ -392,54 +431,51 @@ window.updateNameField = function(newName) {
 }
 
  // Function to change UID
- window.changeUid = async function(uid) {
-     if (uid) {
-         const URL = pythonURI + "/api/user"; // Adjusted endpoint
+window.changeUid = async function(uid) {
+    if (uid) {
+        const URL = pythonURI + "/api/user"; // Adjusted endpoint
 
-         const options = {
-             ...fetchOptions,
-             method: 'PUT',
-             body: JSON.stringify({ uid })
-         };
+        const options = {
+            URL,
+            body: { uid },
+            message: 'uid-message', // Adjust the message area as needed
+            callback: () => {
+                console.log('UID updated successfully!');
+                window.updateUidField(uid);
+                window.location.href = '/portfolio_2025/login'
+            }
+        };
 
-         try {
-             const response = await fetch(URL, options);
-             if (!response.ok) {
-                 throw new Error(`Failed to update UID: ${response.status}`);
-             }
-             console.log('UID updated successfully!');
-            window.updateUidField(uid);
-         } catch (error) {
-             console.error('Error updating UID:', error.message);
-             // Handle error display or fallback mechanism
-         }
-     }
- }
+        try {
+            await putUpdate(options);
+        } catch (error) {
+            console.error('Error updating UID:', error.message);
+            document.getElementById('uid-message').textContent = 'Error updating UID: ' + error.message;
+        }
+    }
+}
 
- // Function to change Name
- window.changeName = async function(name) {
-     if (name) {
-         const URL = pythonURI + "/api/user"; // Adjusted endpoint
-
-         const options = {
-             ...fetchOptions,
-             method: 'PUT',
-             body: JSON.stringify({ name })
-         };
-
-         try {
-             const response = await fetch(URL, options);
-             if (!response.ok) {
-                 throw new Error(`Failed to update Name: ${response.status}`);
-             }
-             console.log('Name updated successfully!');
-             window.updateNameField(name);
-         } catch (error) {
-             console.error('Error updating Name:', error.message);
-             // Handle error display or fallback mechanism
-         }
-     }
- }
+// Function to change Name
+window.changeName = async function(name) {
+    if (name) {
+        const URL = pythonURI + "/api/user"; 
+        const options = {
+            URL,
+            body: { name },
+            message: 'name-message',
+            callback: () => {
+                console.log('Name updated successfully!');
+                window.updateNameField(name);
+            }
+        };
+        try {
+            await putUpdate(options);
+        } catch (error) {
+            console.error('Error updating Name:', error.message);
+            document.getElementById('name-message').textContent = 'Error updating Name: ' + error.message;
+        }
+    }
+}
 
  // Event listener to trigger updateUid function when UID field is changed
  document.getElementById('newUid').addEventListener('change', function() {
@@ -457,16 +493,13 @@ window.updateNameField = function(newName) {
 
 window.fetchKasmServerNeeded = async function() {
   const URL = pythonURI + "/api/id"; // Adjusted endpoint
-
   try {
       const response = await fetch(URL, fetchOptions);
       if (!response.ok) {
           throw new Error(`Failed to fetch kasm_server_needed: ${response.status}`);
       }
-
       const userData = await response.json();
       const kasmServerNeeded = userData.kasm_server_needed
-
       // Update checkbox state based on fetched value
       const checkbox = document.getElementById('kasmServerNeeded');
       checkbox.checked = kasmServerNeeded;
@@ -478,32 +511,25 @@ window.fetchKasmServerNeeded = async function() {
 
 // Function to toggle kasm_server_needed attribute on checkbox change
 window.toggleKasmServerNeeded = async function() {
-  const checkbox = document.getElementById('kasmServerNeeded');
-  const newKasmServerNeeded = checkbox.checked;
+    const checkbox = document.getElementById('kasmServerNeeded');
+    const newKasmServerNeeded = checkbox.checked;
+    const URL = pythonURI + "/api/user"; // Adjusted endpoint
+    const options = {
+        URL,
+        body: { kasm_server_needed: newKasmServerNeeded },
+        message: 'kasm-server-message', // Adjust the message area as needed
+        callback: () => {
+            console.log('Kasm Server Needed updated successfully!');
+        }
+    };
 
-  const URL = pythonURI + "/api/user"; // Adjusted endpoint
-
-  const data = {
-      kasm_server_needed: newKasmServerNeeded
-  };
-
-  const options = {
-      ...fetchOptions,
-      method: 'PUT',
-      body: JSON.stringify(data)
-  };
-
-  try {
-      const response = await fetch(URL, options);
-      if (!response.ok) {
-          throw new Error(`Failed to update kasm_server_needed: ${response.status}`);
-      }
-      console.log('Kasm Server Needed updated successfully!');
-  } catch (error) {
-      console.error('Error updating kasm_server_needed:', error.message);
-      // Handle error display or fallback mechanism
-  }
-};
+    try {
+        await putUpdate(options);
+    } catch (error) {
+        console.error('Error updating kasm_server_needed:', error.message);
+        document.getElementById('kasm-server-message').textContent = 'Error updating kasm_server_needed: ' + error.message;
+    }
+}
     window.fetchUid = async function() {
      const URL = pythonURI + "/api/id"; // Adjusted endpoint
 
