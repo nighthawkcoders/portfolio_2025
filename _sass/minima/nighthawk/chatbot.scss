@@ -1,3 +1,4 @@
+// note: # is used for id, . used for classes
 // Defined colors for each item
 $toggle-btn-bg: green;
 $toggle-btn-hover-bg: darkgreen;
@@ -6,9 +7,9 @@ $msger-send-btn-hover-bg: darkblue;
 $left-msg-bg: white;
 $right-msg-bg: lightblue;
 
-//mixin
-@mixin button($bg-color, $hover-color) { // $bg-color and $hover-color are variables that are passed in as parameters to the mixin
-    margin-top: 10px;
+//mixin for button
+@mixin chatButton($bg-color, $hover-color) { // $bg-color and $hover-color are variables that are passed in as parameters to the mixin
+    margin-top: auto;
     padding: 10px;
     color: white;
     border: none;
@@ -23,47 +24,15 @@ $right-msg-bg: lightblue;
     }
   }
 
-
-
-
-.toggle-response-btn {
-    @include button($toggle-btn-bg, $toggle-btn-hover-bg);
+  #toggle-response-btn { //response btn id
+    @include chatButton($toggle-btn-bg, $toggle-btn-hover-bg);
   }
   
-  //obselete profile styling
-  // #profile-container {
-  //     display: flex;
-  //     justify-content: space-between;
-  //     align-items: flex-start; /* Align items to the top */
-  //     margin: 50px auto;
-  //     padding: 20px;
-  //     max-width: 800px; /* Adjust as needed */ 
-  //     border: 1px solid #ccc;
-  //     border-radius: 8px;
-  //     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  // }
-  
-
-  #msger-send-btn {
-    @include button($msger-send-btn-bg, $msger-send-btn-hover-bg);
+  #msger-send-btn { // message send btn id
+    @include chatButton($msger-send-btn-bg, $msger-send-btn-hover-bg);
   }
   
-  .close {
-      color: white;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-  }
-  
-  .close:hover,
-      .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-  }
-  
-  .msg-info,
-  .msg-text {
+  .msg-info,.msg-text {
     color: black;
   }
   
@@ -82,13 +51,13 @@ $right-msg-bg: lightblue;
     flex-flow: column wrap;
     justify-content: space-between;
     width: fill;
-    margin: 25px 10px;
+    margin: auto auto;
     height: calc(867px);
     border: var(--border);
     border-radius: 5px;
     background: var(--msger-bg);
     box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
-  }
+  } 
   
   .msger-header {
     display: flex;
@@ -116,15 +85,15 @@ $right-msg-bg: lightblue;
   .msg {
     display: flex;
     align-items: flex-end;
-    margin-bottom: 10px;
+    margin-bottom: auto;
   }
   .msg:last-of-type {
-    margin: 0;
+    margin: auto;
   }
   .msg-img {
     width: 64px;
     height: 64px;
-    margin-right: 10px;
+    margin-right: $spacing-unit * 0.1;
     background: #ddd;
     background-repeat: no-repeat;
     background-position: center;
@@ -141,10 +110,10 @@ $right-msg-bg: lightblue;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: gap;
   }
   .msg-info-name {
-    margin-right: 10px;
+    margin-right: $spacing-unit;
     font-weight: bold;
   }
   .msg-info-time {
@@ -164,7 +133,7 @@ $right-msg-bg: lightblue;
     border-bottom-right-radius: 0;
   }
   .right-msg .msg-img {
-    margin: 0 0 0 10px;
+    margin: 0 0 0 $spacing-unit * 0.5;
   }
   
   .msger-inputarea {
@@ -184,7 +153,7 @@ $right-msg-bg: lightblue;
     background: #ddd;
   }
   .msger-send-btn {
-    margin-left: 10px;
+    margin-left: $spacing-unit * 0.1;
     background: rgb(0, 196, 65);  
     color: #fff;
     font-weight: bold;
@@ -199,3 +168,18 @@ $right-msg-bg: lightblue;
     background-color: #fcfcfe;
     background-image: url("https://w.wallhaven.cc/full/vm/wallhaven-vmydxl.jpg")
   }
+
+
+    // .close {
+  //     color: white;
+  //     float: right;
+  //     font-size: 28px;
+  //     font-weight: bold;
+  // }
+  
+  // .close:hover,
+  //     .close:focus {
+  //     color: black;
+  //     text-decoration: none;
+  //     cursor: pointer;
+  // }

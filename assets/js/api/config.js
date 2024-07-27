@@ -25,7 +25,7 @@ export const fetchOptions = {
         'X-Origin': 'client' // New custom header to identify source
     },
 };
-
+// User Login Function 
 export function login(options) {
         // Modify the options to use the POST method and include the request body.
         const requestOptions  = {
@@ -58,3 +58,4 @@ export function login(options) {
                 document.getElementById(options.message).textContent = 'Possible CORS or service down error: ' + error;
         });
 }
+

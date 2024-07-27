@@ -133,7 +133,9 @@ async function botResponse(msgText) {
 
   // Fetch the bot's response
   const data = await fetchData(`${urls.chat}${msgText}&personid=${elements.personid.value}`);
-
+if(data.chatResponse == null) {
+  console.log("No Response");
+}
   console.log(data);
   console.log(data.chatResponse);
   console.log(data.id);
@@ -181,8 +183,6 @@ async function botResponse(msgText) {
   }
 }
 
-
-
 // Function to format the date/time for messages
 function formatDate(date) {
   const currentDateTime = new Date().getMilliseconds();
@@ -223,73 +223,14 @@ async function fetchData(url, method = "GET", data = null) {
   if (data) options.body = JSON.stringify(data); // Add body data if provided
   const response = await fetch(url, options); // Fetch data from the API //:)
   if (!response.ok){
+    appendMessage(assets.botName, assets.botImg, "left", "response failed, your gpt key is likely broken. check console in backend if running locally."); // Append the bot's response to the chat
+    elements.spinner.style.display = "none"; // Hide the loading spinner
+
     const errorMsg = 'AI Bot Error: ' + response.status;
     console.log(errorMsg);
-
+    console.log("failed to send request, if running locally check console in backend, key is likely broken.");
     return Promise.reject(errorMsg);
   }
   console.log(response); // Log the response for debugging
   return response.json(); // Return the response text
 }
-
-
-// // integration with user system to prevent users not logged in from accessing page
-// async function fetchUserData() {
-//   console.log("Getting user data");
-//   var requestOptions = {
-//     method: 'GET',
-//     mode: 'cors',
-//     cache: 'default',
-//     credentials: 'include',
-//   };
-
-//   const uri = "http://localhost:8085"; 
-//   //const uri = "https://codemaxxers.stu.nighthawkcodingsociety.com";
-//   const response = await fetch(uri + "/api/person/jwt", requestOptions);
-  
-//   if (!response.ok){
-//     const errorMsg = 'Login error: ' + response.status;
-//     console.log(errorMsg);
-//     // various errors for missing login
-//     switch (response.status) {
-//       case 401:
-//         alert("Please log into or make an account");
-//         window.location.href = "login";
-//         break;
-//       case 403:
-//         alert("Access forbidden. You do not have permission to access this resource.");
-//         break;
-//       case 404:
-//         alert("User not found. Please check your credentials.");
-//         break;
-//       default:
-//         alert("Login failed. Please try again later.");
-//     }
-
-//     return Promise.reject('Login failed');
-//   }
-
-//   const data = await response.json();
-
-//   // ACCOUNT CARD
-//   let profilePictureDiv = document.getElementById("profilePicture");
-//   let imgElement = document.createElement("img");
-//   imgElement.src = "https://codemaxxers.github.io/codemaxxerFrontend/images/profilePics/"+ data.profilePicInt + ".png";
-//   imgElement.style.width = "60px";
-//   imgElement.style.height = "60px";
-//   imgElement.style.float = "left";
-//   imgElement.style.borderRadius = "5px";
-//   var nameForProfile = document.createElement("h3");
-//   nameForProfile.innerHTML = data.name;
-//   var changeProfileText = document.createElement("p");
-//   changeProfileText.innerHTML = "Level " + data.accountLevel;
-//   changeProfileText.style.marginBottom = "0px";
-//   profilePictureDiv.appendChild(imgElement);
-//   profilePictureDiv.appendChild(nameForProfile);
-//   profilePictureDiv.appendChild(changeProfileText);
-//   // ACCOUNT CARD
-
-//   document.getElementById("initName").innerText = data.name;
-//   document.getElementById("initId").value=data.id;
-//   console.log(data.id);
-
