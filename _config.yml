@@ -1,5 +1,5 @@
 title: Nighthawk Pages 
-description: "August 2024 to June 2025"
+description: "Class of 2025"
 owner_name: John Mortensen
 github_username: nighthawkcoders
 github_repo: "portfolio_2025" 
@@ -11,7 +11,8 @@ minima:
   social_links:
     - { platform: github, user_url: "https://github.com/nighthawkcoders"}
     - { platform: x, user_url: "https://x.com/NighthawkCoding/" }
-    - { platform: youtube, user_url: "https://www.youtube.com/@nighthawkcodingsociety2868" }      
+    - { platform: youtube, user_url: "https://www.youtube.com/@nighthawkcodingsociety2868" } 
+# remote_theme: pages-themes/midnight@v0.2.0
 # remote_theme: pages-themes/dinky@v0.2.0
 # remote_theme: pages-themes/minimal@v0.2.0
 # remote_theme: pages-themes/hacker@v0.2.0
@@ -22,4 +23,4 @@ plugins:
 header_pages:
   - navigation/game.md
   - navigation/blog.md
-  - navigation/search.html
+  - navigation/search.md

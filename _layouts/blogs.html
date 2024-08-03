@@ -1,11 +1,8 @@
 ---
-layout: default
+layout: page 
 ---
 
 <div class="home">
-  {%- if page.title -%}
-    <h1 class="page-heading">{{ page.title }}</h1>
-  {%- endif -%}
 
   {{ content | markdownify }}
 
@@ -49,9 +46,9 @@ layout: default
     <ul class="post-list">
       {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
       {%- for post in posts -%}
-        <li>
-        {%- include post_list.html -%}
-        </li>
+      <li>
+        {%- include post_list_image_card.html -%}
+      </li>
       {%- endfor -%}
     </ul>
 
