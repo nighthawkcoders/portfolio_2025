@@ -7,6 +7,8 @@ $msger-send-btn-hover-bg: darkblue;
 $left-msg-bg: white;
 $right-msg-bg: lightblue;
 
+$spacing-unit:      2rem;
+
 //mixin for button
 @mixin chatButton($bg-color, $hover-color) { // $bg-color and $hover-color are variables that are passed in as parameters to the mixin
     margin-top: auto;

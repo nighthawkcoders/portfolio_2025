@@ -15,6 +15,9 @@
 /// see https://sass-lang.com/documentation/syntax for more information.
 /// Score for the game
 /// @description This ID is used to style the score for the game, key style is to ensure it is on top of other elements.
+/// 
+$spacing-unit:      2rem;
+
 @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 #score {
   position: relative;

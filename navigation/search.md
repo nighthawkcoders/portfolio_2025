@@ -1,43 +1,6 @@
 ---
-layout: page 
+layout: search 
 title: Search
 search_exclude: true
 permalink: /search/
 ---
-
-<!-- adapted from https://github.com/pmarsceill/just-the-docs -->
-<script type="text/javascript" src="{{ '/assets/js/search.js' | relative_url }}"></script>
-<script type="text/javascript" src="{{ '/assets/js/vendor/lunr.min.js' | relative_url }}"></script>
-
-<div class="search">
-    <div class="search-input-wrap">
-    <input type="text" class="js-search-input search-input input-block form-control" tabindex="0" placeholder="Search {{ site.title }}" aria-label="Search {{ site.title }}" autocomplete="off">
-    </div>
-    <br>
-    <div class="js-search-results search-results-wrap"></div>
-</div>
-
-{% if site.categories.size > 0 %}
-<h2>Categories</h2>
-
-  {% assign categories = "" | split:"" %}
-  {% for c in site.categories %}
-    {% assign categories = categories | push: c[0] %}
-  {% endfor %}
-  {% assign categories = categories | sort_natural %}
-
-  <ul> 
-  {% for category in categories %}
-      <li><a href="#{{ category }}">{{ category }}</a></li>
-      {% for post in site.categories[category] %}
-        {% if post.hide != true %}
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="{{ site.baseurl }}{{ post.url }}">{{post.title}}</a>  • {{ post.date | date: date_format }}</p>
-        </article>
-        {% endif %}
-      {% endfor %}
-  {% endfor %}
-  </ul>
-
-{% endif %}
