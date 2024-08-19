@@ -7,6 +7,7 @@ menu: nav/home.html
 show_reading_time: false 
 ---
 
+
 <style>
 .login-container {
     display: flex;
@@ -105,8 +106,10 @@ show_reading_time: false
 </div>
 
 <script type="module">
-    import { login, pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+    import { login, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
 
+    var pythonURI =  "https://flask2025.nighthawkcodingsociety.com"
+    
     // Function to handle Python login
     window.pythonLogin = function() {
         const options = {
