@@ -53,7 +53,7 @@ show_reading_time: false
         <form id="pythonForm" onsubmit="pythonLogin(); return false;">
             <p>
                 <label>
-                    GitHub ID:
+                    Email:
                     <input type="text" name="uid" id="uid" required>
                 </label>
             </p>
@@ -80,7 +80,7 @@ show_reading_time: false
             </p>
             <p>
                 <label>
-                    GitHub ID:
+                     Email:
                     <input type="text" name="signupUid" id="signupUid" required>
                 </label>
             </p>
