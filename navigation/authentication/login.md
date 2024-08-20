@@ -81,13 +81,25 @@ show_reading_time: false
             <p>
                 <label>
                     GitHub ID:
-                    <input type="text" name="signupUid" id="signupUid" required>
+                    <input type="text" name="uid" id="signupUid" required>
                 </label>
             </p>
             <p>
                 <label>
                     Password:
-                    <input type="password" name="signupPassword" id="signupPassword" required>
+                    <input type="password" name="password" id="signupPassword" required>
+                </label>
+            </p>
+            <p>
+                <label>
+                    Date of Birth:
+                    <input type="date" name="dob" id="dob" required>
+                </label>
+            </p>
+            <p>
+                <label>
+                    Email:
+                    <input type="email" name="email" id="email" required>
                 </label>
             </p>
             <p>
@@ -105,8 +117,8 @@ show_reading_time: false
 </div>
 
 <script type="module">
-    import { login, pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
-
+    var pythonURI = "http://127.0.0.1:8087";
+    
     // Function to handle Python login
     window.pythonLogin = function() {
         const options = {
@@ -125,42 +137,47 @@ show_reading_time: false
 
     // Function to handle signup
     window.signup = function() {
-        const signupOptions = {
-            URL: `${pythonURI}/api/user`,
-            method: "POST",
-            cache: "no-cache",
-            body: {
-                name: document.getElementById("name").value,
-                uid: document.getElementById("signupUid").value,
-                password: document.getElementById("signupPassword").value,
-                kasm_server_needed: document.getElementById("kasmNeeded").checked,
-            }
-        };
+    const signupOptions = {
+        URL: `${pythonURI}/api/user`,
+        method: "POST",
+        cache: "no-cache",
+        body: {
+            uid: document.getElementById("signupUid").value,
+            name: document.getElementById("name").value,
+            dob: document.getElementById("dob").value,
+            email: document.getElementById("email").value,
+            kasm_server_needed: document.getElementById("kasmNeeded").checked
+        }
+    };
 
-        fetch(signupOptions.URL, {
-            method: signupOptions.method,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(signupOptions.body)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Signup failed: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            document.getElementById("signupMessage").textContent = "Signup successful!";
-            // Optionally redirect to login page or handle as needed
-        })
-        .catch(error => {
-            console.error("Signup Error:", error);
-            document.getElementById("signupMessage").textContent = `Signup Error: ${error.message}`;
-        });
-    }
+    fetch(signupOptions.URL, {
+        method: signupOptions.method,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(signupOptions.body)
+    })
+    .then(response => {
+        console.log('Response Status:', response.status);
+        console.log('Response Headers:', [...response.headers]);
 
-    // Function to fetch and display Python data
+        if (!response.ok) {
+            return response.text().then(text => {
+                throw new Error(`Signup failed: ${response.status} - ${text}`);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        document.getElementById("signupMessage").textContent = "Signup successful!";
+    })
+    .catch(error => {
+        console.error("Signup Error:", error);
+        document.getElementById("signupMessage").textContent = `Signup Error: ${error.message}`;
+    });
+}
+
+
     function pythonDatabase() {
         const URL = `${pythonURI}/api/id`;
 
@@ -180,8 +197,7 @@ show_reading_time: false
             });
     }
 
-    // Call relevant database functions on the page load
     window.onload = function() {
-         pythonDatabase();
+        pythonDatabase();
     };
 </script>
