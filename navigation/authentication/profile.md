@@ -432,23 +432,6 @@ window.saveProfilePicture = async function () {
 }
 
 
-// Function to fetch profile picture data
-async function fetchProfilePictureData() {
-    try {
-        const response = await fetch('/api/id/pfp', {
-            method: 'GET',
-        });
-        if (!response.ok) {
-            throw new Error('Failed to fetch profile picture data');
-        }
-        const imageData = await response.json();
-        return imageData; // Assuming the backend returns JSON data
-    } catch (error) {
-        console.error('Error fetching profile picture data:', error.message);
-        throw error;
-    }
-}
-
 
 // Function to convert file to base64
 async function convertToBase64(file) {
@@ -518,6 +501,7 @@ window.changeUid = async function(uid) {
            body: { uid },
            message: 'uid-message', // Adjust the message area as needed
            callback: () => {
+               alert("You updated your Github ID, so you will automatically be logged out. Be sure to remember your new github id to log in!");
                console.log('UID updated successfully!');
                window.updateUidField(uid);
                window.location.href = '/portfolio_2025/login'
@@ -546,7 +530,6 @@ window.changePassword = async function(password) {
            message: 'password-message', // Adjust the message area as needed
            callback: () => {
                console.log('Password updated successfully!');
-               window.updatePasswordField(password);
                window.location.href = '/portfolio_2025/login'
 
 
@@ -555,6 +538,7 @@ window.changePassword = async function(password) {
 
 
        try {
+            alert("You updated your password, so you will automatically be logged out. Be sure to remember your password!");
            await putUpdate(options);
            await logoutUser();
        } catch (error) {

@@ -1,7 +1,8 @@
 ---
 layout: page
-title: About Us
+title: About
+description: My name is John, often referred to as "Mr M(ort)" in my CompSci classes.
 permalink: /about/
 ---
 
-Bailey stuffs.
+Creators of Alien World

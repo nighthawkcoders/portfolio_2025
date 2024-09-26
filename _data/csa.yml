@@ -191,7 +191,7 @@ Sprint1:
   end: 2
 Sprint2:
   title: Java Mini-labs
-  description: Students should have an understanding of Fundamentals of Programming from Python, JavaScript, or other backgrounds. In this Sprint, students will become familiar with Java types, booleans, iteration, recursion, using and writing objects through Mini-labs. These labs will introduce AP required aspects of Java, FRQ requirements, and review College Board's 10 Sprints online.
+  description: Students should have an understanding of Fundamentals of Programming from Python, JavaScript, or other backgrounds. In this Sprint, students will become familiar with Java types, booleans, iteration, recursion, using and writing objects through Mini-labs. These labs will introduce AP required aspects of Java, FRQ requirements, and review College Board's 10 Sprints online.  Additionally, student will be introduced to Java/Spring through Teacher Tech Talks and Sample Project.
   illustration: *college_board_fundamentals
   start: 3
   end: 7

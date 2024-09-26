@@ -49,13 +49,13 @@ Sprint1:
   end: 3
 Sprint2:
   title: Introduction to Development with JavaScript
-  description: A key focus of this course is to make Web Games using JavaScript. These next few weeks we will cover the aspects of learning JavaScript, creating animations, and deploying the game to GitHub Pages.
+  description: A key focus of this course is to make Web Games using JavaScript. These next few weeks we start covering object-oriented programming in JavaScript with game emphasis.  Topics include  control structures, data types, input/output, operators, classes, methods and parameters, basic inheritance, and documentation practices.
   start: 4
-  end: 6
+  end: 7
 Sprint3:
   title: Building a Web Application with GitHub Pages for N@tM
   description: Part of the process of becoming technically proficient is taking on challenges while coding. These challenges will often make a student feel uncomfortable. But with some vision, questions, and AI research, it is amazing what can be done. Our goal is to participate in N@tM with the other CS classes and other classes from the Electives Department.
-  start: 7
+  start: 8
   end: 12
 Sprint4:
   title: Planning, Exploration, and OOP Programming Fundamentals

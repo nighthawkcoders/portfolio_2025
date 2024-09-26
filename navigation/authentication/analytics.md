@@ -155,7 +155,8 @@ search_exclude: true
             const issuesData = await issuesResponse.json();
 
             // Extract commits count
-            const commitsCount = commitsData.total_commit_contributions || 'N/A';
+            const commitsArray = commitsData.details_of_commits || [];
+            const commitsCount = commitsData.total_commit_contributions || 0;
             const prsArray = prsData.pull_requests || [];
             const prsCount = prsArray.length || 0;
             const issuesArray = issuesData.issues || [];
@@ -178,7 +179,12 @@ search_exclude: true
             document.getElementById('public-repos').textContent = `Public Repos: ${publicRepos}`;
             document.getElementById('public-gists').textContent = `Public Gists: ${publicGists}`;
             document.getElementById('followers').textContent = `Followers: ${followers}`;
-            document.getElementById('commits-count').textContent = `Commits: ${commitsCount}`;
+
+            document.getElementById('commits-count').innerHTML = '<a href="#" class="info-link"><i class="fas fa-info-circle info-icon"></i></a>' + `Commits: ${commitsCount}`;
+            document.querySelector('#commits-count .info-link').addEventListener('click', (event) => {
+                event.preventDefault();
+                showModal(commitsArray);
+            });
 
             document.getElementById('prs-count').innerHTML = '<a href="#" class="info-link"><i class="fas fa-info-circle info-icon"></i></a>' + `Pull Requests: ${prsCount}`;
             document.querySelector('#prs-count .info-link').addEventListener('click', (event) => {

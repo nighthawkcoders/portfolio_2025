@@ -30,14 +30,61 @@ $ bundle exec jekyll serve
 #     observe web site in the opened browser
 
 comment
+# Function to check if a line exists in run commands
+line_exists_in_rc() {
+  grep -Fxq "$1" ~/.bashrc
+}
 
-#### Github Pages Local Build
+# Function to add line to run commands
+add_to_rc() {
+  if ! line_exists_in_rc "$1"; then
+    echo "$1" >> ~/.bashrc
+  fi
+}
+
+alias code="code --no-sandbox"
+add_to_rc 'alias code="code --no-sandbox"'
+
+#### Github Pages Local Build support
 echo "=== GitHub pages build tools  ==="
 export GEM_HOME="$HOME/gems"
 export PATH="$HOME/gems/bin:$PATH"
-echo '# Install Ruby Gems to ~/gems' >> ~/.bashrc
-echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc
-echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc
+add_to_rc "# Ruby Gem Path"
+add_to_rc 'export GEM_HOME="$HOME/gems"'
+add_to_rc 'export PATH="$HOME/gems/bin:$PATH"'
 echo "=== Gem install starting, thinking... ==="
 gem install jekyll bundler
 
+# Set JAVA_HOME
+export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+export PATH="$PATH:$JAVA_HOME/bin"
+add_to_rc 'export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"'
+add_to_rc 'export PATH="$PATH:$JAVA_HOME/bin"'
+
+# Clone the IJava repository into /tmp
+cd /tmp
+git clone https://github.com/frankfliu/IJava.git
+cd IJava
+# Install the Jupyter Java kernel
+./gradlew installKernel
+# Clean up by removing the IJava directory and downloaded files
+cd /tmp
+rm -rf IJava
+
+# Java VSCode extensions
+code --install-extension vscjava.vscode-java-pack --pre-release
+code --install-extension redhat.java --pre-release
+code --install-extension vscjava.vscode-java-debug --pre-release
+code --install-extension vscjava.vscode-java-test --pre-release
+
+# GitHub VSCode extensiions
+code --install-extension github.vscode-github-actions
+code --install-extension eamodio.gitlens
+
+# Python VSCode Extensions
+code --install-extension ms-python.python
+code --install-extension ms-python.vscode-pylance
+code --install-extension ms-python.python-pack --pre-release
+
+# Jupyter VSCode Extension
+code --install-extension ms-toolsai.jupyter
