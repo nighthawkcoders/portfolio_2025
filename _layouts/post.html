@@ -69,6 +69,11 @@ layout: base
     {%- if page.toc -%}
       {% include toc.html html=content %}
     {%- endif -%}
+
+    {%- if page.submenu -%}
+      {%- include submenu.html -%}
+    {%- endif -%}
+
     {{ content }}
   </div>
   {%- if page.comments -%}
