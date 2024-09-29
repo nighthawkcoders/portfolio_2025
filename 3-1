@@ -1,0 +1,443 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<!-- Look in _includes/theme for <head> and <body> definitions -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>3.1 Variables and Assignments | Nighthawk Pages</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="3.1 Variables and Assignments" />
+<meta name="author" content="Christina, Shubhay, Arushi, Harkirat, Aashray" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Student led teaching on Variables and Assignments. Learn how variables store information and are manipulated in a program." />
+<meta property="og:description" content="Student led teaching on Variables and Assignments. Learn how variables store information and are manipulated in a program." />
+<link rel="canonical" href="https://nighthawkcoders.github.io/portfolio_2025/csp/big-idea/3-1" />
+<meta property="og:url" content="https://nighthawkcoders.github.io/portfolio_2025/csp/big-idea/3-1" />
+<meta property="og:site_name" content="Nighthawk Pages" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-10-05T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="3.1 Variables and Assignments" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Christina, Shubhay, Arushi, Harkirat, Aashray"},"dateModified":"2023-10-05T00:00:00+00:00","datePublished":"2023-10-05T00:00:00+00:00","description":"Student led teaching on Variables and Assignments. Learn how variables store information and are manipulated in a program.","headline":"3.1 Variables and Assignments","mainEntityOfPage":{"@type":"WebPage","@id":"https://nighthawkcoders.github.io/portfolio_2025/csp/big-idea/3-1"},"url":"https://nighthawkcoders.github.io/portfolio_2025/csp/big-idea/3-1"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/portfolio_2025/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://nighthawkcoders.github.io/portfolio_2025/feed.xml" title="Nighthawk Pages" />
+
+<!-- Include favicons --><link rel="shortcut icon" type="image/x-icon" href="/portfolio_2025/images/favicon.ico"><!-- Include Primer CSS for styling -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+
+<!-- Include Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<!-- Include Hypothesis annotations script if annotations are enabled --><!-- Include KaTeX and MathJax for rendering mathematical expressions if use_math is enabled -->
+
+
+<script>
+/**
+ * Function to wrap images with a figure and caption if they have a title attribute.
+ * This function is executed when the window loads.
+ */
+function wrap_img(fn) {
+    // Check if the document is already loaded
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        // Select all images within elements with the class 'post'
+        var elements = document.querySelectorAll(".post img");
+        // Iterate over each image element
+        Array.prototype.forEach.call(elements, function(el, i) {
+            // Check if the image has a title attribute and is not an emoji
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                // Create a figcaption element for the caption
+                const caption = document.createElement('figcaption');
+                // Create a text node with the title attribute value
+                var node = document.createTextNode(el.getAttribute("title"));
+                // Append the text node to the figcaption element
+                caption.appendChild(node);
+                // Create a figure element to wrap the image and caption
+                const wrapper = document.createElement('figure');
+                // Add the 'image' class to the figure element
+                wrapper.className = 'image';
+                // Insert the figure element before the image
+                el.parentNode.insertBefore(wrapper, el);
+                // Remove the image from its original position
+                el.parentNode.removeChild(el);
+                // Append the image and caption to the figure element
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else {
+        // If the document is not loaded, add an event listener to execute the function when it is
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+// Execute the wrap_img function when the window loads
+window.onload = wrap_img;
+</script>
+
+<script>
+/**
+ * Function to add a link icon to anchor tags with the class 'anchor-link'.
+ * This function is executed when the DOM content is loaded.
+ */
+document.addEventListener("DOMContentLoaded", function(){
+    // Select all elements with the class 'anchor-link'
+    var elem = document.querySelectorAll(".anchor-link");
+    // Iterate over each element and set its inner HTML to a Font Awesome link icon
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+});
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/portfolio_2025/">Nighthawk Pages</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/portfolio_2025/blogs/">Blogs</a><a class="page-link" href="/portfolio_2025/rpg/">RPG</a><a class="page-link" href="/portfolio_2025/navigation/game.html">Platformer</a><a class="page-link" href="/portfolio_2025/search/">Search</a><a class="page-link" href="/portfolio_2025/README4YML.html">Readme</a><a class="page-link" href="/portfolio_2025/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+    <div class="wrapper">
+      <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header"><table>
+    <tr>
+        <td><img src="/portfolio_2025/images/logo.png" height="60" title="Big Idea 3" alt=""></td>
+        <td><a href="/portfolio_2025/csp/big-idea/fundamentals">Fundamentals</a></td>
+        <td><a href="/portfolio_2025/csp/big-idea/3-1">.1</a></td>
+        <td><a href="/portfolio_2025/csp/big-idea/3-2">.2</a></td>
+        <td><a href="/portfolio_2025/csp/big-idea/3-3">.3</a></td>
+        <td><a href="/portfolio_2025/csp/big-idea/3-4">.4</a></td>
+        <td><a href="/portfolio_2025/csp/big-idea/3-5">.5</a></td>
+        <td><a href="/portfolio_2025/csp/big-idea/3-6">.6</a></td>
+        <td><a href="/portfolio_2025/csp/big-idea/3-7">.7</a></td>
+        <td class="dropdown">
+            <a class="dropbtn" href="/portfolio_2025/csp/big-idea/p1/3-8">.8</a>
+            <div class="dropdown-content">
+                <a href="/portfolio_2025/csp/big-idea/p1/3-8-1">.8.1</a>
+                <a href="/portfolio_2025/csp/big-idea/p1/3-8-2">.8.2</a>
+                <a href="/portfolio_2025/csp/big-idea/p1/3-8-3">.8.3</a>
+            </div>
+        </td>
+        <td><a href="/portfolio_2025/csp/big-idea/3-10">.10</a></td>
+    </tr>
+</table>
+<h1 class="post-title p-name" itemprop="name headline">3.1 Variables and Assignments</h1><p class="page-description">Student led teaching on Variables and Assignments.  Learn how variables store information and are manipulated in a program.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2023-10-05T00:00:00+00:00" itemprop="datePublished">
+        Oct 5, 2023
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Christina, Shubhay, Arushi, Harkirat, Aashray</span></span>• <span class="read-time" title="Estimated read time">
+    
+    
+      6 min read
+    
+</span>
+    </p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+          <a class="category-tags-link" href="/portfolio_2025/categories/cte#CSP Big Ideas">CSP Big Ideas</a>
+        
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody"><h2 id="variables">Variables</h2>
+
+<p>A Variable is defined as an abstraction inside of a program that can hold a value or values.</p>
+
+<p>Variables can be named from letters like n for number, or description like name or fav_food.  The point of these names is to store some sort of Data to a sensible name.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s">"Gerald"</span>
+<span class="n">fav_food</span> <span class="o">=</span> <span class="s">"Cookies"</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Popcorn Hack</code>: Try making your own set of 3 variable variables</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Popcorn Hack Cell
+</span>
+<span class="c1"># Run this cell to define the variables in Python
+</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s">"Gerald"</span>
+<span class="n">fav_food</span> <span class="o">=</span> <span class="s">"Cookies"</span>
+
+<span class="c1"># Complete the Popcorn Hack from the Variables cell
+</span>
+<span class="c1"># How could you tell if Python is storing the variables correctly?
+</span>
+</code></pre></div></div>
+
+<hr style="solid" />
+
+<h2 id="variable-naming">Variable Naming</h2>
+
+<p>This brings us to the topic of naming Variables. The names of variables are really important when working in groups. For example when one of your teammates review your code they use the names of your variables to quickly understand your code. In the code above you can understand that the variable fav_food represents a favorite food</p>
+
+<p>There are 3 Important Coding Practices to follow when it comes to naming variables</p>
+
+<h3 id="snakecase">SnakeCase</h3>
+
+<p>SnakeCase is where you replace spaces in the words in a variable names to an underscore.  This is the standard naming convention for variables in Python.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">name_one</span> <span class="o">=</span> <span class="s">"Aashray"</span>
+</code></pre></div></div>
+<p>Here’s an example of a SnakeCase variable that uses a _ as a space.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Popcorn Hacks</code>:  Now try making your own SnakeCase variable and set the variable equal to a integer.</p>
+
+<h3 id="pascalcase">PascalCase</h3>
+
+<p>PascalCase is where you capitialize every word in your variable, but keep it all as one singluar phrase with no spaces.  Altough this is shown in example, it should not be used for varialbes in Python.  This is reserved for class names.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">NameOne</span> <span class="o">=</span> <span class="s">"Chrissie"</span>
+</code></pre></div></div>
+
+<p>Here you can clearly see that the vairable has two diffrent words, and we didn’t need to use a space to seperate it.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Popcorn Hack</code>: Try making your own PascalCase variable</p>
+
+<h3 id="camelcase">CamelCase</h3>
+
+<p>CamelCase is where you captalize the second and subsequent words in the variable name.  This is not normally used in Python conventions.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nameOne</span> <span class="o">=</span> <span class="s">"Arushi"</span>
+</code></pre></div></div>
+
+<p>Here the One is captalized to indicate a second word in the variable without using a space.</p>
+
+<p><code class="language-plaintext highlighter-rouge">PopCorn Hack</code>: Try making your own CamelCase</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Popcorn Hack Cell
+</span><span class="n">name_one</span> <span class="o">=</span> <span class="s">"Aashray"</span>
+<span class="n">NameOne</span> <span class="o">=</span> <span class="s">"Chrissie"</span>
+<span class="n">nameOne</span> <span class="o">=</span> <span class="s">"Arushi"</span>
+
+<span class="c1"># All three variables are different.  Programming languages are sensitive to snake case, upper case, etc.
+</span><span class="k">print</span><span class="p">(</span><span class="n">name_one</span><span class="p">,</span> <span class="n">NameOne</span><span class="p">,</span> <span class="n">nameOne</span><span class="p">)</span>
+
+<span class="c1"># Complete the Popcorn Hack from the previous Variable Naming cell
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Aashray Chrissie Arushi
+</code></pre></div></div>
+
+<h2 id="variable-types">Variable Types</h2>
+
+<p>Earlier we explained how to assign variables and properly name them. However in the code above even though I followed all these steps and properly named them I ran into a error.</p>
+
+<p>This is because the types of data, string and int cannot be added. But what are integers and strings?</p>
+
+<p>In python there are multiple types of data that a variable can be, for now lets look at the most commonly use ones.</p>
+
+<h3 id="integers">Integers</h3>
+
+<p>Integers are numerical values such as 1, 2, 3, 4 or -1, -2, -3, etc. These are numbers with no decimals and are usually called “ints”.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Python integer assignment, loosely typed
+</span><span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
+</code></pre></div></div>
+
+<p>In this case (loosely typed), we call the variable <code class="language-plaintext highlighter-rouge">n</code> and assign it the number <code class="language-plaintext highlighter-rouge">3</code>. You don’t need to specify the data type before the variable in Python.</p>
+
+<p>However, in other languages like Java or C++ (strongly typed), you need to prefix the variable name with the word int.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Java integer assignment using type prefix, strongly typed</span>
+<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+</code></pre></div></div>
+
+<h3 id="strings">Strings</h3>
+
+<p>Strings are a chain of text, numbers or charcters that are all inside of “ “</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># camel case, not typically used in python
+</span><span class="n">cookiesStatement</span> <span class="o">=</span> <span class="s">"My Fav cookies are Choclate Chip"</span>
+<span class="c1"># snake case
+</span><span class="n">cookies_statement</span> <span class="o">=</span> <span class="s">"My Fav cookies are Choclate Chip"</span>
+</code></pre></div></div>
+
+<p>Here we set a string cookieStatement “My Fav Cookies are Choclate Chip”  The “ “ marks are what determine it is a string in Python and most coding languages.</p>
+
+<h3 id="boolean">Boolean</h3>
+
+<p>Booleans are True or False, and they are used for condtional statements</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ChrissieGetsSleep</span> <span class="o">=</span> <span class="bp">False</span>
+    
+<span class="k">if</span> <span class="n">ChrissieGetsSleep</span> <span class="o">=</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mi">1</span> 
+ <span class="k">else</span><span class="p">:</span> 
+    <span class="k">return</span> <span class="mi">0</span>
+</code></pre></div></div>
+
+<p>Here we have a if statement that checks if the boolean variable is currently true and if its true it will return 1, but if its false it will return 0.</p>
+
+<h3 id="float">Float</h3>
+
+<p>Floats are numbers that can have decimal values</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pi</span> <span class="o">=</span> <span class="mf">3.1415</span>
+</code></pre></div></div>
+
+<p>In this case we assign pi to be 3.1415, and this is a float because of its decimal points.</p>
+
+<h3 id="lists">Lists</h3>
+
+<p>Lists are ordered collections of items in Python. They can contain a mix of different data types, including integers, floats, strings, and more.  However, it is more common to have list contain the same data type.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>In this list we have define a series of integers.</p>
+
+<h3 id="dictionaries-in-python">Dictionaries in Python</h3>
+
+<p>Dictionaries are versatile data structures in Python that store key-value pairs. Each value in a dictionary is associated with a unique key, which allows for efficient lookups and retrieval of values.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">my_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"name"</span><span class="p">:</span> <span class="s">"Alice"</span><span class="p">,</span>
+    <span class="s">"age"</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="s">"city"</span><span class="p">:</span> <span class="s">"San Diego"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this dictionary we are collecting data to represent the attributes of a person.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Data types cell
+</span>
+<span class="c1"># Variable names in Python typically follow snake_case 
+</span><span class="n">friendly_greeting</span> <span class="o">=</span> <span class="s">"Hello"</span>
+<span class="n">my_name</span> <span class="o">=</span> <span class="s">"Jane Doe"</span>
+<span class="n">my_age</span> <span class="o">=</span> <span class="mi">18</span>
+
+<span class="c1"># Printing data types often requires mixing types and formatting them correctly
+</span>
+<span class="c1"># print with concatenation
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Example 1: "</span> <span class="o">+</span> <span class="n">friendly_greeting</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">my_name</span> <span class="o">+</span> <span class="s">" is see you are "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">my_age</span><span class="p">)</span> <span class="o">+</span> <span class="s">" years old."</span><span class="p">)</span>
+
+<span class="c1"># or you can use f-strings
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Exammpl 2: </span><span class="si">{</span><span class="n">friendly_greeting</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">my_name</span><span class="si">}</span><span class="s"> is see you are </span><span class="si">{</span><span class="n">my_age</span><span class="si">}</span><span class="s"> years old."</span><span class="p">)</span>
+
+<span class="c1"># or you can separate the variable in the print statement
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Example 3:"</span><span class="p">,</span> <span class="n">friendly_greeting</span><span class="p">,</span> <span class="n">my_name</span><span class="p">,</span> <span class="s">"is see you are"</span><span class="p">,</span> <span class="n">my_age</span><span class="p">,</span> <span class="s">"years old."</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Example 1: Hello Jane Doe is see you are 18 years old.
+Exammpl 2: Hello Jane Doe is see you are 18 years old.
+Example 3: Hello Jane Doe is see you are 18 years old.
+</code></pre></div></div>
+
+<h2 id="addition-versus-concatenation">Addition versus Concatenation</h2>
+<p>Operaterors such as + will produce different results on different data types.  Most are familiar with + on numbers, but on characters it connects the sequences of characters.  This connection is called concatenation.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Addition of two integer variables
+</span>
+<span class="n">int1</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">int2</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Concatation between two non strings in a print statement will EVALUATE them."</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Notice how they get ADDED together."</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">int1</span> <span class="o">+</span> <span class="n">int2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">()</span>
+
+<span class="c1"># Concatenation of two string variables
+</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Concatation between two  strings in a print statement will CONNECT them."</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Notice how they get CONNECTED together."</span><span class="p">)</span>
+<span class="n">string1</span> <span class="o">=</span> <span class="s">"1"</span>
+<span class="n">string2</span> <span class="o">=</span> <span class="s">"2"</span>
+<span class="k">print</span><span class="p">(</span><span class="n">string1</span> <span class="o">+</span> <span class="n">string2</span><span class="p">)</span> <span class="c1"># notice how this CONNECTS the variables
+</span>
+<span class="c1"># Print statements like the above can be used to EVALUATE the result of + on two variables
+</span></code></pre></div></div>
+
+<h2 id="hacks">Hacks</h2>
+<p>Review each of the sections above and produce a python program that stores:</p>
+<ul>
+  <li>Name as a string</li>
+  <li>Age as a integer</li>
+  <li>Favorite food as a string</li>
+  <li>Mix the name, age, food into a List and a Dictionary</li>
+</ul>
+
+<ol>
+  <li>Be sure to follow Snake case convention for your variables</li>
+  <li>Build your own code cell(s) that define each variable types</li>
+  <li>Experiment with the + operator on string types, integer types, and float types.  What operations can the + operator perform?</li>
+  <li>Provide comments and outputs in the cell that are easy to follow</li>
+</ol>
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="nighthawkcoders/portfolio_2025"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/portfolio_2025/csp/big-idea/3-1" hidden></a>
+</article>
+
+    </div>
+  </main><footer class="site-footer h-card">
+  <data class="u-url" href="/portfolio_2025/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="https://nighthawkcoders.github.io/portfolio_2025/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/portfolio_2025/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Class of 2025</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+  <a rel="me" href="https://github.com/nighthawkcoders" target="_blank" title="github">
+    <svg class="svg-icon grey">
+      <use xlink:href="/portfolio_2025/assets/minima-social-icons.svg#github"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://x.com/NighthawkCoding/" target="_blank" title="x">
+    <svg class="svg-icon grey">
+      <use xlink:href="/portfolio_2025/assets/minima-social-icons.svg#x"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://www.youtube.com/@nighthawkcodingsociety2868" target="_blank" title="youtube">
+    <svg class="svg-icon grey">
+      <use xlink:href="/portfolio_2025/assets/minima-social-icons.svg#youtube"></use>
+    </svg>
+  </a>
+</li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+</html>
