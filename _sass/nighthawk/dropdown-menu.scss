@@ -1,60 +1,20 @@
-.dropbtn {
-    padding: 8px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .dropdown {
-    position: relative;
-    display: inline-block;
-    z-index: 1;
-  
-    &:hover .dropdown-content {
-      display: block;
-    }
-  
-    .dropdown-content {
-      display: none;
-      position: fixed;
-      background-color: black; // Use Dracula theme code cell background
-      min-width: 160px;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  
-      a {
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-  
-        &:hover {
-          background-color: darkblue; // Use a slightly lighter Dracula theme color for hover
-        }
-      }
-    }
-  }
-
-.dropbtnp2 {
-  padding: 8px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropdownp2 {
+// Define a mixin for common dropdown styles
+@mixin dropdown-styles($background-color, $hover-color) {
   position: relative;
   display: inline-block;
   z-index: 1;
 
-  &:hover .dropdown-contentp2 {
+  &:hover .dropdown-content {
     display: block;
+    animation: scaleIn 0.7s ease forwards;
   }
 
-  .dropdown-contentp2 {
+  .dropdown-content {
     display: none;
     position: fixed;
-    background-color: rgb(5, 7, 43); // Use Dracula theme code cell background
+    background-color: $background-color;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(218, 159, 193, 0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 
     a {
       padding: 12px 16px;
@@ -62,8 +22,120 @@
       display: block;
 
       &:hover {
-        background-color: rgb(209, 27, 11); // Use a slightly lighter Dracula theme color for hover
+        background-color: $hover-color;
       }
     }
+  }
+}
+
+// Original dropdown menu styles
+.dropbtn {
+  padding: 8px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+// Pass the hover color to the mixin
+.dropdown {
+  @include dropdown-styles(black,darkblue); // Original color for hover 
+}
+
+// New color for the second dropdown menu 
+.dropdownp1 {
+  @include dropdown-styles(black, rgb(159, 255, 56)); // New color for hover
+}
+
+.dropdownp2 {
+  @include dropdown-styles(black,rgb(51, 17, 17)); // New color for hover
+}
+
+.dropdownp4 {
+  @include dropdown-styles( rgb(51, 139, 253), #44475a); // New color for hover
+}
+
+// Period 3 Menu Styles
+.dropbtn3 {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  color: #1f84e2;
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border-radius: 6px; /* Ensure the button has a border-radius */
+}
+
+.dropbtn3::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background-color: rgba(31, 132, 226, 0.15);
+  transition: all 0.6s ease;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%; /* Keep this for the circular effect */
+}
+
+.dropbtn3:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.dropbtn3:hover {
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.dropdown3 {
+  position: relative;
+  display: inline-block;
+  z-index: 2;
+}
+
+.dropdown3:hover .dropdown-content3 {
+  display: block;
+  animation: scaleIn 0.5s ease forwards;
+}
+
+.dropdown-content3 {
+  display: none;
+  position: fixed;
+  background-color: #21232a;
+  border-radius: 10px;
+  min-width: 160px;
+  box-shadow: 0px 10px 18px rgba(0, 0, 0, 0.35); 
+  z-index: 10;
+  padding: 8px 0;
+  border: 1px solid #1f84e2;
+}
+
+.dropdown-content3 a {
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #50fa7b;
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.4s ease;
+}
+
+.dropdown-content3 a:hover {
+  background-color: #6272a4;
+  color: #f1fa8c;
+  transform: translateX(8px);
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }

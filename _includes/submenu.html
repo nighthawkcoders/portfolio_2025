@@ -1,9 +1,28 @@
 <div style="text-align:center">
     <table>
-        <tr>
-            <td style="width:33%"><a href="{{site.baseurl}}/{{ page.submenu.table1 }}">-{{ page.submenu.table1Value }}-</a></td>
-            <td style="width:33%"><a href="{{site.baseurl}}/{{page.submenu.table2}}">-{{page.submenu.table2Value}}-</a></td>
-            <td style="width:33%"><a href="{{site.baseurl}}/{{page.submenu.table3}}">-{{ page.submenu.table3Value }}-</a></td>
+        <tr id="thisisimportantidname">
         </tr>
     </table>
 </div>
+
+<script type="text/javascript">
+    // Pulls submenu information from '_data/submenu.yml' and concatenates page information from metadata
+    let submenu = {{ site.data.submenu.[page.submenu] | jsonify }};
+    console.log(submenu)
+    // Converts the submenu data (which is a object) to an array
+    set = Object.values(submenu)
+    // Creates a loop which loops over the length of cells in submenu
+    let submenuLength = set.length;
+    for (let i = 0; i < submenuLength; i++) {
+        // Creates a new element for the page
+        let td = document.createElement('td');
+        // Checks for whether or not a title exists for the data
+        if (set[i][1]) {
+            td.innerHTML = "<a href='{{site.baseurl}}/" + set[i][0] + "'>" + set[i][1] + "</a>"
+        } else {
+            td.innerHTML = "<a href='{{site.baseurl}}/" + set[i][0] + "'>-- --</a>"
+        }
+        // Attaches the new data on to page
+        document.getElementById("thisisimportantidname").append(td)
+    }
+</script>
