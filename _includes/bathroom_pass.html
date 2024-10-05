@@ -24,15 +24,29 @@
     .hidden {
         display: none;
     }
+    .dropdown {
+        width: 200px;
+        margin: 20px;
+      }
+      .result {
+        margin-top: 20px;
+      }
 </style>
-<title>Bathroom Pass</title>
+<title>Pass</title>
 
 
 <div class="pass-container" id="form-pass">
-    <h2>A101 Bathroom Pass</h2>
+    <h2>A101 Pass</h2>
     <label for="studentName">Name: </label>
     <input type="text" id="studentName" placeholder="Enter name here"><br><br>
-    
+    <label for="choices">Choose Location:</label>
+    <select id="choices" class="dropdown">
+        <option value="Bathroom">Bathroom</option>
+        <option value="Health Office">Health Office</option>
+        <option value="Library">Library</option>
+    </select>
+<br>
+
     <label for="signature">Teacher's Signature:</label><br>
     <canvas id="signatureCanvas" width="250" height="200"></canvas>
     <button class='button-30' onclick="clearSignature()">Clear</button><br><br>
@@ -43,7 +57,7 @@
 </div>
 
 <div class="pass-container hidden" id="completed-pass">
-    <h2>A101 Bathroom Pass</h2>
+    <h2>A101 Pass</h2>
     <p>Name: <span id="nameDisplay"></span></p>
     <p>Date & time: <span id="dateTimeDisplay"></span></p>
     <p>Teacher's Signature:<span id="signature"></span></p>
@@ -51,6 +65,7 @@
     <!-- <p>Teacher's approval: <span id="approvalDisplay">[✓]</span></p> -->
     <img src="https://github.com/user-attachments/assets/c350ab11-f560-4c76-b1f3-8bfbce017f77" alt="Teacher" style="width: 100px; height: auto;">
     <p>Good job not using any paper! You're saving both the environment and your seed &#128585;!</p>
+    <strong id="goingto" ></strong>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
@@ -58,8 +73,12 @@
     const canvas = document.querySelector('#signatureCanvas');
     const signaturePad = new SignaturePad(canvas);
     const saveButton = document.querySelector('#saveButton');
-    
-    saveButton.addEventListener('click', function () {});
+    var selectedLocation = 0;
+    const going_to = document.getElementById('choices');
+    //Check location change
+    console.log(going_to.value);
+
+    //saveButton.addEventListener('click', function () {});
     function clearSignature() {
         signaturePad.clear();
     }
@@ -72,6 +91,7 @@
 
             document.getElementById('nameDisplay').innerText = name;
             document.getElementById('dateTimeDisplay').innerText = currentDateTime;
+            document.getElementById('goingto').innerText = `Going to ${going_to.value}`;
 
             // Get the data URL of the signature and set it in the completed pass
             var dataURL = signaturePad.toDataURL();

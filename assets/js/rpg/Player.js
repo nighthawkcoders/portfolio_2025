@@ -17,7 +17,7 @@ const ANIMATION_RATE = 1; // 1/nth of the frame rate
  * making the code more modular and easier to maintain. By using this pattern, we can create
  * multiple instances of the Player class, each with its own state and behavior.
  * 
- * @class Player
+ * @abstract Player
  * @property {Object} position - The current position of the player.
  * @property {Object} velocity - The current velocity of the player.
  * @property {Object} scale - The scale of the player based on the game environment.
@@ -208,26 +208,10 @@ class Player {
      * This method updates the player's velocity based on the key pressed.
      * 
      * @param {Object} event - The keydown event object.
+     * @abstract
      */
     handleKeyDown({ keyCode }) {
-        switch (keyCode) {
-            case 87: // 'W' key
-                this.velocity.y -= this.yVelocity;
-                this.direction = 'up';
-                break;
-            case 65: // 'A' key
-                this.velocity.x -= this.xVelocity;
-                this.direction = 'left';
-                break;
-            case 83: // 'S' key
-                this.velocity.y += this.yVelocity;
-                this.direction = 'down';
-                break;
-            case 68: // 'D' key
-                this.velocity.x += this.xVelocity;
-                this.direction = 'right';
-                break;
-        }
+        throw new Error('Method "handleKeyDown()" must be implemented');
     }
 
     /**
@@ -236,22 +220,10 @@ class Player {
      * This method stops the player's velocity based on the key released.
      * 
      * @param {Object} event - The keyup event object.
+     * @abstract
      */
     handleKeyUp({ keyCode }) {
-        switch (keyCode) {
-            case 87: // 'W' key
-                this.velocity.y = 0;
-                break;
-            case 65: // 'A' key
-                this.velocity.x = 0;
-                break;
-            case 83: // 'S' key
-                this.velocity.y = 0;
-                break;
-            case 68: // 'D' key
-                this.velocity.x = 0;
-                break;
-        }
+        throw new Error('Method "handleKeyUp()" must be implemented');
     }
 }
 
