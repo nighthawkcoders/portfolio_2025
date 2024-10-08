@@ -4,6 +4,7 @@ import GameEnv from './GameEnv.js';
 const SCALE_FACTOR = 25; // 1/nth of the height of the canvas
 const STEP_FACTOR = 100; // 1/nth, or N steps up and across the canvas
 const ANIMATION_RATE = 1; // 1/nth of the frame rate
+const INIT_POSITION = { x: 0, y: 0 };
 
 /**
  * Player is a dynamic class that manages the data and events for a player object.
@@ -42,41 +43,40 @@ class Player {
     /**
      * The constructor method is called when a new Player object is created.
      * 
-     * @param {Object|null} sprite - The sprite data for the player. If null, a default red square is used.
+     * @param {Object|null} data - The sprite data for the player. If null, a default red square is used.
      */
-    constructor(sprite = null) {
+    constructor(data = null) {
         // Initialize the player's scale based on the game environment
         this.scale = { width: GameEnv.innerWidth, height: GameEnv.innerHeight };
-
+        
         // Check if sprite data is provided
-        if (sprite) {
-            this.scaleFactor = sprite.data.SCALE_FACTOR || SCALE_FACTOR;
-            this.stepFactor = sprite.data.STEP_FACTOR || STEP_FACTOR;
-            this.animationRate = sprite.data.ANIMATION_RATE || ANIMATION_RATE;
+        if (data) {
+            this.scaleFactor = data.SCALE_FACTOR || SCALE_FACTOR;
+            this.stepFactor = data.STEP_FACTOR || STEP_FACTOR;
+            this.animationRate = data.ANIMATION_RATE || ANIMATION_RATE;
+            this.position = data.INIT_POSITION || INIT_POSITION;
     
             // Load the sprite sheet
             this.spriteSheet = new Image();
-            this.spriteSheet.src = sprite.src;
+            this.spriteSheet.src = data.src;
 
             // Initialize animation properties
             this.frameIndex = 0; // index reference to current frame
             this.frameCounter = 0; // count each frame rate refresh
             this.direction = 'down'; // Initial direction
-            this.spriteData = sprite.data;
+            this.spriteData = data;
         } else {
             // Default to red square
             this.scaleFactor = SCALE_FACTOR;
             this.stepFactor = STEP_FACTOR;
             this.animationRate = ANIMATION_RATE;
+            this.position = INIT_POSITION;
+
             // No sprite sheet for default
             this.spriteSheet = null;
         }
 
-        // Set the initial size of the player
-        this.size = GameEnv.innerHeight / this.scaleFactor;
-
         // Initialize the player's position and velocity
-        this.position = { x: 0, y: GameEnv.innerHeight - this.size };
         this.velocity = { x: 0, y: 0 };
 
         // Set the initial size and velocity of the player
@@ -224,6 +224,22 @@ class Player {
      */
     handleKeyUp({ keyCode }) {
         throw new Error('Method "handleKeyUp()" must be implemented');
+    }
+
+    /**
+     * Handles key down events to change the player's velocity.
+     * 
+     * This method updates the player's velocity based on the key pressed.
+     * 
+     * The keydown event object.
+     * @abstract
+     */
+    checkProximityToNPC() {
+        return "Method 'checkProximityToNPC()' must be implemented";
+    }
+
+    handleResponse(message) {
+        alert(message);
     }
 }
 

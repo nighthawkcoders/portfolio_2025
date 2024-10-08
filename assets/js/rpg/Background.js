@@ -1,10 +1,10 @@
 import GameEnv from './GameEnv.js';
 
 export class Background {
-    constructor(imageSrc = null) {
-        if (imageSrc) {
+    constructor(data = null) {
+        if (data.src) {
             this.image = new Image();
-            this.image.src = imageSrc.src;
+            this.image.src = data.src;
         } else {
             this.image = null;
         }
@@ -27,6 +27,14 @@ export class Background {
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);
         }
+    }
+
+    update() {
+        this.draw();
+    }
+
+    resize() {
+        this.draw();
     }
 }
 

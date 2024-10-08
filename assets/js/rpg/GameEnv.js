@@ -19,6 +19,7 @@
  * @property {number} bottom - The bottom offset of the game area.
  */
 class GameEnv {
+    static gameObjects = [];
     static canvas;
     static ctx;
     static innerWidth;

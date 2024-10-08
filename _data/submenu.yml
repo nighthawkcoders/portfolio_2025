@@ -7,6 +7,6 @@ lesson3_6:
 lesson3_1:
     set1: ["csp/big-idea/3.1/p5/objectives", "Objectives"]
     set2: ["csp/big-idea/3.1/p5/py/info", "Python Info"]
-    set3: ["csp/big-idea/3.1/python/hacks", "Python Hacks"]
+    set3: ["csp/big-idea/3.1/p5/py/hacks", "Python Hacks"]
     set4: ["csp/big-idea/3.1/p5/js/info", "JavaScript Info"]
     set5: ["csp/big-idea/3.1/p5/js/hacks", "JavaScript Hacks"]
