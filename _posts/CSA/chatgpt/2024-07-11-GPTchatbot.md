@@ -4,7 +4,7 @@ toc: false
 comments: false
 title: GPT chatbot with java spring backend
 description: example frontend for gpt chatbot, making calls to spring_portfolio backend
-courses: { csa: {week: 8}  }
+courses: { csa: {week: 7}  }
 permalink: /GPT_overview/chatbot_example
 menu: nav/GPT_overview.html
 type: ccc

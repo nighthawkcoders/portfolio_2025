@@ -1,0 +1,15 @@
+/* custom.css */
+body {
+    background-color: #505cae;  /* Set the background color to blue */
+    color: white;                /* Optional: Change text color to white for better contrast */
+}
+
+/* Optional: Change the background color of the code cells */
+div.cell {
+    background-color: #0056b3;  /* Darker blue for code cells */
+}
+
+/* Optional: Change the background color of the markdown cells */
+div.text_cell_render {
+    background-color: #0056b3;  /* Darker blue for markdown cells */
+}
