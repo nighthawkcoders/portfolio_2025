@@ -14,7 +14,7 @@ async function startStream()
     if (!peerConnection) {
         peerConnection = createPeerConnection();
     }
-    stream.getTracks().forEach((track) => peerConnection.addTrack(track, stream));
+    stream.getTracks().forEach((track) => peerConnection.addTrack(track, stream)); //add media stream to each connected peer
 }
 
 async function viewStream()
@@ -25,7 +25,7 @@ async function viewStream()
     }
     if(peerConnection.getTransceivers().length === 0)
     {
-    peerConnection.addTransceiver("video", { direction: "recvonly" })
+    peerConnection.addTransceiver("video", { direction: "recvonly" }) //recieve only
     peerConnection.addTransceiver("audio", { direction: "recvonly" })
     document.getElementById("streamOffline").style.display = "none"
     document.getElementById("mortStream").style.display = "block"
@@ -42,7 +42,7 @@ async function captureScreen() {
                 cursor: "always"
             },
             audio: true
-        });
+        }); //get user video and audio as a media stream
         document.getElementById("streamOffline").style.display = "none"
         document.getElementById("mortStream").style.display = "block"
         document.getElementById("mortStream").srcObject = mediaStream
@@ -71,7 +71,6 @@ function createPeerConnection()
         }
       };
     peer.ontrack = ({streams}) => {
-        console.log("life sucks")
         document.getElementById("mortStream").srcObject = streams[0]
         document.getElementById("mortStream").style.display = "block"
         document.getElementById("streamOffline").style.display = "none"
