@@ -4,6 +4,7 @@ layout: post
 title: AI Generator
 categories: [Collaboration]
 type: ccc
+permalink: /project/teacher-toolkit/generator
 ---
 <head>
    <meta charset="UTF-8">
@@ -205,15 +206,9 @@ type: ccc
 <body>
    <!-- Navigation buttons -->
    <div class="nav-buttons">
-      <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Home.html">
-      <button>Home</button>
-      </a>
-      <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Grader.html">
-      <button>Grader</button>
-      </a>
-      <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_QNA.html">
-      <button>QNA</button>
-      </a>
+      <a href="{{site.baseurl}}/project/teacher-toolkit"><button>Home</button></a>
+      <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Grader.html"><button>Grader</button></a>
+        <a href="{{site.baseurl}}/project/teacher-toolkit/QNA"><button>QNA</button></a>
    </div>
    <!-- Main Generator Section -->
    <div class="container">

@@ -3,9 +3,10 @@ toc: false
 layout: post
 title: Grader Project
 description: Grade popcorn hacks, generate hacks, or ask questions here
-courses: { csa: {week: 7}}
-categories: [Collaboration]
+courses: {'csa': {'week': 1}}
+categories: ['AP CSA']
 type: ccc
+permalink: /project/teacher-toolkit
 ---
 
 {% include nav/home.html %}
@@ -88,8 +89,8 @@ type: ccc
     <h2>Super Advanced Grader Artificial Intelligence</h2>
     <div class="nav-buttons">
         <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Grader.html"><button>Grader</button></a>
-        <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Generator.html"><button>Generator</button></a>
-        <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_QNA.html"><button>QNA</button></a>
+        <a href="{{site.baseurl}}/project/teacher-toolkit/generator"><button>Generator</button></a>
+        <a href="{{site.baseurl}}/project/teacher-toolkit/QNA"><button>QNA</button></a>
         <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Assignment.html"><button>Assignments</button></a>
     </div>
 </body>

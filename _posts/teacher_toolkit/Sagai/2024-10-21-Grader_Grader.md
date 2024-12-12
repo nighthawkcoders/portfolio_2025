@@ -141,9 +141,9 @@ type: ccc
 
     <!-- Navigation buttons -->
     <div class="nav-buttons">
-        <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Home.html"><button>Home</button></a>
-        <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Generator.html"><button>Generator</button></a>
-        <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_QNA.html"><button>QNA</button></a>
+      <a href="{{site.baseurl}}/project/teacher-toolkit"><button>Home</button></a>
+      <a href="{{site.baseurl}}/project/teacher-toolkit/generator"><button>Generator</button></a>
+        <a href="{{site.baseurl}}/project/teacher-toolkit/QNA"><button>QNA</button></a>
     </div>
 
     <!-- Main Grader section -->

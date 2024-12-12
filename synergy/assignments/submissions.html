@@ -99,6 +99,11 @@ layout: base
         <input type="url" id="submissionContent" required />
     </div>
     <br><br>
+    <div>
+        <label for="comments" style="font-size: 18px;">Comments:</label>
+        <textarea id="comments" rows="4" style="width: 100%;"></textarea>
+    </div>
+    <br><br>
     <button id="submit-assignment">Submit Assignment</button>
     <div class="output-box" id="outputBox"></div>
 
@@ -133,6 +138,8 @@ layout: base
     function Submit() {
         let urllink_submit=javaURI+"/api/submissions/submit/";
         const submissionContent = document.getElementById('submissionContent').value;
+        const comment=document.getElementById('comments').value;
+        console.log(comment);
         getUserId();
         const student_id=userId;
         const assigmentId=assignments[assignIndex-1].id;
@@ -140,6 +147,7 @@ layout: base
         const data = new FormData();
         data.append("studentId", student_id);
         data.append("content", submissionContent);
+        data.append("comment", comment);
 
         fetch(urllink_submit, {
             method: 'POST',

@@ -5,6 +5,7 @@ title: QNA
 description: Post questions and get replies from peers
 categories: [Collaboration]
 type: ccc
+permalink: /project/teacher-toolkit/QNA
 ---
 
 <html lang="en">
@@ -194,9 +195,9 @@ type: ccc
 <body>
     <!-- Navigation buttons -->
     <div class="nav-buttons">
-        <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Home.html"><button>Home</button></a>
+        <a href="{{site.baseurl}}/project/teacher-toolkit"><button>Home</button></a>
         <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Grader.html"><button>Grader</button></a>
-        <a href="{{site.baseurl}}/collaboration/2024/10/21/Grader_Generator.html"><button>Generator</button></a>
+        <a href="{{site.baseurl}}/project/teacher-toolkit/generator"><button>Generator</button></a>
     </div>
     <!-- Main Q&A Section -->
     <div class="container">
@@ -238,7 +239,7 @@ type: ccc
 
   // prepare fetch urls
   // const url = `${pythonURI}/api/jokes`;
-  const url = `http://localhost:8085/api/messages`;
+  const url = `http://localhost:8085/api/saigai/messages`;
   const getURL = url +"/";
   const likeURL = url + "/message";  // haha reaction
   const jeerURL = url + "/jeer/";  // boohoo reaction
@@ -338,7 +339,7 @@ type: ccc
   // Reaction function to likes or jeers user actions
   function submitMessage() {
     const questionText = document.getElementById('question-input').value;
-    const postURL = `http://localhost:8085/api/messages/message`;
+    const postURL = `http://localhost:8085/api/saigai/messages/saigai/message`;
     const data = {
                 content: questionText
             };
@@ -381,7 +382,7 @@ type: ccc
         return;
     }
     const questionText = document.getElementById('question-input').value;
-    const postURL = `http://localhost:8085/api/comments/${questionId}`;
+    const postURL = `http://localhost:8085/api/saigai/comments/${questionId}`;
     const data = {
                 content: replyText
             };
@@ -420,7 +421,7 @@ type: ccc
 
   // Reaction function to likes or jeers user actions
   function deleteMessageReply(commentId, replyTextArea, replyDiv) {
-    const postURL = `http://localhost:8085/api/comments/${commentId}`;
+    const postURL = `http://localhost:8085/api/saigai/comments/${commentId}`;
   // prepare fetch PUT options, clones with JS Spread Operator (...)
   const postOptions = {...fetchOptions,
     method: 'DELETE',

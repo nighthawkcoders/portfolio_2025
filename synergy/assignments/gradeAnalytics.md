@@ -17,7 +17,7 @@ show_reading_time: false
     <h1>📊 Grades Analytics</h1>
     <!-- Assignment Selection Dropdown -->
     <label for="assignmentSelect">Choose an Assignment:</label>
-    <select id="assignmentSelect" onchange="fetchGrades()"></select>
+    <select id="assignmentSelect"></select>
     <!-- Histogram Section -->
     <div class="chart-section" id="histogramSection">
         <h2>📈 Histogram of Grades</h2>
@@ -35,10 +35,56 @@ show_reading_time: false
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 <script type="module">
-    // Load assignments for dropdown
+    document.getElementById('assignmentSelect').addEventListener('change', fetchGrades);
     import { login, javaURI, pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
-
+    // Utility to get a cookie by its name
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [key, value] = cookie.trim().split('=');
+            if (key === name) {
+                return decodeURIComponent(value);
+            }
+        }
+        return null;
+    }
+    // Decodes and validates the JWT token
+    function decodeToken() {
+        const token = getCookie('jwt_java_spring');
+        if (!token) {
+            console.error("Token not found in cookies");
+            alert("You must log in to access Grade Analytics.");
+            return null;
+        }
+        try {
+            const decodedToken = jwt_decode(token); // Decode the token
+            console.log("Decoded JWT:", decodedToken.sub); // Log email or user ID
+            return token;
+        } catch (err) {
+            console.error('Error decoding token:', err);
+            alert("Invalid token. Please log in again.");
+            return null;
+        }
+    }
+    function getUserId() {
+        const token = getCookie('jwt_java_spring');
+        if (!token) {
+            console.error("Token not found in cookies");
+            alert("You must log in to access Grade Analytics.");
+            return null;
+        }
+        try {
+            const decodedToken = jwt_decode(token);
+            console.log("Decoded User ID:", decodedToken.sub); // Replace sub with the correct key if needed
+            return decodedToken.sub; // Assuming the user ID is stored in the sub field of the JWT
+        } catch (err) {
+            console.error('Error decoding token:', err);
+            alert("Invalid token. Please log in again.");
+            return null;
+        }
+    }
     // Fetch grades based on selected assignment
     // Load assignments for dropdown
     async function loadAssignments() {
@@ -47,25 +93,18 @@ show_reading_time: false
         method: "GET",
         cache: "no-cache",
     };
-
     console.log(options.URL);
-
     try {
         const response = await fetch(options.URL, fetchOptions);
         if (!response.ok) {
             throw new Error(`Failed to load assignments: ${response.status}`);
         }
-
         const responseData = await response.json();
         const assignmentIds = [...new Set(responseData.map(item => item.assignmentId))];
-
         console.log("API Response Data:", responseData);
         console.log("assignment IDS:", assignmentIds);
-
         const assignmentSelect = document.getElementById('assignmentSelect');
-
         assignmentSelect.innerHTML = ""; // Clear existing options
-
         // Populate dropdown with assignment IDs
         assignmentIds.forEach(id => {
             const option = document.createElement('option');
@@ -77,73 +116,50 @@ show_reading_time: false
         console.error(error.message);
     }
 }
-
-    async function fetchGrades() {
+async function fetchGrades() {
     const assignmentId = document.getElementById('assignmentSelect').value;
-    const userId = getUserId(); // Implement this function to retrieve the current user ID.
+    const userId = getUserId();
     const options = {
         method: "GET",
         cache: "no-cache",
     };
-
     try {
         // Fetch grades for the selected assignment
         const gradesResponse = await fetch(`${javaURI}/api/analytics/assignment/${assignmentId}/grades`, fetchOptions);
         if (!gradesResponse.ok) {
             throw new Error(`Failed to fetch grades data: ${gradesResponse.status}`);
         }
-        const gradesData = await gradesResponse.json();
+        const gradesText = await gradesResponse.text(); // Get the raw response text
+        console.log("Grades Response Text:", gradesText);
+        if (!gradesText) {
+            throw new Error("Response body is empty");
+        }
+        const gradesData = JSON.parse(gradesText); // Parse the response if it's valid
         const grades = gradesData.grades;
-
+        console.log("grades:", grades);
         // Fetch user-specific grades for the assignment
         const userResponse = await fetch(`${javaURI}/api/analytics/assignment/${assignmentId}/student/${userId}/grade`, fetchOptions);
         if (!userResponse.ok) {
             throw new Error(`Failed to fetch user-specific grades: ${userResponse.status}`);
         }
         const userData = await userResponse.json();
-
         console.log("Grades Data:", grades);
         console.log("User Data:", userData);
-
         // Update charts with grades data
         createHistogram(grades);
         createPieChart(grades);
         createBoxPlot(grades);
         showCharts();
-
         // Optionally, display user-specific data on the page
         displayUserData(userData);
     } catch (error) {
-        console.error(error.message);
+        console.error("Error fetching or parsing grades:", error.message);
     }
 }
-
-// Function to display user-specific data
-function displayUserData(userData) {
-    const container = document.querySelector('.container');
-    let userInfo = document.getElementById('userInfo');
-    if (!userInfo) {
-        userInfo = document.createElement('div');
-        userInfo.id = 'userInfo';
-        container.appendChild(userInfo);
-    }
-
-    userInfo.innerHTML = `
-        <h3>👤 User Information</h3>
-        <p><strong>Name:</strong> ${userData.name}</p>
-        <p><strong>Grade:</strong> ${userData.grade}</p>
-        <p><strong>Status:</strong> ${userData.status}</p>
-    `;
-}
-
-
     let histogram;
-
     function createHistogram(grades) {
-        const ctx = document.getElementById('histogram').getContext('2d');
-        
+        const ctx = document.getElementById('histogram').getContext('2d');        
         if (histogram) histogram.destroy();
-
         histogram = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -167,9 +183,7 @@ function displayUserData(userData) {
             }
         });
     }
-
     let pieChart;
-
     function createPieChart(grades) {
         const ctx = document.getElementById('pieChart').getContext('2d');
         const gradeRanges = {
@@ -179,9 +193,7 @@ function displayUserData(userData) {
             'D (60-69)': grades.filter(g => g >= .60 && g < .70).length,
             'F (< 60)': grades.filter(g => g < .60).length
         };
-
         if (pieChart) pieChart.destroy();
-
         pieChart = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -214,13 +226,10 @@ function displayUserData(userData) {
             }
         });
     }
-
     let thereIsABoxPlot = false;
-    
     function createBoxPlot(grades) {
         if (!thereIsABoxPlot) {thereIsABoxPlot = true;}
         else { Plotly.purge(document.getElementById("boxPlot")); }
-        
         const trace = {
             y: grades,
             type: 'box',
@@ -236,29 +245,14 @@ function displayUserData(userData) {
             paper_bgcolor: '#2c2c2e',
             plot_bgcolor: '#2c2c2e'
         };
-
         Plotly.newPlot('boxPlot', data, layout);
     }
-
     function showCharts() {
         document.getElementById('histogramSection').classList.add('visible');
         document.getElementById('pieChartSection').classList.add('visible');
         document.getElementById('boxPlotSection').classList.add('visible');
     }
-
     window.onload = loadAssignments;
-
-        // Function to get a cookie by name
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null; // Return null if the cookie doesn't exist
-    }
-
-    // Retrieve the `jwt_java_spring` cookie
-    const jwtToken = getCookie('jwt_java_spring');
-    console.log(jwtToken);
 
 </script>
 
