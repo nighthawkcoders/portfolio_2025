@@ -31,7 +31,7 @@ permalink: /project/mort-translator/student-confirmation-tracker
 <script>
   async function fetchSubmissions() {
     try {
-      const response = await fetch('http://localhost:8085/api/seeds/'); // Replace with your actual backend API endpoint
+      const response = await fetch('http://localhost:8085/api/grades/requests/seed'); // Replace with your actual backend API endpoint
       const submissions = await response.json();
       console.log(submissions);
 

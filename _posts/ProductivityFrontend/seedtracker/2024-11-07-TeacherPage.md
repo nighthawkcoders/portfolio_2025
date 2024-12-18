@@ -6,7 +6,6 @@ type: ccc
 permalink: /project/mort-translator/teacher-tracker
 ---
 
-
 <head>
   <title>Student Weekly Project Submissions</title>
   <style>
@@ -33,7 +32,7 @@ permalink: /project/mort-translator/teacher-tracker
   // Fetch all submissions when the page loads
   async function fetchSubmissions() {
     try {
-      const response = await fetch('http://localhost:8085/api/seeds/');
+      const response = await fetch('http://localhost:8085/api/grades/requests/seed');
       const submissions = await response.json();
 
       const tableBody = document.getElementById('submissionsTable').querySelector('tbody');
@@ -74,14 +73,14 @@ permalink: /project/mort-translator/teacher-tracker
     requestElement.textContent = updatedRequest.toFixed(2);
 
     // Update the backend
-    const response = await fetch(`http://localhost:8085/api/seeds/${id}`, {
+  const response = await fetch(`http://localhost:8085/api/grades/requests/seed/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         grade: updatedRequest,
-      }),
+      }),   
     });
 
     if (!response.ok) {
