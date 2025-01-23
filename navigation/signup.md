@@ -69,10 +69,11 @@ search_exclude: true
 
 <script type="module">
   import { javaURI } from '{{ site.baseurl }}/assets/js/api/config.js';
+  import { pythonURI } from '{{ site.baseurl }}/assets/js/api/config.js';
 
   // Sign up function to handle form submission
   window.signup = function() {
-    const signupOptions = {
+    const signupOptionsJava = {
       URL: `${javaURI}/api/person/create`,
       method: "POST",
       cache: "no-cache",
@@ -89,11 +90,28 @@ search_exclude: true
       })
     };
 
+    const signupOptionsPython = {
+      URL: `${pythonURI}/api/user`,
+      method: "POST",
+      cache: "no-cache",
+      headers: new Headers({
+        "Content-Type": "application/json"
+      }),
+      body: JSON.stringify({
+        uid: document.getElementById("signupUid").value,
+        email: document.getElementById("signupUid").value + "@gmail.com",
+        dob: "11-01-2024",  // Static date for now, you can modify this
+        name: document.getElementById("name").value,
+        password: document.getElementById("signupPassword").value,
+        kasmServerNeeded: document.getElementById("kasmNeeded").checked,
+      })
+    };
+
     // Debugging: Check if the request is set up correctly
-    console.log('Sending request:', signupOptions);
+    console.log('Sending request:', signupOptionsJava, signupOptionsPython);
 
     // Send the request to the server
-    fetch(signupOptions.URL, signupOptions)
+    fetch(signupOptionsJava.URL, signupOptionsJava)
       .then(response => response.json())
       .then(data => {
         if (data.success) {
@@ -106,5 +124,19 @@ search_exclude: true
         document.getElementById("signupMessage").innerText = "Error: " + error.message;
         console.error('Error during signup:', error);
       });
-  };
+    // Send the request to the server
+    fetch(signupOptionsPython.URL, signupOptionsPython)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById("signupMessage").innerText = "Sign up successful!";
+        } else {
+          document.getElementById("signupMessage").innerText = "Sign up failed: " + data.message;
+        }
+      })
+      .catch(error => {
+        document.getElementById("signupMessage").innerText = "Error: " + error.message;
+        console.error('Error during signup:', error);
+      });
+    };
 </script>
