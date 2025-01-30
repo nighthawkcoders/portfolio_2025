@@ -1,0 +1,66 @@
+<label for="darkModeInput">dark mode</label>
+<input type="checkbox" id="darkModeInput" placeholder="false">
+
+<script type="module">
+    import LocalStorage from "{{site.baseurl}}/assets/preferences/LocalStorage.js";
+
+    function setDarkMode(bool){
+        var color1;
+        var color2;
+        if(bool){
+            color2 = "rgb(18, 18, 18)";
+            color1 = "rgb(200, 200, 200)";
+        } else {
+            color1 = "rgb(18, 18, 18)";
+            color2 = "rgb(200, 200, 200)";
+        }
+
+        var elms = document.getElementsByTagName('*');
+
+        // Loop through them
+        Array.prototype.forEach.call(elms, function(elm) {
+            elm.style.backgroundColor = color2;
+            elm.style.color = color1;
+        });
+    }
+
+    window.onload = ()=>{
+        var inputFeild = document.getElementById("darkModeInput");
+
+        //create a keys object
+        var keys = {"darkMode": "darkMode"};
+        //create storage with localStorage class
+        var preferenceStorage = new LocalStorage(keys);
+
+        //get everything in website localstorage that matches given keys
+        preferenceStorage.loadAll()
+
+        //if there is nothing for the darkmode
+        if(preferenceStorage[keys.darkMode] == null){
+            //input default information
+            preferenceStorage[keys.darkMode] = true;
+            //save to website localstorage
+            preferenceStorage.save(keys.darkMode);
+        }
+        if(preferenceStorage[keys.darkMode] == "true"){
+            //update input feild
+            inputFeild.checked = true;
+
+            //update view
+            setDarkMode(true);
+        } else {
+            //update view
+            setDarkMode(false);
+        }
+
+        //every time the checkbox is clicked
+        inputFeild.addEventListener("change",()=>{
+            //update the localstorage
+            preferenceStorage[keys.darkMode] = inputFeild.checked;
+            preferenceStorage.save(keys.darkMode);
+
+            //update view
+            setDarkMode(inputFeild.checked);
+        })
+    }
+</script>
