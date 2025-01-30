@@ -21,6 +21,10 @@ show_reading_time: false
        <label for="newName">Enter New Name:</label>
        <input type="text" id="newName" placeholder="New Name">
      </div>
+     <div>
+        <label for="newStudentID">Enter New Student ID: </label>
+        <input type="number" id="newStudentId" placeholder="NewStudentID">
+    </div>
       <div>
        <label for="newPassword">Enter New Password:</label>
        <input type="text" id="newPassword" placeholder="New Password">
@@ -77,7 +81,6 @@ async function fetchUserProfile() {
             throw new Error(`Failed to fetch user profile: ${response.status}`);
         }
         const profileData = await response.json();
-
         // Pass the full profile data to display function
         displayUserProfile(profileData);
     } catch (error) {
@@ -87,27 +90,21 @@ async function fetchUserProfile() {
         profileImageBox.innerHTML = '<p>Error loading profile picture.</p>';
     }
 }
-
 function displayUserProfile(profileData) {
     const profileImageBox = document.getElementById('profileImageBox');
     profileImageBox.innerHTML = ''; // Clear existing content
-
     if (profileData.pfp) {
         const img = document.createElement('img');
-        
         // Construct full URL for the image
         img.src = `${javaURI}${profileData.pfp}`;
         img.alt = 'Profile Picture';
         img.style.width = '150px'; // Example size
         img.style.height = '150px'; // Example size
-
         profileImageBox.appendChild(img);
     } else {
         profileImageBox.innerHTML = '<p>No profile picture available.</p>';
     }
-
     // Example: Update other profile fields
-
 }
 // Function to save profile picture
 window.saveProfilePicture = async function () {
@@ -176,6 +173,12 @@ window.updateNameField = function(newName) {
   nameInput.value = newName;
   nameInput.placeholder = newName;
 }
+// Function to update UI with new Student ID and change to a placeholder
+window.updateStudentIdField = function(newStudentId) {
+  const studentIdInput = document.getElementById('newStudentId');
+  studentIdInput.value = newStudentId;
+  studentIdInput.placeholder = newStudentId;
+}
 // Function to change UID
 window.changeEmail = async function(email) {
    if (email) {
@@ -224,8 +227,7 @@ window.changePassword = async function(password) {
            body: { password }, // Adjust the message area as needed
            callback: () => {
                console.log('Password updated successfully!');
-               window.location.href = '/portfolio_2025/toolkit-login'
-               
+               window.location.href = '/portfolio_2025/toolkit-login'      
            }
        };
      try {
@@ -256,11 +258,32 @@ window.changeName = async function(name) {
        }
    }
 }
-// Event listener to trigger updateUid function when UID field is changed
+window.changeStudentId = async function(sid) {
+   if (sid) {
+       alert('Student ID set to' + sid);
+       const URL = javaURI + "/api/person/update";
+       const options = {
+           URL,
+           body: { sid: parseInt(sid, 10) }, // Use the correct property name
+           callback: () => {
+               console.log('Student ID updated successfully!');
+               window.updateStudentIdField(sid);
+               alert('Student ID updated successfully!');
+           }
+       };
+       try {
+           await postUpdate(options);
+       } catch (error) {
+           console.error('Error updating Student ID:', error.message);
+       }
+   }
+}
+// Event listener to trigger updateEmail function when Email field is changed
 document.getElementById('newEmail').addEventListener('change', function() {
     const email = this.value;
     window.changeEmail(email);
 });
+// Event listener to trigger updateUid function when UID field is changed
 document.getElementById('newUid').addEventListener('change', function() {
     const uid = this.value;
     window.changeUid(uid);
@@ -270,9 +293,15 @@ document.getElementById('newName').addEventListener('change', function() {
     const name = this.value;
     window.changeName(name);
 });
+// Event listener to trigger updatePassword function when Password field is changed
 document.getElementById('newPassword').addEventListener('change', function() {
     const password = this.value;
     window.changePassword(password);
+});
+// Event listener to trigger updateStudentId function when Student ID field is changed
+document.getElementById('newStudentId').addEventListener('change', function() {
+    const sid = this.value;
+    window.changeStudentId(sid);
 });
 window.fetchKasmServerNeeded = async function() {
  const URL = javaURI + "/api/person/get"; // Adjusted endpoint
@@ -338,7 +367,6 @@ window.fetchName = async function() {
         return null;
     }
 };
-
 window.fetchUid = async function() {
     const URL = javaURI + "/api/person/get"; // Adjusted endpoint
     try {
@@ -353,17 +381,33 @@ window.fetchUid = async function() {
         return null;
     }
 };
-
-
+// Function to fetch Student ID from backend
+window.fetchStudentId = async function() {
+    const URL = javaURI + "/api/person/get"; // Adjusted endpoint
+    try {
+        const response = await fetch(URL, fetchOptions);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch Student ID: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Fetched Student ID:', data.sid);
+        return data.sid;
+    } catch (error) {
+        console.error('Error fetching Student ID:', error.message);
+        return null;
+    }
+};
 // Function to set placeholders for email and Name
 window.setPlaceholders = async function() {
     const emailInput = document.getElementById('newEmail');
     const nameInput = document.getElementById('newName');
     const uidInput = document.getElementById('newUid');
+    const studentIdInput = document.getElementById('newStudentId');
     try {
         const email = await window.fetchEmail();
         const name = await window.fetchName();
         const uid = await window.fetchUid();
+        const sid = await window.fetchStudentId();
         if (uid !== null) {
             uidInput.placeholder = uid;
         }
@@ -372,6 +416,9 @@ window.setPlaceholders = async function() {
         }
         if (name !== null) {
             nameInput.placeholder = name;
+        }
+        if (sid !== null) {
+            studentIdInput.placeholder = sid;
         }
     } catch (error) {
         console.error('Error setting placeholders:', error.message);
