@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 50px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "sidebar main-info";
+    }
+
+    .sidebar {
+        grid-area: sidebar;
+    }
+
+    .main-info {
+        display: grid;
+        grid-template-columns: 500px 500px;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        gap: 30px 30px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "header header"
+            "name-info uid-info"
+            "email-info kasm-info"
+            "class-info pfp-info";
+        grid-area: main-info;
+    }
+
+    .header {
+        grid-area: header;
+    }
+
+    .name-info {
+        display: grid;
+        grid-template-columns: 1fr max-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "name-details name-icon";
+        grid-area: name-info;
+    }
+
+    .name-details {
+        grid-area: name-details;
+    }
+
+    .name-icon {
+        grid-area: name-icon;
+    }
+
+    .uid-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "uid-details uid-icon";
+        grid-area: uid-info;
+    }
+
+    .uid-details {
+        grid-area: uid-details;
+    }
+
+    .uid-icon {
+        grid-area: uid-icon;
+    }
+
+    .email-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "email-details email-icon";
+        grid-area: email-info;
+    }
+
+    .email-details {
+        grid-area: email-details;
+    }
+
+    .email-icon {
+        grid-area: email-icon;
+    }
+
+    .kasm-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "kasm-details kasm-icon";
+        grid-area: kasm-info;
+    }
+
+    .kasm-details {
+        grid-area: kasm-details;
+    }
+
+    .kasm-icon {
+        grid-area: kasm-icon;
+    }
+
+    .class-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "class-details class-icon";
+        grid-area: class-info;
+    }
+
+    .class-details {
+        grid-area: class-details;
+    }
+
+    .class-icon {
+        grid-area: class-icon;
+    }
+
+    .pfp-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "pfp-details pfp-icon";
+        grid-area: pfp-info;
+    }
+
+    .pfp-details {
+        grid-area: pfp-details;
+    }
+
+    .pfp-icon {
+        grid-area: pfp-icon;
+    }
+
+    .card {
+        /* colors */
+        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* sizing */
+        box-sizing: border-box;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+
+        /* spacing */
+        padding: 30px;
+
+        /* other */
+        cursor: pointer;
+    }
+
+    .change-info-card {
+        /* colors */
+        backdrop-filter: blur(30px);
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* spacing */
+        padding: 30px;
+        width: min-content;
+        text-align: center;
+
+        /* positioning for centering */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        /* other */
+        z-index: 999;
+    }
+
+    h3 {
+        margin-top: 0px;
+        padding-top: 0px;
+    }
+
+    h1 {
+        white-space: nowrap;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #111111;
+        color: white;
+
+        /* delete later */
+        margin: 50px;
+    }
+
+    img {
+        border-radius: 50%;
+        height: 125px;
+        width: 125px;
+    }
+
+    input {
+        /* colors */
+        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
+        color: white;
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* spacing */
+        padding: 15px;
+        margin: 10px;
+
+        /* other */
+        font-size: large;
+    }
+
+    .close {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+
+        cursor: pointer;
+    }
+
+    .dim {
+        box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .3);
+        pointer-events: none;
+    }
+
+    /* CHECKBOX STUFF ================================ */
+    /* The container-checkbox */
+    .container-checkbox {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Hide the browser's default checkbox */
+    .container-checkbox input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 5px;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container-checkbox:hover input~.checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .container-checkbox input:checked~.checkmark {
+        background-color: #2196F3;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container-checkbox input:checked~.checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container-checkbox .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+</style>
+
+<body>
+    <!-- change name box -->
+    <div id="change-name" class="change-info-card" style="visibility: hidden;">
+        <ion-icon name="person-outline" size="large"></ion-icon>
+        <h1>Name</h1>
+        <form>
+            <input type="text" placeholder="Enter new first name.">
+            <input type="text" placeholder="Enter new last name.">
+        </form>
+        <div class="close" onclick="document.getElementById('change-name').style.visibility = 'hidden'">
+            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+        </div>
+    </div>
+
+    <!-- change user ID box -->
+    <div id="change-uid" class="change-info-card" style="visibility: hidden;">
+        <ion-icon name="id-card-outline" size="large"></ion-icon>
+        <h1>User ID</h1>
+        <form>
+            <input type="text" placeholder="Enter new user ID.">
+        </form>
+        <div class="close" onclick="document.getElementById('change-uid').style.visibility = 'hidden'">
+            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+        </div>
+    </div>
+
+    <!-- change email box -->
+    <div id="change-email" class="change-info-card" style="visibility: hidden;">
+        <ion-icon name="mail-outline" size="large"></ion-icon>
+        <h1>Email</h1>
+        <form>
+            <input type="text" placeholder="Enter new email.">
+        </form>
+        <div class="close" onclick="document.getElementById('change-email').style.visibility = 'hidden'">
+            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+        </div>
+    </div>
+
+    <!-- change kasm box -->
+    <div id="change-kasm" class="change-info-card" style="visibility: hidden;">
+        <ion-icon name="server-outline" size="large"></ion-icon>
+        <h1>Kasm</h1>
+        <form>
+            <label class="container-checkbox" style="white-space: nowrap;">I need a Kasm server.
+                <input type="checkbox" checked="checked">
+                <span class="checkmark"></span>
+            </label>
+        </form>
+        <div class="close" onclick="document.getElementById('change-kasm').style.visibility = 'hidden'">
+            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+        </div>
+    </div>
+
+    <!-- change class box -->
+    <div id="change-class" class="change-info-card" style="visibility: hidden;">
+        <ion-icon name="school-outline" size="large"></ion-icon>
+        <h1>Class Info</h1>
+        <form>
+            <label class="container-checkbox" style="white-space: nowrap;">My class
+                <select id="cars" name="cars">
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="fiat">Fiat</option>
+                    <option value="audi">Audi</option>
+                </select>
+            </label>
+        </form>
+        <div class="close" onclick="document.getElementById('change-class').style.visibility = 'hidden'">
+            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+        </div>
+    </div>
+
+    <!-- change profile pic box -->
+    <div id="change-pfp" class="change-info-card" style="visibility: hidden;">
+        <ion-icon name="image-outline" size="large"></ion-icon>
+        <h1>Profile Picture</h1>
+        <form>
+            <label class="container-checkbox" style="white-space: nowrap; padding-left: 0px;">Click to upload a profile picture.
+                <input type="file" id="myFile" name="filename" style="visibility: hidden;">
+                <input type="submit" style="visibility: hidden;">
+                <ion-icon name="cloud-upload-outline"></ion-icon>
+            </label>
+        </form>
+        <div class="close" onclick="document.getElementById('change-pfp').style.visibility = 'hidden'">
+            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+        </div>
+    </div>
+
+
+    <div class="container" id="main-content-container">
+        <!-- the sidebar on the left with the links -->
+        <div class="sidebar">
+            <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt="">
+            <h1>Welcome, Aashray</h1>
+            <h3 style="color: #0071e3">Profile Settings</h3>
+            <h3>Student Toolkit</h3>
+            <h3>Calendar</h3>
+        </div>
+
+        <!-- your personal information -->
+        <div class="main-info">
+            <!-- the info header at the top of the page -->
+            <div class="header">
+                <h1>Personal Information</h1>
+                <p>Manage your personal information, including name, user ID, email, class specific information, and more.</p>
+            </div>
+
+            <!-- name card -->
+            <div class="name-info card" onclick="document.getElementById('change-name').style.visibility = 'visible'">
+                <div class="name-details">
+                    <h3>Name</h3>
+                    <p>Aashray</p>
+                </div>
+                <div class="name-icon">
+                    <ion-icon name="person-outline" size="large"></ion-icon>
+                </div>
+            </div>
+
+            <!-- uid card -->
+            <div class="uid-info card" onclick="document.getElementById('change-uid').style.visibility = 'visible'">
+                <div class="uid-details">
+                    <h3>User ID</h3>
+                    <p>KinetekEnergy</p>
+                </div>
+                <div class="uid-icon">
+                    <ion-icon name="id-card-outline" size="large"></ion-icon>
+                </div>
+            </div>
+
+            <!-- email card -->
+            <div class="email-info card" onclick="document.getElementById('change-email').style.visibility = 'visible'">
+                <div class="email-details">
+                    <h3>Email</h3>
+                    <p>transyt8@gmail.com</p>
+                </div>
+                <div class="email-icon">
+                    <ion-icon name="mail-outline" size="large"></ion-icon>
+                </div>
+            </div>
+
+            <!-- kasm card -->
+            <div class="kasm-info card" onclick="document.getElementById('change-kasm').style.visibility = 'visible'">
+                <div class="kasm-details">
+                    <h3>Kasm</h3>
+                    <p>Kasm Disabled</p>
+                </div>
+                <div class="kasm-icon">
+                    <ion-icon name="server-outline" size="large"></ion-icon>
+                </div>
+            </div>
+
+            <!-- class card -->
+            <div class="class-info card" onclick="document.getElementById('change-class').style.visibility = 'visible'">
+                <div class="class-details">
+                    <h3>Class Info</h3>
+                    <p>CSA 2025</p>
+                </div>
+                <div class="class-icon">
+                    <ion-icon name="school-outline" size="large"></ion-icon>
+                </div>
+            </div>
+
+            <!-- pfp card -->
+            <div class="pfp-info card" onclick="document.getElementById('change-pfp').style.visibility = 'visible'">
+                <div class="pfp-details">
+                    <h3>Profile Picture</h3>
+                    <p>Click to change or add your profile picture.</p>
+                </div>
+                <div class="pfp-icon">
+                    <ion-icon name="image-outline" size="large"></ion-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<!-- icons -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

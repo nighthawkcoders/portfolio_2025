@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 50px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "sidebar main-info";
+    }
+
+    .sidebar {
+        grid-area: sidebar;
+    }
+
+    .main-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "header header"
+            "name-info uid-info"
+            "email-info kasm-info"
+            "class-info pfp-info";
+        grid-area: main-info;
+    }
+
+    .header {
+        grid-area: header;
+    }
+
+    .name-info {
+        display: grid;
+        grid-template-columns: 1fr max-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "name-details name-icon";
+        grid-area: name-info;
+    }
+
+    .name-details {
+        grid-area: name-details;
+    }
+
+    .name-icon {
+        grid-area: name-icon;
+    }
+
+    .uid-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "uid-details uid-icon";
+        grid-area: uid-info;
+    }
+
+    .uid-details {
+        grid-area: uid-details;
+    }
+
+    .uid-icon {
+        grid-area: uid-icon;
+    }
+
+    .email-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "email-details email-icon";
+        grid-area: email-info;
+    }
+
+    .email-details {
+        grid-area: email-details;
+    }
+
+    .email-icon {
+        grid-area: email-icon;
+    }
+
+    .kasm-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "kasm-details kasm-icon";
+        grid-area: kasm-info;
+    }
+
+    .kasm-details {
+        grid-area: kasm-details;
+    }
+
+    .kasm-icon {
+        grid-area: kasm-icon;
+    }
+
+    .class-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "class-details class-icon";
+        grid-area: class-info;
+    }
+
+    .class-details {
+        grid-area: class-details;
+    }
+
+    .class-icon {
+        grid-area: class-icon;
+    }
+
+    .pfp-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "pfp-details pfp-icon";
+        grid-area: pfp-info;
+    }
+
+    .pfp-details {
+        grid-area: pfp-details;
+    }
+
+    .pfp-icon {
+        grid-area: pfp-icon;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1>Welcome, Aashray</h1>
+        </div>
+        <div class="main-info">
+            <div class="header">
+                <h1>Personal Information</h1>
+                <p>Manage your personal information, including phone numbers and email addresses where you can be reached.</p>
+            </div>
+            <div class="name-info">
+                <div class="name-details">
+                    <h3>Aashray</h3>
+                </div>
+                <div class="name-icon">
+                    <ion-icon name="person-outline" size="large"></ion-icon>
+                </div>
+            </div>
+            <div class="uid-info">
+                <div class="uid-details">
+                    <h3>KinetekEnergy</h3>
+                </div>
+                <div class="uid-icon">
+                    <ion-icon name="id-card-outline" size="large"></ion-icon>
+                </div>
+            </div>
+            <div class="email-info">
+                <div class="email-details">
+                    <h3>transyt8@gmail.com</h3>
+                </div>
+                <div class="email-icon">
+                    <ion-icon name="mail-outline" size="large"></ion-icon>
+                </div>
+            </div>
+            <div class="kasm-info">
+                <div class="kasm-details">
+                    <h3>Kasm Disabled</h3>
+                </div>
+                <div class="kasm-icon">
+                    <ion-icon name="server-outline" size="large"></ion-icon>
+                </div>
+            </div>
+            <div class="class-info">
+                <div class="class-details">
+                    <h3>CSA 2025</h3>
+                </div>
+                <div class="class-icon">
+                    <ion-icon name="school-outline" size="large"></ion-icon>
+                </div>
+            </div>
+            <div class="pfp-info">
+                <div class="pfp-details">
+                    <h3>No pfp found. Click to upload.</h3>
+                </div>
+                <div class="pfp-icon">
+                    <ion-icon name="image-outline" size="large"></ion-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
