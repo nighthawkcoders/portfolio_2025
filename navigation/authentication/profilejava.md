@@ -105,6 +105,10 @@ function displayUserProfile(profileData) {
         profileImageBox.innerHTML = '<p>No profile picture available.</p>';
     }
     // Example: Update other profile fields
+    document.getElementById('newEmail').value = profileData.email || '';
+    document.getElementById('newName').value = profileData.name || '';
+    document.getElementById('newUid').value = profileData.uid || '';
+    document.getElementById('newStudentId').value = profileData.student_id || '';
 }
 // Function to save profile picture
 window.saveProfilePicture = async function () {
@@ -258,16 +262,16 @@ window.changeName = async function(name) {
        }
    }
 }
-window.changeStudentId = async function(sid) {
-   if (sid) {
-       alert('Student ID set to' + sid);
+window.changeStudentId = async function(student_id) {
+   if (student_id) {
+       alert('Student ID set to' + student_id);
        const URL = javaURI + "/api/person/update";
        const options = {
            URL,
-           body: { sid: parseInt(sid, 10) }, // Use the correct property name
+           body: { student_id: parseInt(student_id, 10) }, // Use the correct property name
            callback: () => {
                console.log('Student ID updated successfully!');
-               window.updateStudentIdField(sid);
+               window.updateStudentIdField(student_id);
                alert('Student ID updated successfully!');
            }
        };
@@ -300,8 +304,8 @@ document.getElementById('newPassword').addEventListener('change', function() {
 });
 // Event listener to trigger updateStudentId function when Student ID field is changed
 document.getElementById('newStudentId').addEventListener('change', function() {
-    const sid = this.value;
-    window.changeStudentId(sid);
+    const student_id = this.value;
+    window.changeStudentId(student_id);
 });
 window.fetchKasmServerNeeded = async function() {
  const URL = javaURI + "/api/person/get"; // Adjusted endpoint
@@ -390,8 +394,8 @@ window.fetchStudentId = async function() {
             throw new Error(`Failed to fetch Student ID: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Fetched Student ID:', data.sid);
-        return data.sid;
+        console.log('Fetched Student ID:', data.student_id);
+        return data.student_id;
     } catch (error) {
         console.error('Error fetching Student ID:', error.message);
         return null;
@@ -407,7 +411,7 @@ window.setPlaceholders = async function() {
         const email = await window.fetchEmail();
         const name = await window.fetchName();
         const uid = await window.fetchUid();
-        const sid = await window.fetchStudentId();
+        const student_id = await window.fetchStudentId();
         if (uid !== null) {
             uidInput.placeholder = uid;
         }
@@ -417,8 +421,8 @@ window.setPlaceholders = async function() {
         if (name !== null) {
             nameInput.placeholder = name;
         }
-        if (sid !== null) {
-            studentIdInput.placeholder = sid;
+        if (student_id !== null) {
+            studentIdInput.placeholder = student_id;
         }
     } catch (error) {
         console.error('Error setting placeholders:', error.message);
