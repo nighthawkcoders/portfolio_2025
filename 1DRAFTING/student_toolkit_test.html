@@ -27,8 +27,8 @@
     .main-info {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-        gap: 0px 0px;
+        grid-template-rows: auto auto auto auto auto auto auto;
+        gap: 30px 0px;
         grid-auto-flow: row;
         grid-template-areas:
             "header"
@@ -58,6 +58,7 @@
 
     .bathroom-details {
         grid-area: bathroom-details;
+        padding: 30px;
     }
 
     .bathroom-thumbnail {
@@ -77,6 +78,7 @@
 
     .screen-queue-details {
         grid-area: screen-queue-details;
+        padding: 30px;
     }
 
     .screen-queue-thumbnail {
@@ -96,6 +98,7 @@
 
     .assignment-submissions-details {
         grid-area: assignment-submissions-details;
+        padding: 30px;
     }
 
     .assignment-submissions-thumbnail {
@@ -115,6 +118,7 @@
 
     .seed-tracker-details {
         grid-area: seed-tracker-details;
+        padding: 30px;
     }
 
     .seed-tracker-thumbnail {
@@ -134,6 +138,7 @@
 
     .sagai-details {
         grid-area: sagai-details;
+        padding: 30px;
     }
 
     .sagai-thumbnail {
@@ -153,6 +158,7 @@
 
     .view-grades-details {
         grid-area: view-grades-details;
+        padding: 30px;
     }
 
     .view-grades-thumbnail {
@@ -179,37 +185,8 @@
         position: relative;
         width: 100%;
 
-        /* spacing */
-        padding: 30px;
-
         /* other */
         cursor: pointer;
-    }
-
-    .change-info-card {
-        /* colors */
-        backdrop-filter: blur(30px);
-
-        /* border */
-        border-radius: 10px;
-        border: 1px solid hsla(240, 6%, 30%, 0.63);
-
-        /* shadow */
-        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
-
-        /* spacing */
-        padding: 30px;
-        width: min-content;
-        text-align: center;
-
-        /* positioning for centering */
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-
-        /* other */
-        z-index: 999;
     }
 
     /* TYPOGRAPHY STUFF ================= */
@@ -232,7 +209,7 @@
         margin: 50px;
     }
 
-    img {
+    .profile-pic {
         border-radius: 50%;
         height: 125px;
         width: 125px;
@@ -339,79 +316,18 @@
         -ms-transform: rotate(45deg);
         transform: rotate(45deg);
     }
+
+    ul {
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+
+    .thumbnail {
+        width: 150px;
+    }
 </style>
 
 <body>
-    <!-- change name box -->
-    <div id="change-name" class="change-info-card" style="visibility: hidden;">
-        <ion-icon name="person-outline" size="large"></ion-icon>
-        <h1>Name</h1>
-        <form>
-            <input type="text" placeholder="Enter new first name.">
-            <input type="text" placeholder="Enter new last name.">
-        </form>
-        <div class="close" onclick="document.getElementById('change-name').style.visibility = 'hidden'">
-            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
-        </div>
-    </div>
-
-    <!-- change user ID box -->
-    <div id="change-uid" class="change-info-card" style="visibility: hidden;">
-        <ion-icon name="id-card-outline" size="large"></ion-icon>
-        <h1>User ID</h1>
-        <form>
-            <input type="text" placeholder="Enter new user ID.">
-        </form>
-        <div class="close" onclick="document.getElementById('change-uid').style.visibility = 'hidden'">
-            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
-        </div>
-    </div>
-
-    <!-- change email box -->
-    <div id="change-email" class="change-info-card" style="visibility: hidden;">
-        <ion-icon name="mail-outline" size="large"></ion-icon>
-        <h1>Email</h1>
-        <form>
-            <input type="text" placeholder="Enter new email.">
-        </form>
-        <div class="close" onclick="document.getElementById('change-email').style.visibility = 'hidden'">
-            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
-        </div>
-    </div>
-
-    <!-- change kasm box -->
-    <div id="change-kasm" class="change-info-card" style="visibility: hidden;">
-        <ion-icon name="server-outline" size="large"></ion-icon>
-        <h1>Kasm</h1>
-        <form>
-            <label class="container-checkbox" style="white-space: nowrap;">I need a Kasm server.
-                <input type="checkbox" checked="checked">
-                <span class="checkmark"></span>
-            </label>
-        </form>
-        <div class="close" onclick="document.getElementById('change-kasm').style.visibility = 'hidden'">
-            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
-        </div>
-    </div>
-
-    <!-- change class box -->
-    <div id="change-class" class="change-info-card" style="visibility: hidden;">
-        <ion-icon name="school-outline" size="large"></ion-icon>
-        <h1>Class Info</h1>
-        <form>
-            <label class="container-checkbox" style="white-space: nowrap;">My class
-                <select id="cars" name="cars">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="fiat">Fiat</option>
-                    <option value="audi">Audi</option>
-                </select>
-            </label>
-        </form>
-        <div class="close" onclick="document.getElementById('change-class').style.visibility = 'hidden'">
-            <ion-icon name="close-outline" size="large" class="close"></ion-icon>
-        </div>
-    </div>
 
     <!-- change profile pic box -->
     <div id="change-pfp" class="change-info-card" style="visibility: hidden;">
@@ -431,17 +347,17 @@
     </div>
 
 
-    <div class="container" id="main-content-container">
+    <div class="container">
         <!-- the sidebar on the left with the links -->
         <div class="sidebar">
-            <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt="">
+            <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt=""
+                class="profile-pic">
             <h1>Welcome, Aashray</h1>
             <h3>Profile Settings</h3>
             <h3 style="color: #0071e3">Student Toolkit</h3>
             <h3>Calendar</h3>
         </div>
 
-        <!-- student toolkit list -->
         <div class="main-info">
             <!-- the info header at the top of the page -->
             <div class="header">
@@ -449,69 +365,103 @@
                 <p>Access all student toolkits here.</p>
             </div>
 
-            <!-- name card -->
-            <div class="name-info card" onclick="document.getElementById('change-name').style.visibility = 'visible'">
-                <div class="name-details">
-                    <h3>Name</h3>
-                    <p>Aashray</p>
+            <!-- bathroom -->
+            <div class="bathroom card">
+                <div class="bathroom-details">
+                    <h3>Bathroom</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>Add yourself to a queue to go to the bathroom</li>
+                        <li>Track how many people have already left the class to go to the bathroom</li>
+                        <li>Report issues with any bathroom</li>
+                        <li>Track your bathroom statistics</li>
+                    </ul>
                 </div>
-                <div class="name-icon">
-                    <ion-icon name="person-outline" size="large"></ion-icon>
-                </div>
-            </div>
-
-            <!-- uid card -->
-            <div class="uid-info card" onclick="document.getElementById('change-uid').style.visibility = 'visible'">
-                <div class="uid-details">
-                    <h3>User ID</h3>
-                    <p>KinetekEnergy</p>
-                </div>
-                <div class="uid-icon">
-                    <ion-icon name="id-card-outline" size="large"></ion-icon>
+                <div class="bathroom-thumbnail">
+                    <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt=""
+                        class="thumbnail">
                 </div>
             </div>
 
-            <!-- email card -->
-            <div class="email-info card" onclick="document.getElementById('change-email').style.visibility = 'visible'">
-                <div class="email-details">
-                    <h3>Email</h3>
-                    <p>transyt8@gmail.com</p>
+            <!-- screen queue -->
+            <div class="screen-queue card">
+                <div class="screen-queue-details">
+                    <h3>Screen Queue</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>Add yourself to a queue to present to the teacher</li>
+                        <li>Track who is not waiting to go to present</li>
+                        <li>Track who is waiting to go to present</li>
+                        <li>Track who has already presented</li>
+                    </ul>
                 </div>
-                <div class="email-icon">
-                    <ion-icon name="mail-outline" size="large"></ion-icon>
-                </div>
-            </div>
-
-            <!-- kasm card -->
-            <div class="kasm-info card" onclick="document.getElementById('change-kasm').style.visibility = 'visible'">
-                <div class="kasm-details">
-                    <h3>Kasm</h3>
-                    <p>Kasm Disabled</p>
-                </div>
-                <div class="kasm-icon">
-                    <ion-icon name="server-outline" size="large"></ion-icon>
+                <div class="screen-queue-thumbnail">
+                    <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt=""
+                        class="thumbnail">
                 </div>
             </div>
 
-            <!-- class card -->
-            <div class="class-info card" onclick="document.getElementById('change-class').style.visibility = 'visible'">
-                <div class="class-details">
-                    <h3>Class Info</h3>
-                    <p>CSA 2025</p>
+            <!-- assignment submissions -->
+            <div class="assignment-submissions card">
+                <div class="assignment-submissions-details">
+                    <h3>Assignment Submissions</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>Submit an assignment directly to the teacher</li>
+                        <li>Write special comments on your assignment submission</li>
+                    </ul>
                 </div>
-                <div class="class-icon">
-                    <ion-icon name="school-outline" size="large"></ion-icon>
+                <div class="assignment-submissions-thumbnail">
+                    <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt=""
+                        class="thumbnail">
                 </div>
             </div>
 
-            <!-- pfp card -->
-            <div class="pfp-info card" onclick="document.getElementById('change-pfp').style.visibility = 'visible'">
-                <div class="pfp-details">
-                    <h3>Profile Picture</h3>
-                    <p>Click to change or add your profile picture.</p>
+            <!-- seed tracker -->
+            <div class="seed-tracker card">
+                <div class="seed-tracker-details">
+                    <h3>Seed Tracker</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>Request seed</li>
+                    </ul>
                 </div>
-                <div class="pfp-icon">
-                    <ion-icon name="image-outline" size="large"></ion-icon>
+                <div class="seed-tracker-thumbnail">
+                    <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt=""
+                        class="thumbnail">
+                </div>
+            </div>
+
+            <!-- sagai -->
+            <div class="sagai card">
+                <div class="sagai-details">
+                    <h3>SAGAI</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>Use AI to grade your work</li>
+                        <li>Use AI to generate hacks based on a topic or other set of instructions</li>
+                        <li>Ask an AI to answer questions you have</li>
+                        <li>Manage assignments</li>
+                    </ul>
+                </div>
+                <div class="sagai-thumbnail">
+                    <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt=""
+                        class="thumbnail">
+                </div>
+            </div>
+
+            <!-- grade viewer -->
+            <div class="view-grades card">
+                <div class="view-grades-details">
+                    <h3>View Grades</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>View your grades per assignment</li>
+                    </ul>
+                </div>
+                <div class="view-grades-thumbnail">
+                    <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt=""
+                        class="thumbnail">
                 </div>
             </div>
         </div>
