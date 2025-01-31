@@ -8,10 +8,12 @@
 </head>
 
 <style>
+    /* GRID STUFF =========================== */
     .container {
         display: grid;
         grid-template-columns: auto 1fr;
         grid-template-rows: 1fr;
+        grid-auto-columns: 1fr;
         gap: 0px 50px;
         grid-auto-flow: row;
         grid-template-areas:
@@ -24,15 +26,18 @@
 
     .main-info {
         display: grid;
-        grid-template-columns: 500px 500px;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
-        gap: 30px 30px;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
         grid-auto-flow: row;
         grid-template-areas:
-            "header header"
-            "name-info uid-info"
-            "email-info kasm-info"
-            "class-info pfp-info";
+            "header"
+            "bathroom"
+            "screen-queue"
+            "assignment-submissions"
+            "seed-tracker"
+            "sagai"
+            "view-grades";
         grid-area: main-info;
     }
 
@@ -40,119 +45,121 @@
         grid-area: header;
     }
 
-    .name-info {
+    .bathroom {
         display: grid;
-        grid-template-columns: 1fr max-content;
+        grid-template-columns: 150px 1fr;
         grid-template-rows: 1fr;
         gap: 0px 0px;
         grid-auto-flow: row;
         grid-template-areas:
-            "name-details name-icon";
-        grid-area: name-info;
+            "bathroom-thumbnail bathroom-details";
+        grid-area: bathroom;
     }
 
-    .name-details {
-        grid-area: name-details;
+    .bathroom-details {
+        grid-area: bathroom-details;
     }
 
-    .name-icon {
-        grid-area: name-icon;
+    .bathroom-thumbnail {
+        grid-area: bathroom-thumbnail;
     }
 
-    .uid-info {
+    .screen-queue {
         display: grid;
-        grid-template-columns: 1fr min-content;
+        grid-template-columns: 150px 1fr;
         grid-template-rows: 1fr;
         gap: 0px 0px;
         grid-auto-flow: row;
         grid-template-areas:
-            "uid-details uid-icon";
-        grid-area: uid-info;
+            "screen-queue-thumbnail screen-queue-details";
+        grid-area: screen-queue;
     }
 
-    .uid-details {
-        grid-area: uid-details;
+    .screen-queue-details {
+        grid-area: screen-queue-details;
     }
 
-    .uid-icon {
-        grid-area: uid-icon;
+    .screen-queue-thumbnail {
+        grid-area: screen-queue-thumbnail;
     }
 
-    .email-info {
+    .assignment-submissions {
         display: grid;
-        grid-template-columns: 1fr min-content;
+        grid-template-columns: 150px 1fr;
         grid-template-rows: 1fr;
         gap: 0px 0px;
         grid-auto-flow: row;
         grid-template-areas:
-            "email-details email-icon";
-        grid-area: email-info;
+            "assignment-submissions-thumbnail assignment-submissions-details";
+        grid-area: assignment-submissions;
     }
 
-    .email-details {
-        grid-area: email-details;
+    .assignment-submissions-details {
+        grid-area: assignment-submissions-details;
     }
 
-    .email-icon {
-        grid-area: email-icon;
+    .assignment-submissions-thumbnail {
+        grid-area: assignment-submissions-thumbnail;
     }
 
-    .kasm-info {
+    .seed-tracker {
         display: grid;
-        grid-template-columns: 1fr min-content;
+        grid-template-columns: 150px 1fr;
         grid-template-rows: 1fr;
         gap: 0px 0px;
         grid-auto-flow: row;
         grid-template-areas:
-            "kasm-details kasm-icon";
-        grid-area: kasm-info;
+            "seed-tracker-thumbnail seed-tracker-details";
+        grid-area: seed-tracker;
     }
 
-    .kasm-details {
-        grid-area: kasm-details;
+    .seed-tracker-details {
+        grid-area: seed-tracker-details;
     }
 
-    .kasm-icon {
-        grid-area: kasm-icon;
+    .seed-tracker-thumbnail {
+        grid-area: seed-tracker-thumbnail;
     }
 
-    .class-info {
+    .sagai {
         display: grid;
-        grid-template-columns: 1fr min-content;
+        grid-template-columns: 150px 1fr;
         grid-template-rows: 1fr;
         gap: 0px 0px;
         grid-auto-flow: row;
         grid-template-areas:
-            "class-details class-icon";
-        grid-area: class-info;
+            "sagai-thumbnail sagai-details";
+        grid-area: sagai;
     }
 
-    .class-details {
-        grid-area: class-details;
+    .sagai-details {
+        grid-area: sagai-details;
     }
 
-    .class-icon {
-        grid-area: class-icon;
+    .sagai-thumbnail {
+        grid-area: sagai-thumbnail;
     }
 
-    .pfp-info {
+    .view-grades {
         display: grid;
-        grid-template-columns: 1fr min-content;
+        grid-template-columns: 150px 1fr;
         grid-template-rows: 1fr;
         gap: 0px 0px;
         grid-auto-flow: row;
         grid-template-areas:
-            "pfp-details pfp-icon";
-        grid-area: pfp-info;
+            "view-grades-thumbnail view-grades-details";
+        grid-area: view-grades;
     }
 
-    .pfp-details {
-        grid-area: pfp-details;
+    .view-grades-details {
+        grid-area: view-grades-details;
     }
 
-    .pfp-icon {
-        grid-area: pfp-icon;
+    .view-grades-thumbnail {
+        grid-area: view-grades-thumbnail;
     }
+
+    /* CARD STUFF =========================== */
 
     .card {
         /* colors */
@@ -205,6 +212,7 @@
         z-index: 999;
     }
 
+    /* TYPOGRAPHY STUFF ================= */
     h3 {
         margin-top: 0px;
         padding-top: 0px;
@@ -214,6 +222,7 @@
         white-space: nowrap;
     }
 
+    /* OTHER STUFF ====================== */
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: #111111;
@@ -427,18 +436,17 @@
         <div class="sidebar">
             <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt="">
             <h1>Welcome, Aashray</h1>
-            <h3 style="color: #0071e3">Profile Settings</h3>
-            <h3>Student Toolkit</h3>
+            <h3>Profile Settings</h3>
+            <h3 style="color: #0071e3">Student Toolkit</h3>
             <h3>Calendar</h3>
         </div>
 
-        <!-- your personal information -->
+        <!-- student toolkit list -->
         <div class="main-info">
             <!-- the info header at the top of the page -->
             <div class="header">
-                <h1>Personal Information</h1>
-                <p>Manage your personal information, including name, user ID, email, class specific information, and
-                    more.</p>
+                <h1>Student Toolkit</h1>
+                <p>Access all student toolkits here.</p>
             </div>
 
             <!-- name card -->
