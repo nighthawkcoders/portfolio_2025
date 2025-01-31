@@ -6,12 +6,11 @@ type: ccc
 permalink: /project/mort-translator/student-tracker
 ---
 
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Weekly Project Page</title>
+    <title>Student Project Submission</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,7 +18,7 @@ permalink: /project/mort-translator/student-tracker
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 300vh;
+            height: 100vh;
             margin: 20px;
         }
         .container {
@@ -49,7 +48,6 @@ permalink: /project/mort-translator/student-tracker
             display: block;
         }
         .form-group input,
-        .form-group textarea,
         .form-group button {
             width: 100%;
             padding: 15px;
@@ -58,10 +56,6 @@ permalink: /project/mort-translator/student-tracker
             border: 1px solid #ddd;
             border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .form-group textarea {
-            resize: vertical;
-            min-height: 150px;
         }
         .form-group button {
             background-color: #4CAF50;
@@ -96,14 +90,10 @@ permalink: /project/mort-translator/student-tracker
 </head>
 <body>
 <div class="container">
-    <h1>Weekly Project Submission</h1>
+    <h1>Project Submission</h1>
     <div class="form-group">
         <label for="studentName">Student Name</label>
         <input type="text" id="studentName" placeholder="Enter your name" required>
-    </div>
-    <div class="form-group">
-        <label for="activityLog">Weekly Activity Log</label>
-        <textarea id="activityLog" rows="4" placeholder="Describe what you did this week..." required></textarea>
     </div>
     <div class="form-group">
         <label for="gradeRequest">Requested Grade (Seed)</label>
@@ -123,18 +113,18 @@ permalink: /project/mort-translator/student-tracker
 
     async function submitEntry() {
         const studentName = document.getElementById('studentName').value;
-        const activityLog = document.getElementById('activityLog').value;
         const gradeRequest = document.getElementById('gradeRequest').value;
         const messageElement = document.getElementById('message');
 
-        if (!studentName || !activityLog) {
-            messageElement.textContent = "Please fill in all fields before submitting.";
+        if (!studentName) {
+            messageElement.textContent = "Please enter your name before submitting.";
             return;
         }
 
+        // check that this matches an ID in the database 
+
         const entryData = {
             name: studentName,
-            comment: activityLog,
             grade: parseFloat(gradeRequest)
         };
 
@@ -156,13 +146,6 @@ permalink: /project/mort-translator/student-tracker
             console.error("Submission error:", error);
         }
     }
-
-    document.getElementById('activityLog').addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            submitEntry();
-        }
-    });
 </script>
 </body>
 </html>
