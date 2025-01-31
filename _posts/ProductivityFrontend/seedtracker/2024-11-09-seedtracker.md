@@ -6,6 +6,7 @@ type: ccc
 permalink: /project/mort-translator/student-tracker
 ---
 
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,92 +15,82 @@ permalink: /project/mort-translator/student-tracker
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f7fa;
+            background-color: #F9F9F9;
             display: flex;
-            align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
+            align-items: center;
+            height: 300vh;
+            margin: 20px;
         }
         .container {
-            background-color: #ffffff;
-            padding: 25px;
+            background-color: #000000;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-            max-width: 450px;
-            width: 100%;
-            text-align: center;
+            animation: moving-glow 2s infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 600px;
+            max-width: 100%;
         }
-        .container h1 {
-            font-size: 26px;
+        h1 {
+            font-size: 28px;
+            color: white;
             margin-bottom: 20px;
-            color: #374785;
         }
         .form-group {
-            margin-bottom: 18px;
-            text-align: left;
+            width: 100%;
+            margin-bottom: 12px;
         }
         .form-group label {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 5px;
             display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #24305e;
         }
         .form-group input,
         .form-group textarea,
         .form-group button {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
+            font-size: 18px;
+            margin: 12px 0;
             border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .form-group textarea {
             resize: vertical;
+            min-height: 150px;
         }
         .form-group button {
-            background-color: #ff6b6b;
-            color: #ffffff;
-            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
             font-weight: bold;
-            font-size: 16px;
+            cursor: pointer;
             transition: background-color 0.3s;
             border: none;
         }
         .form-group button:hover {
-            background-color: #ff4b4b;
-        }
-        .form-group input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        .form-group input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #374785;
-            cursor: pointer;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-        }
-        .form-group input[type="range"]::-webkit-slider-runnable-track {
-            height: 5px;
-            border-radius: 3px;
-            background: #d3d3d3;
+            background-color: #45A049;
         }
         .range-value {
             font-weight: bold;
             font-size: 18px;
-            color: #ff6b6b;
+            color: #00FFA2;
             text-align: center;
             margin-top: 8px;
         }
-        .message {
-            font-size: 14px;
-            color: #374785;
-            margin-top: 15px;
+        @keyframes moving-glow {
+            0% {
+                box-shadow: 0 0 10px rgba(81, 0, 255, 0.8);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(81, 0, 255, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 10px rgba(81, 0, 255, 0.8);
+            }
         }
     </style>
 </head>
@@ -122,7 +113,7 @@ permalink: /project/mort-translator/student-tracker
     <div class="form-group">
         <button onclick="submitEntry()">Submit Entry</button>
     </div>
-    <div class="message" id="message"></div>
+    <div class="range-value" id="message"></div>
 </div>
 
 <script>
@@ -136,13 +127,11 @@ permalink: /project/mort-translator/student-tracker
         const gradeRequest = document.getElementById('gradeRequest').value;
         const messageElement = document.getElementById('message');
 
-        // Data validation
         if (!studentName || !activityLog) {
             messageElement.textContent = "Please fill in all fields before submitting.";
             return;
         }
 
-        // Preparing the data for submission
         const entryData = {
             name: studentName,
             comment: activityLog,
@@ -150,18 +139,15 @@ permalink: /project/mort-translator/student-tracker
         };
 
         try {
-            // Post data to the backend
             const response = await fetch('http://localhost:8085/api/grades/requests/seed', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(entryData)
             });
 
-            // Check if the submission was successful
             if (response.ok) {
                 const result = await response.json();
-                const generatedId = result.id;  // Backend-generated ID
-                messageElement.textContent = `Entry submitted successfully! Your Entry ID is: ${generatedId}`;
+                messageElement.textContent = `Entry submitted successfully! Your Entry ID is: ${result.id}`;
             } else {
                 throw new Error("Failed to submit entry");
             }
@@ -171,14 +157,12 @@ permalink: /project/mort-translator/student-tracker
         }
     }
 
-    // Adding event listener to submit on pressing "Enter"
     document.getElementById('activityLog').addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent the Enter key from creating a new line
+            event.preventDefault();
             submitEntry();
         }
     });
 </script>
-
 </body>
 </html>
