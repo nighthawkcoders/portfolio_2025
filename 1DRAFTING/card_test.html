@@ -332,7 +332,7 @@
     }
 
     /* SIDEBAR LINK STYLES */
-    ul {
+    .sidebar ul {
         display: flex;
         flex-direction: column;
         align-items: start;
@@ -340,7 +340,7 @@
         padding-left: 0px;
     }
 
-    ul li a {
+    .sidebar ul li a {
         position: relative;
         display: block;
         padding: 4px 0;
@@ -351,7 +351,7 @@
         font-weight: bolder;
     }
 
-    ul li a::after {
+    .sidebar ul li a::after {
         position: absolute;
         content: "";
         top: 100%;
@@ -364,16 +364,16 @@
         transition: transform 0.5s;
     }
 
-    ul li a:hover {
+    .sidebar ul li a:hover {
         color: #95a5a6;
     }
 
-    ul li a:hover::after {
+    .sidebar ul li a:hover::after {
         transform: scaleX(1);
         transform-origin: left;
     }
 
-    .active-tab {
+    .sidebar .active-tab {
         color: #0071e3;
     }
 </style>
@@ -483,13 +483,16 @@
             <!-- nav links -->
             <ul>
                 <li>
-                    <h3><a href="#" class="active-tab">Profile Settings</a></h3>
+                    <h3><a href="card_test.html" class="active-tab">Profile Settings</a></h3>
                 </li>
                 <li>
-                    <h3><a href="#">Student Toolkit</a></h3>
+                    <h3><a href="student_toolkit_test.html">Student Toolkit</a></h3>
                 </li>
                 <li>
                     <h3><a href="#">Calendar</a></h3>
+                </li>
+                <li>
+                    <h3><a href="#">Sign Out</a></h3>
                 </li>
             </ul>
         </div>
