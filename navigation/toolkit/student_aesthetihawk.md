@@ -1,0 +1,623 @@
+---
+permalink: /student_aesthetihawk
+---
+
+<style>
+    /* GRID STUFF =========================== */
+    .container {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: 1fr;
+        grid-auto-columns: 1fr;
+        gap: 0px 50px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "sidebar main-info";
+    }
+
+    .sidebar {
+        grid-area: sidebar;
+    }
+
+    .main-info {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto auto auto;
+        gap: 30px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "header"
+            "bathroom"
+            "screen-queue"
+            "assignment-submissions"
+            "seed-tracker"
+            "sagai"
+            "view-grades";
+        grid-area: main-info;
+    }
+
+    .header {
+        grid-area: header;
+    }
+
+    .bathroom {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "bathroom-thumbnail bathroom-details";
+        grid-area: bathroom;
+    }
+
+    .bathroom-details {
+        grid-area: bathroom-details;
+        padding: 30px;
+    }
+
+    .bathroom-thumbnail {
+        grid-area: bathroom-thumbnail;
+    }
+
+    .screen-queue {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "screen-queue-thumbnail screen-queue-details";
+        grid-area: screen-queue;
+    }
+
+    .screen-queue-details {
+        grid-area: screen-queue-details;
+        padding: 30px;
+    }
+
+    .screen-queue-thumbnail {
+        grid-area: screen-queue-thumbnail;
+    }
+
+    .assignment-submissions {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "assignment-submissions-thumbnail assignment-submissions-details";
+        grid-area: assignment-submissions;
+    }
+
+    .assignment-submissions-details {
+        grid-area: assignment-submissions-details;
+        padding: 30px;
+    }
+
+    .assignment-submissions-thumbnail {
+        grid-area: assignment-submissions-thumbnail;
+    }
+
+    .seed-tracker {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "seed-tracker-thumbnail seed-tracker-details";
+        grid-area: seed-tracker;
+    }
+
+    .seed-tracker-details {
+        grid-area: seed-tracker-details;
+        padding: 30px;
+    }
+
+    .seed-tracker-thumbnail {
+        grid-area: seed-tracker-thumbnail;
+    }
+
+    .sagai {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "sagai-thumbnail sagai-details";
+        grid-area: sagai;
+    }
+
+    .sagai-details {
+        grid-area: sagai-details;
+        padding: 30px;
+    }
+
+    .sagai-thumbnail {
+        grid-area: sagai-thumbnail;
+    }
+
+    .view-grades {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "view-grades-thumbnail view-grades-details";
+        grid-area: view-grades;
+    }
+
+    .view-grades-details {
+        grid-area: view-grades-details;
+        padding: 30px;
+    }
+
+    .view-grades-thumbnail {
+        grid-area: view-grades-thumbnail;
+    }
+
+    /* CARD STUFF =========================== */
+
+    .card {
+        /* colors */
+        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* sizing */
+        box-sizing: border-box;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+
+        /* other */
+        cursor: pointer;
+        transition: transform ease-in-out 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+    }
+
+    /* TYPOGRAPHY STUFF ================= */
+    h3 {
+        margin-top: 0px;
+        padding-top: 0px;
+    }
+
+    h1 {
+        white-space: nowrap;
+    }
+
+    /* OTHER STUFF ====================== */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #111111;
+        color: white;
+
+        /* delete later */
+        margin: 50px;
+    }
+
+    .profile-pic {
+        border-radius: 50%;
+        height: 125px;
+        width: 125px;
+    }
+
+    input {
+        /* colors */
+        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
+        color: white;
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* spacing */
+        padding: 15px;
+        margin: 10px;
+
+        /* other */
+        font-size: large;
+    }
+
+    .close {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+
+        cursor: pointer;
+    }
+
+    .dim {
+        box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .3);
+        pointer-events: none;
+    }
+
+    /* CHECKBOX STUFF ================================ */
+    /* The container-checkbox */
+    .container-checkbox {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Hide the browser's default checkbox */
+    .container-checkbox input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 5px;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container-checkbox:hover input~.checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .container-checkbox input:checked~.checkmark {
+        background-color: #2196F3;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container-checkbox input:checked~.checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container-checkbox .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    ul.info {
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+
+    .thumbnail {
+        width: 150px;
+    }
+
+    /* SIDEBAR LINK STYLES */
+    .sidebar ul {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    .sidebar ul li a {
+        position: relative;
+        display: block;
+        padding: 4px 0;
+        font-family: Lato, sans-serif;
+        color: #ecf0f1;
+        text-decoration: none;
+        transition: 0.5s;
+        font-weight: bolder;
+    }
+
+    .sidebar ul li a::after {
+        position: absolute;
+        content: "";
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: #3498db;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.5s;
+    }
+
+    .sidebar ul li a:hover {
+        color: #95a5a6;
+    }
+
+    .sidebar ul li a:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+
+    .sidebar .active-tab {
+        color: #0071e3;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <!-- the sidebar on the left with the links -->
+        <div class="sidebar">
+            <img src="https://github.com/user-attachments/assets/986d9971-9046-43d1-82d3-71470dc538ca" alt=""
+                class="profile-pic">
+            <h1>Welcome, Aashray</h1>
+            <!-- nav links -->
+            <ul>
+                <!-- these will show if you ARE logged in -->
+                <li id="profile-link">
+                    <h3><a href="card_test.html">Profile Settings</a></h3>
+                </li>
+
+                <li id="student-toolkit-link">
+                    <h3><a href="student_toolkit_test.html" class="active-tab">Student Toolkit</a></h3>
+                </li>
+
+                <li id="teacher-toolkit-link">
+                    <!-- this only shows if you are a teacher (your user has the teacher role) -->
+                    <h3><a href="#">Teacher Toolkit</a></h3>
+                </li>
+
+                <li id="calendar-link">
+                    <h3><a href="{{site.baseurl}}/student/calendar">Calendar</a></h3>
+                </li>
+
+                <li id="sign-out-link">
+                    <h3><a href="{{site.baseurl}}/logoutjava">Sign Out</a></h3>
+                </li>
+
+                <!-- these will show if you're NOT logged in -->
+                <li id="sign-in-link">
+                    <h3><a href="{{site.baseurl}}/toolkit-login">Sign In</a></h3>
+                </li>
+
+                <li id="sign-up-link">
+                    <h3><a href="{{site.baseurl}}/signup">Sign Up</a></h3>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main-info">
+            <!-- the info header at the top of the page -->
+            <div class="header">
+                <h1>Student Toolkit</h1>
+                <p>Access all student toolkits here.</p>
+            </div>
+
+            <!-- bathroom -->
+            <div class="bathroom card">
+                <div class="bathroom-details">
+                    <h3>Bathroom</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>Add yourself to a queue to go to the bathroom</li>
+                        <li>Track how many people have already left the class to go to the bathroom</li>
+                        <li>Report issues with any bathroom</li>
+                        <li>Track your bathroom statistics</li>
+                    </ul>
+                </div>
+                <div class="bathroom-thumbnail">
+                    <img src="{{site.baseurl}}/images/toolkit-nav-buttons/bathroom.png" alt="Bathroom" class="thumbnail">
+                </div>
+            </div>
+
+            <!-- screen queue -->
+            <div class="screen-queue card">
+                <div class="screen-queue-details">
+                    <h3>Screen Queue</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>Add yourself to a queue to present to the teacher</li>
+                        <li>Track who is not waiting to go to present</li>
+                        <li>Track who is waiting to go to present</li>
+                        <li>Track who has already presented</li>
+                    </ul>
+                </div>
+                <div class="screen-queue-thumbnail">
+                    <img src="{{site.baseurl}}/images/toolkit-nav-buttons/group-chat.png" alt="ScreenQueue" class="thumbnail">
+                </div>
+            </div>
+
+            <!-- assignment submissions -->
+            <div class="assignment-submissions card">
+                <div class="assignment-submissions-details">
+                    <h3>Assignment Submissions</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>Submit an assignment directly to the teacher</li>
+                        <li>Write special comments on your assignment submission</li>
+                    </ul>
+                </div>
+                <div class="assignment-submissions-thumbnail">
+                    <img src="{{site.baseurl}}/images/toolkit-nav-buttons/submissions.png" alt="Submissions" class="thumbnail">
+                </div>
+            </div>
+
+            <!-- seed tracker -->
+            <div class="seed-tracker card">
+                <div class="seed-tracker-details">
+                    <h3>Seed Tracker</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>Request seed</li>
+                    </ul>
+                </div>
+                <div class="seed-tracker-thumbnail">
+                    <img src="{{site.baseurl}}/images/toolkit-nav-buttons/seedtracker.png" alt="Seed Tracker" class="thumbnail">
+                </div>
+            </div>
+
+            <!-- sagai -->
+            <div class="sagai card">
+                <div class="sagai-details">
+                    <h3>SAGAI</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>Use AI to grade your work</li>
+                        <li>Use AI to generate hacks based on a topic or other set of instructions</li>
+                        <li>Ask an AI to answer questions you have</li>
+                        <li>Manage assignments</li>
+                    </ul>
+                </div>
+                <div class="sagai-thumbnail">
+                    <img src="{{site.baseurl}}/images/toolkit-nav-buttons/sagai.png" alt="SAGAI" class="thumbnail">
+                </div>
+            </div>
+
+            <!-- grade viewer -->
+            <div class="view-grades card">
+                <div class="view-grades-details">
+                    <h3>View Grades</h3>
+                    <p>This tool lets you:</p>
+                    <ul>
+                        <li>View your grades per assignment</li>
+                    </ul>
+                </div>
+                <div class="view-grades-thumbnail">
+                    <img src="{{site.baseurl}}/images/toolkit-nav-buttons/view-grades.png" alt="view-grades" class="thumbnail">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<!-- icons -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<!-- js tilt feature -->
+<script src="tilt.js"></script>
+
+<!-- link controller (show and hide relevant links depending on the user's login status: logged in or logged out) -->
+<script type="module">
+    // use this to configure the API links depending on if you're running on local host or not
+    import { javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+
+    document.addEventListener('DOMContentLoaded', function () {
+        getCredentialsJavaSimulation()
+            .then(data => {
+                // these only show if you ARE logged in
+                const profileLink = document.getElementById('profile-link');
+                const studentToolkitLink = document.getElementById('student-toolkit-link');
+                const teacherToolkitLink = document.getElementById('teacher-toolkit-link');
+                const calendarLink = document.getElementById('calendar-link');
+                const signOutLink = document.getElementById('sign-out-link');
+
+                // these ones only show if you are NOT logged in
+                const signInLink = document.getElementById('sign-in-link');
+                const signUpLink = document.getElementById('sign-up-link');
+
+                if (data) { // the user is authenticated
+                    // hide sign-in link and sign-up link because the user doesn't need it anymore
+                    signInLink.style.display = 'none';
+                    signUpLink.style.display = 'none';
+
+                    // only when the user is logged in can they access the toolkits
+                    // profileLink.innerHTML = `<a href="{{site.baseurl}}/profilejava">Profile</a>`;
+                    // studentToolkitLink.innerHTML = `<a href="{{site.baseurl}}/student">Student Toolkit</a>`;
+                    // calendarLink.innerHTML = `<a href="{{site.baseurl}}/student/calendar">Calendar</a>`;
+                    profileLink.style.display = 'block'; 
+                    studentToolkitLink.style.display = 'block';
+                    calendarLink.style.display = 'block'; 
+
+                    // if the person who is logged in has the teacher role, display "Teacher Toolkit"
+                    const isTeacher = data.roles.some(role => role.name === 'ROLE_TEACHER');
+                    if (isTeacher) {
+                        // teacherToolkitLink.innerHTML = `<a href="{{site.baseurl}}/teacher">Teacher Toolkit</a>`;
+                        teacherToolkitLink.style.display = 'block';
+                    }
+                    else {
+                        teacherToolkitLink.style.display = 'none';
+                    }
+
+                    // because the user is logged in, show the sign out link
+                    // logoutLink.innerHTML = `<a href="{{site.baseurl}}/logoutjava">Logout of Toolkit</a>`;
+                    signOutLink.style.display = 'block';
+                }
+                else { // user isn't authenticated
+                    // show signup and login links
+                    // signupLink.innerHTML = `<a href="{{site.baseurl}}/signup">Signup for Toolkit</a>`;
+                    // loginLink.innerHTML = `<a href="{{site.baseurl}}/toolkit-login">Login to Toolkit</a>`;
+                    signInLink.style.display = 'block';
+                    signUpLink.style.display = 'block';
+
+                    // hide everything else
+                    profileLink.style.display = 'none';
+                    studentToolkitLink.style.display = 'none';
+                    teacherToolkitLink.style.display = 'none';
+                    calendarLink.style.display = 'none';
+                    signOutLink.style.display = 'none';
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching credentials: ", err);
+            });
+    });
+
+    // this calls the backend and gets the user credentials
+    // it returns the data
+    function getCredentialsJava() {
+        const URL = javaURI + '/api/person/get';
+        return fetch(URL, fetchOptions)
+            .then(response => {
+                if (response.status !== 200) {
+                    console.error("HTTP status code: " + response.status);
+                    return null;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data === null) return null;
+                console.log(data);
+                return data;
+            })
+            .catch(err => {
+                console.error("Fetch error: ", err);
+                return null;
+            });
+    }
+
+    function getCredentialsJavaSimulation() {
+        return true;
+    }
+</script>
