@@ -5,7 +5,6 @@ permalink: /csp/big-idea/p3/3-5-1
 layout: post
 title: 3.5 Booleans; De Morgan's Law (Period 3)
 description: Student led teaching on Booleans. Learn how booleans are used in decision-making with logical operators.
-categories: ['CSP Big Ideas']
 author: Trevor V
 menu: /nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

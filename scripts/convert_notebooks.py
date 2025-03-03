@@ -5,81 +5,66 @@ import os
 import nbformat
 import yaml
 import sys
+import subprocess
+from hashlib import sha256
 
-# Specify the directory where your Jupyter Notebook files are located
+if __name__ == "__main__":
+    from progress_bar import ProgressBar
+else:
+    from scripts.progress_bar import ProgressBar
+
+
 notebook_directory = "_notebooks"
-
-# Specify the destination directory for the converted Markdown files
 destination_directory = "_posts"
+mermaid_output_directory = "assets/mermaid"
 
 def error_cleanup(notebook_file):
-    # Remove the destination file if it exists
     destination_file = os.path.basename(notebook_file).replace(".ipynb", "_IPYNB_2_.md")
     destination_path = os.path.join(destination_directory, destination_file)
+    
     if os.path.exists(destination_path):
         os.remove(destination_path)
 
 def extract_front_matter(notebook_file, cell):
     front_matter = {}
-    
     source = cell.get('source', '')
+    
     if source.startswith('---'):
-        # Extract front matter from source
         try:
             front_matter = yaml.safe_load(source.split('---', 2)[1])
         except yaml.YAMLError as e:
             print(f"Error parsing YAML front matter: {e}")
             error_cleanup(notebook_file)
             sys.exit(1)
-
     return front_matter
 
 def get_relative_output_path(notebook_file):
-    # Calculate the relative path of the notebook file
     relative_path = os.path.relpath(notebook_file, notebook_directory)
-    # Replace the file extension and prepend the subdirectory structure
+    
     markdown_filename = relative_path.replace(".ipynb", "_IPYNB_2_.md")
-    # Construct the full path for the output file
-    destination_path = os.path.join(destination_directory, markdown_filename)
-    return destination_path
+    
+    return os.path.join(destination_directory, markdown_filename)
+
 
 def ensure_directory_exists(path):
-    # Ensure the directory of the given path exists
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    
+
 # Function to convert the notebook to Markdown with front matter
 def convert_notebook_to_markdown_with_front_matter(notebook_file):
-    # Load the notebook file
     with open(notebook_file, 'r', encoding='utf-8') as file:
         notebook = nbformat.read(file, as_version=nbformat.NO_CONVERT)
-        
-        # Extract front matter from the first cell
         front_matter = extract_front_matter(notebook_file, notebook.cells[0])
-        
-        # Remove the first cell from the notebook
         notebook.cells.pop(0)
-        
-        # Convert the notebook to Markdown
+        process_mermaid_cells(notebook)
         exporter = MarkdownExporter()
         markdown, _ = exporter.from_notebook_node(notebook)
-        
-        # Prepend the front matter to the Markdown content
         front_matter_content = "---\n" + "\n".join(f"{key}: {value}" for key, value in front_matter.items()) + "\n---\n\n"
         markdown_with_front_matter = front_matter_content + markdown
-        
-        # Generate the destination Markdown file name by replacing the extension
-        destination_file = os.path.basename(notebook_file).replace(".ipynb", "_IPYNB_2_.md")
-
-        # Generate the destination path including subdirectories
         destination_path = get_relative_output_path(notebook_file)
-        
-        # Ensure the output directory exists
         ensure_directory_exists(destination_path)
-        
-        # Write the converted Markdown file
         with open(destination_path, "w", encoding="utf-8") as file:
             file.write(markdown_with_front_matter)
-            
+
 # Function to convert the Jupyter Notebook files to Markdown
 def convert_single_notebook(notebook_file):
     try:
@@ -90,16 +75,52 @@ def convert_single_notebook(notebook_file):
         sys.exit(1)
 
 def convert_notebooks():
-    # Use recursive glob pattern to find .ipynb files in all subdirectories
     notebook_files = glob.glob(f"{notebook_directory}/**/*.ipynb", recursive=True)
+
+    # create progress bar
+    convertBar = ProgressBar(
+        userInfo="Notebook conversion progress:", total=(len(notebook_files))
+    )
+
     for notebook_file in notebook_files:
         try:
             convert_single_notebook(notebook_file)
+            convertBar.continue_progress()
         except ConversionException as e:
             print(f"Conversion error for {notebook_file}: {str(e)}")
             error_cleanup(notebook_file)
             sys.exit(1)
 
-# Call the function to perform conversions when the script is run directly
+    convertBar.end_progress()
+
+
+# MERMAID STUFF =========
+def ensure_directory_exists(path):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+def convert_mermaid_to_image(mermaid_code):
+    ensure_directory_exists(mermaid_output_directory)
+    mermaid_hash = sha256(mermaid_code.encode()).hexdigest()
+    image_path = os.path.join(mermaid_output_directory, f"{mermaid_hash}.png")
+    
+    if not os.path.exists(image_path):
+        try:
+            process = subprocess.run([
+                "mmdc", "-i", "-", "-o", image_path, "-s", "10"
+            ], input=mermaid_code, text=True, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error converting mermaid diagram: {e}")
+            return None
+    return image_path
+
+def process_mermaid_cells(notebook):
+    for cell in notebook.cells:
+        if cell.cell_type == "markdown" and cell.source.startswith("~~~mermaid"):
+            mermaid_code = cell.source.replace("~~~mermaid", "").replace("~~~", "").strip()
+            image_path = convert_mermaid_to_image(mermaid_code)
+            if image_path:
+                cell.source = f"![Mermaid Diagram](../../../../{image_path})"
+
+
 if __name__ == "__main__":
     convert_notebooks()

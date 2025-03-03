@@ -1,0 +1,434 @@
+---
+title: Student Toolkit
+layout: aesthetihawk
+active_tab: toolkit
+---
+
+<style>
+    .main-info {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto auto auto;
+        gap: 30px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "header"
+            "bathroom"
+            "screen-queue"
+            "assignment-submissions"
+            "seed-tracker"
+            "sagai"
+            "view-grades";
+        grid-area: main-info;
+    }
+
+    .header {
+        grid-area: header;
+    }
+
+    .bathroom {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "bathroom-thumbnail bathroom-details";
+        grid-area: bathroom;
+    }
+
+    .bathroom-details {
+        grid-area: bathroom-details;
+        padding: 30px;
+    }
+
+    .bathroom-thumbnail {
+        grid-area: bathroom-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .screen-queue {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "screen-queue-thumbnail screen-queue-details";
+        grid-area: screen-queue;
+    }
+
+    .screen-queue-details {
+        grid-area: screen-queue-details;
+        padding: 30px;
+    }
+
+    .screen-queue-thumbnail {
+        grid-area: screen-queue-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .assignment-submissions {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "assignment-submissions-thumbnail assignment-submissions-details";
+        grid-area: assignment-submissions;
+    }
+
+    .assignment-submissions-details {
+        grid-area: assignment-submissions-details;
+        padding: 30px;
+    }
+
+    .assignment-submissions-thumbnail {
+        grid-area: assignment-submissions-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .seed-tracker {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "seed-tracker-thumbnail seed-tracker-details";
+        grid-area: seed-tracker;
+    }
+
+    .seed-tracker-details {
+        grid-area: seed-tracker-details;
+        padding: 30px;
+    }
+
+    .seed-tracker-thumbnail {
+        grid-area: seed-tracker-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .sagai {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "sagai-thumbnail sagai-details";
+        grid-area: sagai;
+    }
+
+    .sagai-details {
+        grid-area: sagai-details;
+        padding: 30px;
+    }
+
+    .sagai-thumbnail {
+        grid-area: sagai-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .view-grades {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "view-grades-thumbnail view-grades-details";
+        grid-area: view-grades;
+    }
+
+    .view-grades-details {
+        grid-area: view-grades-details;
+        padding: 30px;
+    }
+
+    .view-grades-thumbnail {
+        grid-area: view-grades-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* CARD STUFF =========================== */
+
+    .card {
+        /* colors */
+        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* sizing */
+        box-sizing: border-box;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+
+        /* other */
+        cursor: pointer;
+        transition: transform ease-in-out 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+    }
+
+    /* OTHER STUFF ====================== */
+    
+
+    input {
+        /* colors */
+        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
+        color: white;
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* spacing */
+        padding: 15px;
+        margin: 10px;
+
+        /* other */
+        font-size: large;
+    }
+
+    .close {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+
+        cursor: pointer;
+    }
+
+    /* CHECKBOX STUFF ================================ */
+    /* The container-checkbox */
+    .container-checkbox {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Hide the browser's default checkbox */
+    .container-checkbox input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 5px;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container-checkbox:hover input~.checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .container-checkbox input:checked~.checkmark {
+        background-color: #2196F3;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container-checkbox input:checked~.checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container-checkbox .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    ul.info {
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+
+    .thumbnail {
+        width: 150px;
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+    }
+</style>
+
+<div class="main-info">
+    <!-- the info header at the top of the page -->
+    <div class="header">
+        <h1>Student Toolkit</h1>
+        <p>Access all student toolkits here.</p>
+    </div>
+
+    <!-- bathroom -->
+    <a href="{{site.baseurl}}/bathroom/">
+        <div class="bathroom card">
+            <div class="bathroom-details">
+                <h3>Bathroom</h3>
+                <p>This tool lets you:</p>
+                <ul>
+                    <li>Add yourself to a queue to go to the bathroom</li>
+                    <li>Track how many people have already left the class to go to the bathroom</li>
+                    <li>Report issues with any bathroom</li>
+                    <li>Track your bathroom statistics</li>
+                </ul>
+            </div>
+            <div class="bathroom-thumbnail">
+                <img src="{{site.baseurl}}/images/toolkit-nav-buttons/bathroom.png" alt="Bathroom"
+                    class="thumbnail">
+            </div>
+        </div>
+    </a>
+
+    <!-- screen queue -->
+    <a href="{{site.baseurl}}/student-toolkit/queue">
+        <div class="screen-queue card">
+            <div class="screen-queue-details">
+                <h3>Screen Queue</h3>
+                <p>This tool lets you:</p>
+                <ul>
+                    <li>Add yourself to a queue to present to the teacher</li>
+                    <li>Track who is not waiting to go to present</li>
+                    <li>Track who is waiting to go to present</li>
+                    <li>Track who has already presented</li>
+                </ul>
+            </div>
+            <div class="screen-queue-thumbnail">
+                <img src="{{site.baseurl}}/images/toolkit-nav-buttons/group-chat.png" alt="ScreenQueue"
+                    class="thumbnail">
+            </div>
+        </div>
+    </a>
+
+    <!-- assignment submissions -->
+    <a href="{{site.baseurl}}/student/submissions/">
+        <div class="assignment-submissions card">
+            <div class="assignment-submissions-details">
+                <h3>Assignment Submissions</h3>
+                <p>This tool lets you:</p>
+                <ul>
+                    <li>Submit an assignment directly to the teacher</li>
+                    <li>Write special comments on your assignment submission</li>
+                </ul>
+            </div>
+            <div class="assignment-submissions-thumbnail">
+                <img src="{{site.baseurl}}/images/toolkit-nav-buttons/submissions.png" alt="Submissions"
+                    class="thumbnail">
+            </div>
+        </div>
+    </a>
+
+    <!-- seed tracker -->
+    <a href="{{site.baseurl}}/student/seedtracker/">
+        <div class="seed-tracker card">
+            <div class="seed-tracker-details">
+                <h3>Seed Tracker</h3>
+                <p>This tool lets you:</p>
+                <ul>
+                    <li>Request seed</li>
+                </ul>
+            </div>
+            <div class="seed-tracker-thumbnail">
+                <img src="{{site.baseurl}}/images/toolkit-nav-buttons/seedtracker.png" alt="Seed Tracker"
+                    class="thumbnail">
+            </div>
+        </div>
+    </a>
+
+    <!-- sagai -->
+    <a href="{{site.baseurl}}/student/TeamTeachToolkit/">
+        <div class="sagai card">
+            <div class="sagai-details">
+                <h3>SAGAI</h3>
+                <p>This tool lets you:</p>
+                <ul>
+                    <li>Use AI to grade your work</li>
+                    <li>Use AI to generate hacks based on a topic or other set of instructions</li>
+                    <li>Ask an AI to answer questions you have</li>
+                    <li>Manage assignments</li>
+                </ul>
+            </div>
+            <div class="sagai-thumbnail">
+                <img src="{{site.baseurl}}/images/toolkit-nav-buttons/sagai.png" alt="SAGAI" class="thumbnail">
+            </div>
+        </div>
+    </a>
+
+    <!-- grade viewer -->
+    <a href="{{site.baseurl}}/student/view-grades">
+        <div class="view-grades card">
+            <div class="view-grades-details">
+                <h3>View Grades</h3>
+                <p>This tool lets you:</p>
+                <ul>
+                    <li>View your grades per assignment</li>
+                </ul>
+            </div>
+            <div class="view-grades-thumbnail">
+                <img src="{{site.baseurl}}/images/toolkit-nav-buttons/view-grades.png" alt="view-grades"
+                    class="thumbnail">
+            </div>
+        </div>
+    </a>
+</div>

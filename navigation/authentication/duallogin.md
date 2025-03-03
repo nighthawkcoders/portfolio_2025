@@ -142,7 +142,7 @@ search_exclude: true
             method: "POST",
             cache: "no-cache",
             body: {
-                email: document.getElementById("uid").value,
+                uid: document.getElementById("uid").value,
                 password: document.getElementById("password").value,
             }
         };

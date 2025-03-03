@@ -5,7 +5,6 @@ layout: post
 permalink: /csp/big-idea/p3/3-3
 title: 3.3 Mathematical Expressions
 description: Student led teaching on  Mathematical Expressions. Learn how mathematical expressions involve using arithmetic operators (like addition, subtraction, multiplication, and division) to perform calculations
-categories: ['CSP Big Ideas']
 author: Trevor V, Wyatt Z, Max G, Johan M, Luke S
 menu: /nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

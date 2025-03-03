@@ -5,7 +5,6 @@ layout: post
 title: 3.4.1 Python Strings
 description: This is  a student-led taught lesson on strings, here you'll learn some major concepts from Big Idea 3
 permalink: /csp/big-idea/p3/3-4-1
-categories: ['CSP Big Ideas']
 author: Ahaan Vaidyanathan, Spencer Lyons, Vasanth Rajasekaran, Xavier Thompson
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

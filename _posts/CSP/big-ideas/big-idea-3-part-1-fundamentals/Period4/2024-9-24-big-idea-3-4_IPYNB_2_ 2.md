@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Lesson 3.4 Strings
-categories: ['Collaboration']
 permalink: /csp/big-idea/p4/3-4
 comments: True
 author: Joanna

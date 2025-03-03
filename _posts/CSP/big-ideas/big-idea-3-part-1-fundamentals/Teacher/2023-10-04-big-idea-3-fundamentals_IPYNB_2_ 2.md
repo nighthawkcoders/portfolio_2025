@@ -4,7 +4,6 @@ title: Big Idea 3 Algo and Prog Fundamentals
 description: An introduction to College Board's Big Idea 3, part one.  This is a collection of Python lessons to help students understand the fundamental algorithm and programming elementes required by College Board's AP Computer Science Principles curriculum.
 toc: False
 comments: False
-categories: ['CSP Big Ideas']
 permalink: /csp/big-idea/fundamentals
 courses: {'csp': {'week': 5}}
 type: collab

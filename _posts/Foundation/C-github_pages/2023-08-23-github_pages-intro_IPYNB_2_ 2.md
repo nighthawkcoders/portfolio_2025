@@ -2,7 +2,7 @@
 layout: post
 title: GitHub Pages Playground
 description: The Web Programming topics are focused on learning Frontend programming, GitHub Pages, and Jupyter Notebooks.
-categories: ['Javascript']
+categories: ['JavaScript']
 permalink: /github/pages/intro
 type: ccc
 courses: {'csse': {'week': 1}, 'csp': {'week': 1}, 'csa': {'week': 0}}

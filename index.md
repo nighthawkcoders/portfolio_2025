@@ -97,9 +97,19 @@ menu: nav/home.html
       this.animate(this.obj["Walk"], 3);
     }
 
+    startWalkingL() {
+      this.stopAnimate();
+      this.animate(this.obj["WalkL"], -3);
+    }
+
     startRunning() {
       this.stopAnimate();
       this.animate(this.obj["Run1"], 6);
+    }
+
+    startRunningL() {
+      this.stopAnimate();
+      this.animate(this.obj["Run1L"], -6);
     }
 
     startPuffing() {
@@ -107,9 +117,19 @@ menu: nav/home.html
       this.animate(this.obj["Puff"], 0);
     }
 
+    startPuffingL() {
+      this.stopAnimate();
+      this.animate(this.obj["PuffL"], 0);
+    }
+
     startCheering() {
       this.stopAnimate();
       this.animate(this.obj["Cheer"], 0);
+    }
+
+    startCheeringL() {
+      this.stopAnimate();
+      this.animate(this.obj["CheerL"], 0);
     }
 
     startFlipping() {
@@ -117,9 +137,19 @@ menu: nav/home.html
       this.animate(this.obj["Flip"], 0);
     }
 
+    startFlippingL() {
+      this.stopAnimate();
+      this.animate(this.obj["FlipL"], 0);
+    }
+
     startResting() {
       this.stopAnimate();
       this.animate(this.obj["Rest"], 0);
+    }
+
+    startRestingL() {
+      this.stopAnimate();
+      this.animate(this.obj["RestL"], 0);
     }
 
     stopAnimate() {
@@ -131,42 +161,64 @@ menu: nav/home.html
 
   ////////// event control /////////
 
+// Add event listener for keydown events
   window.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowRight") {
-      event.preventDefault();
-      if (event.repeat) {
-        mario.startCheering();
-      } else {
-        if (mario.currentSpeed === 0) {
-          mario.startWalking();
-        } else if (mario.currentSpeed === 3) {
-          mario.startRunning();
-        }
+      if (event.key === "ArrowRight" || event.key === "d" || event.key === "D") {
+          event.preventDefault();
+          if (event.repeat) {
+              mario.startCheering();
+          } else {
+              if (mario.currentSpeed === 0) {
+                  mario.startWalking();
+              } else if (mario.currentSpeed === 3) {
+                  mario.startRunning();
+              }
+          }
+      } else if (event.key === "ArrowLeft" || event.key === "a" || event.key === "A") {
+          event.preventDefault();
+          if (event.repeat) {
+              mario.startCheeringL();
+          } else {
+              if (mario.currentSpeed === 0) {
+                  mario.startWalkingL();
+              } else if (mario.currentSpeed === 3) {
+                  mario.startRunningL();
+              }
+          }
+      } else if (event.key === "ArrowUp" || event.key === "w" || event.key === "W") {
+          event.preventDefault();
+          mario.startFlipping();
+      } else if (event.key === "ArrowDown" || event.key === "s" || event.key === "S") {
+          event.preventDefault();
+          mario.startResting();
       }
-    } else if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      if (event.repeat) {
-        mario.stopAnimate();
-      } else {
-        mario.startPuffing();
-      }
-    }
   });
-
-  //touch events that enable animations
+  
+  // Add event listener for touchstart events
   window.addEventListener("touchstart", (event) => {
-    event.preventDefault(); // prevent default browser action
-    if (event.touches[0].clientX > window.innerWidth / 2) {
-      // move right
-      if (currentSpeed === 0) { // if at rest, go to walking
-        mario.startWalking();
-      } else if (currentSpeed === 3) { // if walking, go to running
-        mario.startRunning();
+      event.preventDefault(); // prevent default browser action
+      const touchX = event.touches[0].clientX;
+      const screenWidth = window.innerWidth;
+      const centerThreshold = screenWidth * 0.1; // 10% of the screen width on either side of the center
+
+      if (touchX > screenWidth / 2 + centerThreshold) {
+          // move right
+          if (mario.currentSpeed === 0) {
+              mario.startWalking();
+          } else if (mario.currentSpeed === 3) {
+              mario.startRunning();
+          }
+      } else if (touchX < screenWidth / 2 - centerThreshold) {
+          // move left
+          if (mario.currentSpeed === 0) {
+              mario.startWalkingL();
+          } else if (mario.currentSpeed === 3) {
+              mario.startRunningL();
+          }
+      } else {
+          // touch near the center, make Mario puff
+          mario.startPuffing();
       }
-    } else {
-      // move left
-      mario.startPuffing();
-    }
   });
 
   //stop animation on window blur
@@ -287,4 +339,3 @@ AP Computer Science A is an in-depth course that focuses on programming, algorit
 
 ![csa]({{site.baseurl}}/images/course-brag/csa24.png)
 
-![foundation]({{site.baseurl}}/images/course-brag/foundation.png)

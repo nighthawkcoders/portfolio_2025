@@ -28,7 +28,7 @@
 
 /* Card styling for each name */
 .card {
-    width: 90%;
+    width: 150px;
     margin: 10px 0;
     padding: 10px;
     background-color: #282828;
@@ -39,6 +39,7 @@
 
 /* Timer display */
 .timer {
+    padding-left: 423px;
     margin-top: 20px;
     font-size: 1.5em;
     color: #76ff03;
@@ -46,6 +47,7 @@
 
 /* Button styling */
 .controls {
+    padding-left: 385px;
     margin: auto;
     width: 500px;
     display: flex;

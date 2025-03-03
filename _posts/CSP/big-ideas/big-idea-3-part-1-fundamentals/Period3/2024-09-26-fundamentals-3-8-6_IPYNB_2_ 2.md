@@ -5,7 +5,6 @@ layout: post
 title: 3.8.6 Iterating over a created list using loops
 description: Learn how to iterate over a list.
 permalink: /csp/big-idea/p3/3-8-6
-categories: ['CSP Big Ideas']
 author: Nikhil
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

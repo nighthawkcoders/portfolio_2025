@@ -4,7 +4,6 @@ comments: True
 layout: post
 title: 3.6.3 Simple Python Conditionals
 permalink: /csp/big-idea/p3/3-6-3
-categories: ['CSP Big Ideas']
 author: Zoe, Avika, Rutvik, Jonah, Aarush
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

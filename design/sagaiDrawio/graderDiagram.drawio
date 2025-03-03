@@ -1,0 +1,67 @@
+<mxfile host="65bd71144e">
+    <diagram id="Q4j-bnqEYDqWV0s7E-9s" name="Page-1">
+        <mxGraphModel dx="3990" dy="1567" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="29" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="70" y="90" width="290" height="273" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="ChatterController" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="- restTemplate&lt;br&gt;- objectMapper&lt;br&gt;- MODEL_URL" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="2">
+                    <mxGeometry x="10" y="22" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry y="80" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="+ getInput()&lt;br&gt;+ sendMessage()&lt;br&gt;+ cleanResponse()" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="29">
+                    <mxGeometry y="80" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="RequestBodyData" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry x="160" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="- prompt: String&lt;br&gt;- codeBlock: String" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="9">
+                    <mxGeometry y="32" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="edgeStyle=none;html=1;rounded=0;startArrow=classic;startFill=1;" edge="1" parent="29" source="2" target="9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="RequestPayload" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry x="160" y="100" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="- prompt: String&lt;br&gt;- codeBlock: String" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="12">
+                    <mxGeometry y="32" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="" style="edgeStyle=none;html=1;" edge="1" parent="29" source="9" target="12">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.483;exitY=1.033;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="29" source="8">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="100" y="190" as="sourcePoint"/>
+                        <mxPoint x="58" y="190" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="17" value="RestTemplate" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry y="191" width="125" height="82" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="- clientHyypRequest&lt;br&gt;- interceptors&lt;br&gt;- errorHandler" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="17">
+                    <mxGeometry x="-5" y="22" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="" style="edgeStyle=none;rounded=0;html=1;startArrow=classic;startFill=1;" edge="1" parent="29">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="130" y="234.60606060606062" as="sourcePoint"/>
+                        <mxPoint x="155" y="234.45454545454544" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="24" value="HttpEntity" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="29">
+                    <mxGeometry x="160" y="202.5" width="130" height="59" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="&amp;nbsp;- body: String&lt;br&gt;- headers: HttpHeaders" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="24">
+                    <mxGeometry x="-10" y="19" width="150" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -2,7 +2,7 @@
 layout: post
 title: Setting up utterances
 description: Learn how to set up utterances for your blog. Utterances is a tool that allows you to have comments on your blog posts.
-categories: ['DevOps', 'Github Pages']
+categories: ['DevOps', 'GitHub Pages']
 permalink: /github/pages/utterances
 author: Trevor Huang
 menu: nav/github_pages.html
@@ -11,7 +11,7 @@ comments: True
 ---
 
 ## What is utterances?
-> Utterances is a comments widget built on Github which allows you to comment on blog posts using Github Pages
+> Utterances is a comments widget built on Github which allows you to comment on blog posts using GitHub Pages
 - When you comment on a blog post, utterances will create a GitHub issue in the designated repository to store the comments
 - You need to authenticate with your Github account as this prevents spam
 - If you scroll down to the bottom of a page, you can see if utterances are there or not
@@ -46,6 +46,6 @@ comments: True
 ## Troubleshooting/Common Mistakes
 - Make sure that the category is a hack or a tangible. **Utterances will not automatically work on plans**
     - Use the script above if you want comments on posts such as plans
-- Check if Github Pages is working
+- Check if GitHub Pages is working
     - Go to your repository on Github. Settings -> Pages -> Change deploy from branch to Github Actions
         - If this wasn't done, the website wouldn't exist and utterances would only work on localhost

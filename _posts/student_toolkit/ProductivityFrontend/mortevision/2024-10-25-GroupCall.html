@@ -108,12 +108,12 @@ layout: base
 <h1 id="StreamOfflineHead">Stream Offline</h1>
 <span id="StreamOfflineWitty">Make sure you connect to the stream, or start your own!</span>
 </div>
-<video id="mortStream" autoplay playsinline></video>
+<video id="mortStream" autoplay playsinline muted></video>
 </div>
 
 <div id="streamControl">
-<button alt="Begin Streaming" onclick="streamerInit()" id="broadcastButton"><span class="material-symbols-outlined">podcasts</span></button>
-<button alt="Stop Streaming" onclick="endStream()" style="display:none" id="endBroadcastButton"><span class="material-symbols-outlined" >stop_screen_share</span></button>
-<button alt="Connect To Stream" onclick="consumerInit()"><span class="material-symbols-outlined">play_circle</span></button>
+<button alt="Begin Streaming"  id="broadcastButton" onclick="broadcast()"><span class="material-symbols-outlined">podcasts</span></button>
+<button alt="Stop Streaming" style="display:none" id="endBroadcastButton"><span class="material-symbols-outlined" >stop_screen_share</span></button>
+<button alt="Connect To Stream" onclick="watch()" id="watchButton"><span class="material-symbols-outlined">play_circle</span></button>
 <button alt="Fullscreen" onclick="document.getElementById('mortStream').webkitRequestFullScreen()"><span class="material-symbols-outlined">fullscreen</span></button>
 </div>

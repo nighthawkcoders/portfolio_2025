@@ -5,7 +5,6 @@ layout: post
 title: 3.8.7 Iterating over a list using loops and printing a message
 description: Learn how to iterate over a list/dictionaryand then print a message afterwards.
 permalink: /csp/big-idea/p3/3-8-7
-categories: ['CSP Big Ideas']
 author: Nikhil
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

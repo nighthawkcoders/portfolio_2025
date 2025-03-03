@@ -4,7 +4,6 @@ layout: post
 type: hacks
 title: 3.6 Conditionals Part 1
 escription: Student led teaching on Conditionals.
-categories: ['CSP Big Ideas']
 menu: nav/csp_units/csp_unit3_p5_fundamentals.html
 submenu: lesson3_6
 author: Shriya S

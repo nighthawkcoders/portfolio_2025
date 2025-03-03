@@ -1,5 +1,5 @@
 ---
-layout: none
+layout: base
 permalink: /stocks/home
 title: Stocks Home
 ---
@@ -55,33 +55,36 @@ title: Stocks Home
             width: 70%; /* Increased width for the left side */
         }
         .sidebar {
-            width: 25%; /* Width for the right side */
+            width: 35%; /* Width for the right side */
             display: flex;
             flex-direction: column;
             gap: 20px;
+            justify-content: space-between; 
+            /*left: 50%;*/
+            position: relative; 
+            background-color: #121212; /* Orange hover effect */
+            padding: 20px; /* Add padding to the sidebar */
+            box-sizing: border-box; /* Ensure padding doesn't overflow */
         }
         .stock-table, .your-stocks {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .your-stocks, .stock-table {
-            height: full; /* Height for tables */
+            background-color: #121212; /* Orange hover effect */
+            border-collapse: collapse;
         }
         .stock-table table, .your-stocks table {
             width: 100%;
             border-collapse: collapse;
+            background-color: #121212; /* Orange hover effect */
         }
-        .stock-table table, th, td, .your-stocks table, th, td {
-            border: none; /* Removed the border to make it invisible */
-        }
-        .stock-table th, td, .your-stocks th, td {
+        .stock-table th, .stock-table td, .your-stocks th, .your-stocks td {
             padding: 10px;
             text-align: left;
+            background-color: #121212; /* Orange hover effect */
         }
         .stock-table th, .your-stocks th {
-            background-color: #f2f2f2;
+            background-color: #121212; /* Orange hover effect */
         }
         .welcome {
             font-size: 24px;
@@ -99,8 +102,7 @@ title: Stocks Home
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             flex: 1;
             text-align: center;
-            color: #fff; /* Text color set to white */
-            padding-bottom: -40px;
+            color: #fff;
         }
         .card-orange {
             background-color: #FF8C00; /* Orange color */
@@ -112,10 +114,11 @@ title: Stocks Home
             background-color: #001f3f; /* Dark blue color */
         }
         .card h2 {
-            font-size: 20px;
+            margin-top: 2px; 
+            font-size: 18px;
         }
         .card p {
-            font-size: 36px;
+            font-size: 28px;
             font-weight: bold;
         }
         .chart-container {
@@ -129,9 +132,9 @@ title: Stocks Home
             gap: 20px;
         }
         .chart {
-            height: 100%; /* Set height to 100% to fill the container */
-            width: 100%; /* Set height to 100% to fill the container */
-            background-color: #fff; /* Set the chart background to white */
+            height: 100%; 
+            width: 100%; 
+            background-color: #fff; 
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -141,11 +144,11 @@ title: Stocks Home
             flex: 1;
         }
         .search-container {
-            margin-bottom: 20px; /* Add margin to space it out */
+            margin-bottom: 20px;
             display: flex;
         }
         .search-container input[type="text"] {
-            width: 100%; /* Full width of the graph */
+            width: 100%;
             padding: 12px;
             border: none;
             border-radius: 4px;
@@ -153,219 +156,273 @@ title: Stocks Home
             font-size: 16px;
         }
         .search-button {
-            background-color: #ff8c00; /* Orange color */
+            background-color: #ff8c00; 
             color: #fff;
             border: none;
-            border-radius: 0 4px 4px 0; /* Rounded corners on the right */
+            border-radius: 0 4px 4px 0; 
             padding: 12px 20px;
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
         }
         .search-button:hover {
-            background-color: #e07b00; /* Darker orange on hover */
+            background-color: #e07b00;
         }
-     /* Leaderboard modal styling */
-    #leaderboardModal {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        width: 80%;
-        max-height: 80%;
-        overflow-y: auto;
-        z-index: 1000; /* Ensures modal is above other elements */
-    }
-    /* Semi-transparent background overlay */
-    #modalOverlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 999; /* Ensures overlay is beneath modal */
-    }
-    /* Table styling */
-    #leaderboardTable {
+        /* Crypto History Table */
+    .crypto-history table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 20px;
+        table-layout: fixed;
     }
-    #leaderboardTable th,
-    #leaderboardTable td {
-        text-align: left;
-        padding: 10px;
-        border: 1px solid #ddd;
+    .crypto-history th, .crypto-history td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #444;
+        word-wrap: break-word;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-    #leaderboardTable th {
-        background-color: #f8f8f8;
+    .crypto-history th {
+        background-color: #222;
         font-weight: bold;
-        text-align: left; /* Align headers to the left by default */
     }
-    #leaderboardTable tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-    #leaderboardTable tr:hover {
-        background-color: #f1f1f1;
-    }
-    /* Close button styling */
-    #closeLeaderboardButton {
-        display: block;
-        margin: 20px auto 0;
-        padding: 10px 20px;
-        background-color: #00274d;
-        color: #fff;
+    /* Even Column Spacing */
+    .crypto-history td:first-child { width: 20%; }
+    .crypto-history td:nth-child(2) { width: 30%; }
+    .crypto-history td:nth-child(3) { width: 25%; }
+    .crypto-history td:nth-child(4) { width: 25%; }
+    /* View Full History Button */
+    .view-full-history-btn {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        background-color: #444;
+        color: white;
         border: none;
-        border-radius: 5px;
         cursor: pointer;
         text-align: center;
         font-size: 16px;
+        border-radius: 5px;
     }
-    #closeLeaderboardButton:hover {
-        background-color: #004080;
+    .view-full-history-btn:hover {
+        background-color: #666;
     }
-</style>
+    /* Modal Styling */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        overflow: auto;
+    }
+    .modal-content {
+        background-color: #121212;
+        color: white;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    /* Close Button */
+    .close {
+        color: white;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .close:hover {
+        color: red;
+    }
+    /* Modal Table */
+    .modal table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .modal th, .modal td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #444;
+    }
+    .modal th {
+        background-color: #333;
+        font-weight: bold;
+    }
+    .crypto-chart-container {
+    background-color: #121212;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    }
+    .crypto-chart-container h3 {
+        color: white;
+        margin-bottom: 10px;
+    }
+    /* 🔹 Crypto Chart Container */
+    .crypto-chart-container {
+        width: 100%; /* Ensures it doesn't overflow */
+        max-width: 700px; /* Limits the chart width */
+        height: 400px; /* Set a reasonable height */
+        margin: 0 auto; /* Centers the chart */
+        padding: 10px;
+        background-color: #121212;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    /* 🔹 Chart Canvas */
+    #cryptoBalanceChart {
+        width: 100% !important;
+        height: 100% !important;
+    }
 
+    </style>
+</head>
 <body>
-    <!-- Leaderboard Modal -->
-    <div id="leaderboardModal">
-        <h3 style="font-family: Arial, sans-serif; font-size: 24px;">Leaderboard</h3>
-        <hr style="margin: 10px 0; border: 1px solid black;">
-        <table id="leaderboardTable">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Username</th>
-                    <th>Total Portfolio Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="3" style="text-align: center;">Loading...</td>
-                </tr>
-            </tbody>
-        </table>
-        <button id="closeLeaderboardButton">Close</button>
-    </div>
-    <div id="modalOverlay"></div>
-<!-- Navigation Bar -->
-<nav class="navbar">
-    <div class="logo">NITD</div>
-    <div class="nav-buttons">
-        <a href="{{site.baseurl}}/stocks/home">Home</a>
-        <a href="{{site.baseurl}}/crypto/portfolio">Crypto</a>
-        <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
-        <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
-        <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
-        <a href="{{site.baseurl}}/stocks/leaderboard">Leaderboard</a>
-    </div>
-</nav>
-    <!-- Dashboard Content   -->
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+          <div class="nav-buttons">
+            <a href="{{site.baseurl}}/stocks/home">Home</a>
+            <a href="{{site.baseurl}}/crypto/portfolio">Crypto</a>
+            <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
+            <a href="{{site.baseurl}}/crypto/mining">Mining</a>
+            <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
+            <a href="{{site.baseurl}}/stocks/leaderboard">Leaderboard</a>
+            <a href="{{site.baseurl}}/stocks/game">Game</a>
+            <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
+
+        </div>
+    </nav>
+    <!-- Dashboard -->
     <div class="dashboard">
         <div class="dashboard-content">
-            <h1 id="userIDName" class="welcome">Hi Rafael, Welcome Back</h1>
-            <p>Invest your money with small risk!</p>
-            <div class="summary-cards">
-                <div class="card card-orange">
-                    <h2>Today's Dollar Change</h2>
-                    <p id="totalGain">NA</p>
-                </div>
-                <div class="card card-purple">
-                    <h2>Today's Percent Change</h2>
-                    <p id="percentIncrease">NA</p>
-                </div>
-                <div class="card card-darkblue">
-                    <h2>Revenue Return</h2>
-                    <p id="portfolioValue">NA</p>
-                </div>
-            </div>
+            <h1 id="userIDName" class="welcome">Hi, Welcome Back</h1>
+            <p>Invest your money today!</p>
             <div class="search-container">
-               <input type="text" id="searchBar" placeholder="Search...">
-               <button class="search-button" onclick="getStockData()">Search</button>
+                <input type="text" id="searchBar" placeholder="Search...">
+                <button class="search-button" onclick="getStockData()">Search</button>
             </div>
             <div class="chart-container" id="chartContainer">
                 <div class="chart" id="chart1">
                     <canvas id="stockChart" width="475" height="375">[Graph Placeholder]</canvas>
                 </div>
             </div>
+            <div class="crypto-chart-container">
+                <h3> Portfolio Balance History</h3>
+                <canvas id="cryptoBalanceChart"></canvas>
+            </div>
             <div id="output" style="color: red; padding-top: 10px;"></div>
         </div>
         <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="your-stocks">
-                <h3>Your Stocks</h3>
-                <table id="yourStocksTable">
-                    <tr>
-                        <th>Stock</th>
-                        <th>Price</th>
-                    </tr>
-                </table>
-            </div>
-            <div class="stock-table">
-                <h3>Stock Prices</h3>
-                <table>
-                    <tr>
-                        <th>Stock</th>
-                        <th>Price</th>
-                    </tr>
-                    <tr>
-                        <td>Spotify</td>
-                        <td id="SpotifyPrice">$297,408</td>
-                    </tr>
-                    <tr>
-                        <td>Apple</td>
-                        <td id="ApplePrice">$142,845</td>
-                    </tr>
-                    <tr>
-                        <td>Google</td>
-                        <td id="GooglePrice">$2,823,894</td>
-                    </tr>
-                    <tr>
-                        <td>Facebook</td>
-                        <td id="FacebookPrice">$208,123</td>
-                    </tr>
-                    <tr>
-                        <td>Microsoft</td>
-                        <td id="MicrosoftPrice">$330,456</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+        <!-- Sidebar -->
+<div class="sidebar">
+    <div class="your-stocks">
+        <h3>Your Stocks</h3>
+        <table id="yourStocksTable">
+            <tr>
+                <th>Stock</th>
+                <th>Price</th>
+            </tr>
+        </table>
     </div>
-   <script type="module">
+<div class="crypto-history">
+    <h3>Your Crypto Transaction History</h3>
+    <table id="cryptoHistoryTable">
+        <tr>
+            <th>Type</th>
+            <th>Crypto Amount</th>
+            <th>Dollar Value</th>
+            <th>Timestamp</th>
+        </tr>
+    </table>
+    <button class="view-full-history-btn" onclick="openHistoryModal()">View Full History</button>
+</div>
+
+<!-- Modal for Full History -->
+<div id="historyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeHistoryModal()">&times;</span>
+        <h3>Full Crypto Transaction History</h3>
+        <table id="fullCryptoHistoryTable">
+            <tr>
+                <th>Type</th>
+                <th>Crypto Amount</th>
+                <th>Dollar Value</th>
+                <th>Timestamp</th>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</div>
+
+<script type="module">
     import { pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
-    async function getUserId(){
-        const url_persons = `${javaURI}/api/person/get`;
-        await fetch(url_persons, fetchOptions)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Spring server response: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                userID=data.id;
-            })
-            .catch(error => {
-                console.error("Java Database Error:", error);
-            });
-    }
-    async function getUserStocks() {
+    // Fetch user credentials and update the welcome message
+    async function updateWelcomeMessage() {
         try {
-            const response = await fetch(javaURI + `/stocks/table/getStocks?username=${userID}`);
-            return await response.json();
+            const credentials = await getCredentialsJava();
+            const name = credentials?.name; // Assuming the name is stored in the credentials
+            if (name) {
+                document.getElementById("userIDName").textContent = `Hi ${name}, Welcome Back`;
+            } else {
+                console.error("User name not found in credentials");
+            }
         } catch (error) {
-            console.error("Error fetching user stocks:", error);
-            return [];
+            console.error("Error updating welcome message:", error);
         }
     }
+    // Fetch user credentials
+    async function getCredentialsJava() {
+    const URL = javaURI + '/api/person/get';
+    try {
+        const response = await fetch(URL, fetchOptions);
+        if (response.status !== 200) {
+            console.error("HTTP status code: " + response.status);
+            return null;
+        }
+
+        const data = await response.json();
+        if (!data) return null;
+
+        console.log("User Data:", data);
+
+        // Store user email for later use
+        if (data.email) {
+            localStorage.setItem("userEmail", data.email);
+        }
+
+        return data;
+    } catch (err) {
+        console.error("Fetch error: ", err);
+        return null;
+    }
+}
+
+   async function getUserStocks() {
+    try {
+        const credentials = await getCredentialsJava(); // Get user data
+        const email = credentials?.email; // Extract email
+        if (!email) {
+            throw new Error("User email not found");
+        }
+        const response = await fetch(javaURI + `/stocks/table/getStocks?username=${encodeURIComponent(email)}`);
+        if (!response.ok) {
+            throw new Error(`Error fetching stocks: ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching user stocks:", error);
+        return [];
+    }
+}
     async function updateYourStocksTable() {
         const userStocks = await getUserStocks();
         const table = document.getElementById("yourStocksTable");
@@ -391,10 +448,10 @@ title: Stocks Home
         updateYourStocksTable();
     });
     let stockChart; // Declare stockChart globally
-    async function getStockData() {
-        const stockSymbol = document.getElementById("searchBar").value;
-        document.getElementById("output").textContent = ""; // Clear previous messages
-     try {
+   window.getStockData = async function() {
+    const stockSymbol = document.getElementById("searchBar").value;
+    document.getElementById("output").textContent = ""; // Clear previous messages
+    try {
         const response = await fetch(javaURI + `/api/stocks/${stockSymbol}`);
         const data = await response.json();
         // Extract timestamps and prices
@@ -402,18 +459,17 @@ title: Stocks Home
         const prices = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.close;
         // Check if data exists
         if (timestamps && prices) {
-                // Convert timestamps to readable dates
-                const labels = timestamps.map(ts => new Date(ts * 1000).toLocaleString());
-               displayChart(labels, prices, stockSymbol);
-            } else {
-                console.error(`Data not found for ${stockSymbol}. Response structure:`, data);
-                document.getElementById("output").textContent = `Data not found for ${stockSymbol}.`;
-            }
-        } catch (error) {
-            console.error('Error fetching stock data:', error);
-            document.getElementById("output").textContent = "Error fetching stock data. Please try again later.";
+            // Convert timestamps to readable dates
+            const labels = timestamps.map(ts => new Date(ts * 1000).toLocaleString());
+            displayChart(labels, prices, stockSymbol);
+        } else {
+            document.getElementById("output").textContent = `Data not found for ${stockSymbol}.`;
         }
-}
+    } catch (error) {
+        console.error('Error fetching stock data:', error);
+        document.getElementById("output").textContent = "Error fetching stock data. Please try again later.";
+    }
+};
 function displayChart(labels, prices, tickerSymbol) {
     const ctx = document.getElementById('stockChart').getContext('2d');
     // Destroy the old chart if it exists
@@ -505,8 +561,9 @@ return new Promise((resolve) => {
             }); 
       }
       document.addEventListener("DOMContentLoaded", () => {
+            getCredentialsJava();
             updateStockPrices(); // Call the function after DOM is fully loaded
-            getPortfolioPerformance(userID);
+            getPortfolioPerformance();
             //getUserIdFromAPI();
         });
 async function updateStockPrices() {
@@ -530,33 +587,213 @@ async function updateStockPrices() {
                 //console.log(counter);
             }
         }
-async function getPortfolioPerformance(user) {
-            // Fetch user's stocks and quantities
-            const userStocks = await getUserStock(user);
-            const userValue = await getUserValue(user);
-            let totalGain = 0;
-            let totalLatestValue = 0;
-            let totalOldValue = 0;
-            for (const { stockSymbol, quantity } of userStocks) {
-                const latestPrice = await getStockPrice(stockSymbol);
-                const oldPrice = await getOldStockPrice(stockSymbol);
-                // Calculate gain for each stock
-                const stockGain = (latestPrice - oldPrice) * quantity;
-                totalGain += stockGain;
-                // Calculate total values for percent increase calculation
-                totalLatestValue += latestPrice * quantity;
-                totalOldValue += oldPrice * quantity;
-            }
-            // Calculate percent increase
-            const percentIncrease = ((totalLatestValue - totalOldValue) / totalOldValue) * 100;
-            console.log(`total increase: $${totalGain.toFixed(2)}, percent increase: ${percentIncrease.toFixed(2)}%`);
-            const totalElement = document.getElementById("totalGain");
-            const percentElement = document.getElementById("percentIncrease");
-            const valueElement = document.getElementById("portfolioValue");
-            totalElement.textContent = `$${totalGain.toFixed(2)}`;
-            percentElement.textContent = `${percentIncrease.toFixed(2)}%`;
-            valueElement.textContent = `$${userValue.toFixed(2)}`;
+async function updateCryptoHistoryTable() {
+    try {
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+            console.warn("User email not found in localStorage.");
+            return;
         }
+
+        console.log(`Fetching transaction history for email: ${email}`);
+
+        const response = await fetch(javaURI + `/api/crypto/history?email=${encodeURIComponent(email)}`);
+        if (!response.ok) {
+            throw new Error(`Error fetching transaction history: ${response.statusText}`);
+        }
+
+        const transactionData = await response.json();
+        console.log("Transaction History Response:", transactionData);
+
+        let cryptoHistoryString = transactionData.cryptoHistory;
+        if (!cryptoHistoryString || cryptoHistoryString.trim() === "") {
+            console.warn("No transaction history found.");
+            return;
+        }
+
+        const transactionHistory = cryptoHistoryString.split("\n").filter(entry => entry.trim() !== "");
+        console.log("Parsed Transaction History:", transactionHistory);
+
+        const table = document.getElementById("cryptoHistoryTable");
+        const fullTable = document.getElementById("fullCryptoHistoryTable");
+        if (!table || !fullTable) {
+            console.error("Table elements not found.");
+            return;
+        }
+
+        // Clear existing table rows (except header)
+        table.innerHTML = `
+            <tr>
+                <th>Type</th>
+                <th>Crypto Amount</th>
+                <th>Dollar Value</th>
+                <th>Timestamp</th>
+            </tr>`;
+        fullTable.innerHTML = table.innerHTML; // Clone structure for modal
+
+        // 🟢 **Balance Tracking Fix**
+        let runningBalance = 100000; // ✅ Start at $100,000
+        let labels = [];
+        let balances = [];
+
+        transactionHistory.forEach(transaction => {
+            const rowData = parseTransaction(transaction);
+            if (rowData) {
+                const row = createTransactionRow(rowData);
+                table.appendChild(row);
+                fullTable.appendChild(row.cloneNode(true));
+
+                // 🟢 **Apply transaction to running balance**
+                const transactionAmount = parseFloat(rowData.value.replace("$", ""));
+                runningBalance += rowData.type === "Bought" ? -transactionAmount : transactionAmount;
+
+                // Store for graph plotting
+                labels.push(rowData.timestamp);
+                balances.push(runningBalance);
+            }
+        });
+
+        // Render updated chart with correct running balance
+        renderCryptoBalanceChart(labels, balances);
+
+    } catch (error) {
+        console.error("Error updating Crypto Transaction History:", error);
+    }
+}
+
+
+/* 🛠️ Function to Parse Transaction Details */
+function parseTransaction(transaction) {
+    const regex = /(Bought|Sold)\s([\d.]+)\s([A-Z]+)\sfor\s\$([\d.]+)\sat\s([\d-:\s]+)/;
+    const match = transaction.match(regex);
+
+    if (match) {
+        return {
+            type: match[1],
+            amount: match[2] + " " + match[3], // Example: "0.5 BTC"
+            value: `$${parseFloat(match[4]).toFixed(2)}`, // Format dollar amount
+            timestamp: match[5]
+        };
+    }
+    return null;
+}
+
+/* 🛠️ Function to Create Table Row */
+function createTransactionRow({ type, amount, value, timestamp }) {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${type}</td>
+        <td>${amount}</td>
+        <td>${value}</td>
+        <td>${timestamp}</td>
+    `;
+    return row;
+}
+
+function renderCryptoBalanceChart(labels, balances) {
+    const ctx = document.getElementById("cryptoBalanceChart").getContext("2d");
+
+    // ✅ Ensure previous chart exists before destroying
+    if (window.cryptoBalanceChart instanceof Chart) {
+        window.cryptoBalanceChart.destroy();
+    }
+
+    // ✅ Set correct Y-axis range
+    const yMin = 0;  // 🔥 Start at $100,000
+    const yMax = Math.ceil((Math.max(200000, Math.max(...balances) + 5000)) / 30000) * 30000; // Round up to nearest 30,000
+
+    // ✅ Create new chart instance
+    window.cryptoBalanceChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Crypto Portfolio Balance (USD)",
+                data: balances,
+                borderColor: "#FF8C00",
+                borderWidth: 2,
+                fill: true,
+                backgroundColor: "rgba(255, 140, 0, 0.2)",
+                pointRadius: 5, // Dots to make changes visible
+                tension: 0.2 // Smooth line
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Ensures proper fit
+            scales: {
+                x: { 
+                    title: { display: true, text: "Date" }, 
+                    ticks: { autoSkip: true, maxTicksLimit: 10 } // Avoids overcrowding
+                },
+                y: { 
+                    title: { display: true, text: "Portfolio Balance (USD)" },
+                    min: yMin, // 🔥 Start at $100,000
+                    max: yMax,  // 🔥 Adjust dynamically if needed
+                    ticks: { stepSize: 30000 } // **🔥 Increments of 30,000**
+                }
+            },
+            plugins: {
+                legend: { display: true, position: "top" },
+                tooltip: { enabled: true, mode: "index", intersect: false }
+            }
+        }
+    });
+}
+
+
+
+/* 🖼️ Modal Functions */
+// Open Modal Function
+window.openHistoryModal = function() {
+    document.getElementById("historyModal").style.display = "block";
+}
+
+// Close Modal Function
+window.closeHistoryModal = function() {
+    document.getElementById("historyModal").style.display = "none";
+}
+
+// ✅ Call function when page loads
+document.addEventListener("DOMContentLoaded", () => {
+    updateCryptoHistoryTable();
+});
+
+async function getPortfolioPerformance() {
+    try {
+        // Fetch user credentials
+        const credentials = await getCredentialsJava();
+        const email = credentials?.email;
+        if (!email) {
+            throw new Error("User email not found");
+        }
+        // Fetch user's stocks and portfolio value using the email
+        const userStocks = await getUserStock(email);
+        const userValue = await getUserValue(email);
+        let totalGain = 0;
+        let totalLatestValue = 0;
+        let totalOldValue = 0;
+        for (const { stockSymbol, quantity } of userStocks) {
+            const latestPrice = await getStockPrice(stockSymbol);
+            const oldPrice = await getOldStockPrice(stockSymbol);
+            // Calculate gain for each stock
+            const stockGain = (latestPrice - oldPrice) * quantity;
+            totalGain += stockGain;
+            // Calculate total values for percent increase calculation
+            totalLatestValue += latestPrice * quantity;
+            totalOldValue += oldPrice * quantity;
+        }
+        // Calculate percent increase
+        const percentIncrease = ((totalLatestValue - totalOldValue) / totalOldValue) * 100;
+        console.log(`Total increase: $${totalGain.toFixed(2)}, Percent increase: ${percentIncrease.toFixed(2)}%`);
+        // Update UI elements
+        document.getElementById("totalGain").textContent = `$${totalGain.toFixed(2)}`;
+        document.getElementById("percentIncrease").textContent = `${percentIncrease.toFixed(2)}%`;
+        document.getElementById("portfolioValue").textContent = `$${userValue.toFixed(2)}`;
+    } catch (error) {
+        console.error("Error fetching portfolio performance:", error);
+    }
+}
 async function getUserStock(user) {
             try {
                 const response = await fetch(javaURI + `/stocks/table/getStocks?username=${user}`);
@@ -599,76 +836,13 @@ async function getUserValue(user) {
                 return [];
             }
         }
-async function logout() {
-            userID = "";
-            console.log(userID);
-            localStorage.setItem('userID', userID)
-            return(userID);   
-        }
-document.getElementById("leaderboardButton").addEventListener("click", function () {
-    openLeaderboard(); // Open the leaderboard modal when the button is clicked
-});
-document.getElementById("closeLeaderboardButton").addEventListener("click", function () {
-    closeLeaderboard(); // Close the leaderboard modal when the close button is clicked
-});
-// Open leaderboard modal
-function openLeaderboard() {
-    const modal = document.getElementById("leaderboardModal");
-    const overlay = document.getElementById("modalOverlay");
-    modal.style.display = "block";
-    overlay.style.display = "block";
-    fetchLeaderboard(); // Fetch and display leaderboard data
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
-// Close leaderboard modal
-function closeLeaderboard() {
-    const modal = document.getElementById("leaderboardModal");
-    const overlay = document.getElementById("modalOverlay");
-    modal.style.display = "none";
-    overlay.style.display = "none";
-}
-// Fetch leaderboard data
-function fetchLeaderboard() {
-    const leaderboardTable = document.getElementById("leaderboardTable");
-    leaderboardTable.innerHTML = `<tr><td colspan="3" style="text-align: center;">Loading...</td></tr>`; // Display loading text
-    fetch(javaURI + "/user/leaderboard") // Update API endpoint if needed
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch leaderboard");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            leaderboardTable.innerHTML = ""; // Clear the loading text
-            if (Array.isArray(data)) {
-                // Sort data by balance descending for proper ranking
-                const sortedData = data.sort((a, b) => b.balance - a.balance);
-                sortedData.forEach((entry, index) => {
-                    const rank = index + 1; // Calculate rank based on order
-                    const username = entry.username; // Extract username
-                    const portfolioValue = entry.balance.toFixed(2); // Extract portfolio value and format it
-                    // Append each entry to the leaderboard table
-                    leaderboardTable.innerHTML += `
-                        <tr>
-                            <td>${rank}</td>
-                            <td>${username}</td>
-                            <td>$${portfolioValue}</td>
-                        </tr>
-                    `;
-                });
-            } else {
-                leaderboardTable.innerHTML = `
-                    <tr>
-                        <td colspan="3" style="text-align: center; color: red;">Invalid leaderboard data format</td>
-                    </tr>
-                `;
-            }
-        })
-        .catch((error) => {
-            console.error("Error fetching leaderboard:", error);
-            leaderboardTable.innerHTML = `
-                <tr>
-                    <td colspan="3" style="text-align: center; color: red;">Failed to load leaderboard data</td>
-                </tr>
-            `;
-        });
-}
+document.addEventListener("DOMContentLoaded", () => {
+        updateWelcomeMessage(); // Update the welcome message with the user's name
+        updateYourStocksTable();
+        updateStockPrices();
+        getPortfolioPerformance();
+    });
+</script>

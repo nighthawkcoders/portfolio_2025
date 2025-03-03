@@ -218,7 +218,7 @@ NIGHTHAWK Pages support a variety of different themes that are each overlaid on 
 
 To learn about the minima themes search for "GitHub Pages minima" and review the README.
 
-To find a new theme search for "Github Pages Themes".
+To find a new theme search for "GitHub Pages Themes".
 
 ### Includes
 

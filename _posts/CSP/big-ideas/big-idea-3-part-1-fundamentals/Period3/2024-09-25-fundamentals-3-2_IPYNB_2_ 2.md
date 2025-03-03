@@ -5,7 +5,6 @@ layout: post
 title: 3.2 Data Abstraction - Hacks and Homework
 description: Here, you will learn how to represent a list or string using a variable, generalize data sources through variables, use abstraction to manage complexity in a program, and explain how abstraction manages complexity.
 permalink: /csp/big-idea/p3/3-2/
-categories: ['CSP Big Ideas']
 author: Gabriela, Jowan, Michelle
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

@@ -6,42 +6,39 @@ permalink: /teacher-toolkit/student-info
 comments: false
 ---
 
-<html>
-<head>
-  <title>Student GitHub Profile</title>
-  <style>
-    #details-container {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      background-color: #3a3a3a;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      max-width: 700px;
-    }
-    #profile-pic {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 2px solid #ddd;
-    }
-    .details-content {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .details-content a {
-      color: #b0d4ff;
-      text-decoration: none;
-    }
-    .details-content p {
-      margin: 2px 0;
-      font-size: 16px;
-    }
-  </style>
-</head>
-<body>
+<title>Student GitHub Profile</title>
+<style>
+  #details-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: #3a3a3a;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 700px;
+  }
+  #profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+  }
+  .details-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .details-content a {
+    color: #b0d4ff;
+    text-decoration: none;
+  }
+  .details-content p {
+    margin: 2px 0;
+    font-size: 16px;
+  }
+</style>
+
 
 <div id="details-container">
   <img id="profile-pic" src="" alt="Profile Picture">
@@ -135,6 +132,3 @@ comments: false
 
   window.onload = fetchStudentDetails;
 </script>
-
-</body>
-</html>

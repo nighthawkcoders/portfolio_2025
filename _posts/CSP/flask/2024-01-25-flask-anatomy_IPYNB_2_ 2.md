@@ -2,7 +2,7 @@
 layout: post
 title: Anatomy of Python Flask
 description: A discussion of key elements in a Python Flask backend project.  This includes preparing a project for deployment.
-categories: ['Python', 'Flask']
+categories: [Python Flask]
 permalink: /flask-anatomy
 menu: nav/flask.html
 toc: True

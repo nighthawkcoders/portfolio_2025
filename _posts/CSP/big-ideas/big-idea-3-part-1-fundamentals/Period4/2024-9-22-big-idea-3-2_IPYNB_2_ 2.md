@@ -5,7 +5,6 @@ layout: post
 title: 3.2 Data Abstraction
 description: Student led teaching on Abstraction. Teaching how various data types can use abstraction for computational efficiency.
 permalink: /csp/big-idea/p4/3-2/
-categories: ['CSP Big Ideas']
 author: Ian, Thomas, Collin, Aarush.
 menu: nav/csp_units/csp_unit3_p4_fundamentals.html
 ---

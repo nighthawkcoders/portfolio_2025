@@ -140,7 +140,7 @@ search_exclude: true
 <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'Github')">Github</button>
     <button class="tablinks" onclick="openTab(event, 'Bathroom')">Bathroom</button>
-    <button class="tablinks" onclick="openTab(event, 'Something else')">Something else</button>
+    <button class="tablinks" onclick="openTab(event, 'Grades')">Grades</button>
 </div>
 
 <div id="Github" class="tabcontent">
@@ -152,7 +152,6 @@ search_exclude: true
             <pre id="modalData"></pre>
         </div>
     </div>
-
     <!-- Analytics Page -->
     <!-- Analytics Page -->
     <div class="container animate__animated animate__fadeIn">
@@ -176,48 +175,63 @@ search_exclude: true
     </div>
 </div>
 
+<!-- Bathroom Tab -->
 <div id="Bathroom" class="tabcontent">
     <h3 style="padding-left: 32px;" class="animate__animated animate__fadeIn">Bathroom</h3>
     <div class="container">
         <div class="components">
-
-            <!-- frequency charts -->
-            <div class="div3 animate__animated animate__fadeIn" style="background-color: #2c3e50; padding: 20px; color: white; border-radius: 15px;">
-                <!-- graph Data Sections -->
-                <div class="additional-info">
-
-                    <div class="comparison">
-                        <h3 style="color: white;">Comparison with Class Data</h3>
-                        <canvas id="comparisonGraph"></canvas> <!-- Embedded mini-graph -->
-                    </div>
-                </div>
-            </div>
-            <br>
-            <br>
-            <!-- personal stats -->
-            <div class="div4 animate__animated animate__fadeIn" style="background-color: #2c3e50; padding: 20px; color: white; border-radius: 15px;">
-                <!-- Visit Frequency and Average Duration -->
-                <div class="info-div">
-                    <div class="frequency">
-                        <h3>Visit Frequency</h3>
-                        <p>Frequency per day: <span id="freq-per-day">--</span></p>
-                        <p>Frequency per week: <span id="freq-per-week">--</span></p>
-                    </div>
-
-                    <div class="duration">
-                        <h3>Average Duration</h3>
-                        <p><span id="avg-duration">--</span> minutes</p>
-                        <p>&nbsp;</p>
-                    </div>
-                </div>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Statistic</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Average Duration (minutes)</td>
+                        <td id="avg-duration">placeholder</td>
+                    </tr>
+                    <tr>
+                        <td>Number of Times Gone</td>
+                        <td id="num-times">placeholder</td>
+                    </tr>
+                </tbody>
+            </table>
+            <canvas id="bathroomChart" width="400" height="200"></canvas> </div>
         </div>
     </div>
 </div>
 
-<div id="Something else" class="tabcontent">
-    <h3>Something else</h3>
-    <p>Your content here</p>
+<!-- Grades Tab -->
+<div id="Grades" class="tabcontent">
+    <h3 style="padding-left: 32px;" class="animate__animated animate__fadeIn">Grades</h3>
+    <div class="container">
+        <div class="components">
+            <table id="gradesTable" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Assignment</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic content will be inserted here -->
+                </tbody>
+            </table>
+            <label for="assignmentSelect">Choose an Assignment:</label>
+            <select id="assignmentSelect"></select>
+            <!-- Box and Whisker Plot Section -->
+            <div class="chart-section" id="boxPlotSection">
+                <h2>📦 Box and Whisker Plot</h2>
+                <div id="boxPlot"></div>
+            </div>
+            <div class="chart-section" id="userGradeSection">
+                <h2>🎓 Your Grade</h2>
+                <p id="userGrade">Loading your grade...</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -368,187 +382,323 @@ search_exclude: true
     fetchData();
 </script>
 
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script type="module">
-    // Load the graph within the Comparison with Class Data section
-    function loadMiniGraph() {
-        const ctx = document.getElementById('comparisonGraph').getContext('2d');
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
+<script type="module">
+    import { pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+
+    function calculateAverageDuration(timeIn) {
+        const visits = timeIn.split(',');
+        let totalDuration = 0;
+        visits.forEach(visit => {
+            const [checkIn, checkOut] = visit.split('-');
+            const formatTime = time => time.padStart(5, '0');
+            const checkInTime = new Date('1970-01-01T' + formatTime(checkIn)).getTime();
+            const checkOutTime = new Date('1970-01-01T' + formatTime(checkOut)).getTime();
+            totalDuration += (checkOutTime - checkInTime) / 1000 / 60;
+        });
+        return totalDuration / visits.length;
+    }
+
+    function getTinkle(personName) {
+        fetch(`${javaURI}/api/tinkle/${personName}`, { ...fetchOptions, credentials: 'include' })
+            .then(response => response.ok ? response.json() : null)
+            .then(data => {
+                if (!data) return;
+                const timeIn = data.timeIn;
+                document.getElementById('num-times').textContent = timeIn.split(',').length;
+                document.getElementById('avg-duration').textContent = calculateAverageDuration(timeIn).toFixed(2);
+                updateChart(timeIn);
+            })
+            .catch(console.error);
+    }
+
+    function getPerson() {
+        fetch(`${javaURI}/api/person/get`, { ...fetchOptions, credentials: 'include' })
+            .then(response => response.ok ? response.json() : null)
+            .then(data => { if (data) getTinkle(encodeURIComponent(data.name)); })
+            .catch(console.error);
+    }
+
+    function getPeriod(time) {
+        const periods = [
+            ['08:35', '09:41'],
+            ['09:46', '10:55'],
+            ['11:37', '12:43'],
+            ['13:18', '14:24'],
+            ['14:29', '15:35']
+        ];
+        const t = new Date('1970-01-01T' + time).getTime();
+        return periods.findIndex(([start, end]) => t >= new Date('1970-01-01T' + start).getTime() && t <= new Date('1970-01-01T' + end).getTime()) + 1;
+    }
+
+    function updateChart(timeIn) {
+        const periodCounts = Array(5).fill(0);
+        timeIn.split(',').forEach(visit => {
+            const checkIn = visit.split('-')[0];
+            const period = getPeriod(checkIn);
+            if (period) periodCounts[period - 1]++;
+        });
+        const ctx = document.getElementById('bathroomChart').getContext('2d');
         new Chart(ctx, {
-            type: 'bar', // Use 'line', 'pie', etc., for different chart types
+            type: 'bar',
             data: {
-                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                labels: ['P1', 'P2', 'P3', 'P4', 'P5'],
                 datasets: [{
-                    label: 'Visits per Day',
-                    data: [12, 19, 3, 5, 2], // Sample data, replace with dynamic data as needed
+                    label: 'Bathroom Usage',
+                    data: periodCounts,
                     backgroundColor: 'rgba(54, 162, 235, 0.5)',
                     borderColor: 'rgba(54, 162, 235, 1)',
-                    color: 'rgba(255, 255, 255, 1)',
                     borderWidth: 1
                 }]
             },
-            options: {
-                maintainAspectRatio: true, // Allows better fit in small containers
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Days of the Week' // Label for x-axis
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Number of Visits' // Label for y-axis
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false // Hide the legend to save space
-                    },
-                    title: {
-                        display: true,
-                        text: 'Weekly Bathroom Visit Frequency' // Title of the graph
-                    }
-                }
-            }
+            options: { scales: { y: { beginAtZero: true } } }
         });
     }
 
-    // Initialize the mini-graph when the page loads
-    document.addEventListener("DOMContentLoaded", loadMiniGraph);
+    window.addEventListener('load', getPerson);
 </script>
 
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script type="module">
+    import { javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+    let userId = -1;
+    let grades = [];
+    let assignment;
 
-<script>
-    import { javaURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js'
+    function populateTable(grades) {
+        const tableBody = document.getElementById("gradesTable").getElementsByTagName("tbody")[0];
+        
+        tableBody.innerHTML = "";
 
-    const url = javaURI + '/api/queue';
-    const getUrl = url + '/all';
-    const addUrl = url + '/add';
-    const removeUrl = url + '/remove';
-    const approveUrl = url + '/approve';
+        grades.forEach(stugrade => {
+            let row = tableBody.insertRow();
 
-    const fetchOptions = {
-        headers: {
-            "Content-Type": "application/json"
+            let cell1 = row.insertCell(0);
+            cell1.textContent = stugrade[1];
+
+            let cell2 = row.insertCell(1);
+            cell2.textContent = stugrade[0];
+        });
+
+        displayAverage(grades);
+    }
+
+    function displayAverage(grades) {
+        let total = 0;
+        let count = grades.length;
+
+        grades.forEach(stugrade => {
+            total += parseFloat(stugrade[0]); 
+        });
+
+        let average = (total / count).toFixed(2); 
+
+        const averageDiv = document.getElementById("averageDiv");
+        if (averageDiv) {
+            averageDiv.innerHTML = `<strong>Average Grade: ${average}</strong>`;
+        } else {
+            const newAverageDiv = document.createElement("div");
+            newAverageDiv.id = "averageDiv";
+            newAverageDiv.innerHTML = `<strong>Average Grade: ${average}</strong>`;
+            document.body.appendChild(newAverageDiv);
         }
-    };
+    }
 
-    const postOptions = {
-        ...fetchOptions,
-        method: 'POST',
-    };
-    const deleteOptions = {
-        ...fetchOptions,
-        method: 'DELETE',
-    };
-
-    // Get teacher name and student name from local storage or variables
-    const teacherName = "Mortensen"; // Replace with dynamic teacher name if needed
-    const studentName = localStorage.getItem("email"); // Assume stored from login
-
-    function fetchQueueData() {
-        fetch(getUrl, fetchOptions)
+    async function getUserId() {
+        const url_persons = `${javaURI}/api/person/get`;
+        await fetch(url_persons, fetchOptions)
             .then(response => {
-                if (response.status !== 200) {
-                    console.error("Failed to fetch queue data.");
-                    return;
+                if (!response.ok) {
+                    throw new Error(`Spring server response: ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
-                console.log("Queue data:", data);
-                const mortensenQueue = data.find(queue => queue.teacherName === teacherName);
-                if (mortensenQueue) {
-                    window.studentsInQueue = mortensenQueue.peopleQueue.split(','); // Convert the queue string into an array
-                    displayQueue();
-
-                    // Run approveStudent if there is at least one student in queue and the first student is the current user
-                    if (window.studentsInQueue.length > 0 && window.studentsInQueue[0] === studentName) {
-                        approveStudent();
-                    }
-                } else {
-                    console.error("Mortensen's queue not found.");
-                }
+                userId = data.id;
             })
-            .catch(error => console.error("Error fetching data:", error));
+            .catch(error => {
+                console.error("Java Database Error:", error);
+            });
     }
 
-    // Function to add student to the queue
-    function addToQueue() {
-        const queuer = {
-            teacherName: teacherName,
-            studentName: studentName,
-        };
-
-        fetch(addUrl, {
-            ...postOptions,
-            body: JSON.stringify(queuer),
-        })
-            .then(response => {
-                if (response.ok) {
-                    fetchQueueData(); // Refresh the queue after adding
-                } else {
-                    alert("Failed to add to queue.");
+    async function fetchAssignmentbyId(assignmentId) {
+        try {
+            const response = await fetch(javaURI + "/api/assignments/" + String(assignmentId), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
                 }
-            })
-            .catch(error => console.error("Error adding to queue:", error));
-        console.log("Added to queue:", queuer);
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch assignments: ${response.statusText}`);
+            }
+
+            const assignment = await response.text();
+            return assignment;  
+
+        } catch (error) {
+            console.error('Error fetching assignments:', error);
+        }
     }
 
-    // Function to remove student from the queue
-    function removeFromQueue() {
-        const queuer = {
-            teacherName: teacherName,
-            studentName: studentName,
-        };
+    async function getGrades() {
+        const urlGrade = javaURI + '/api/synergy/grades';
 
-        fetch(removeUrl, {
-            ...deleteOptions,
-            body: JSON.stringify(queuer),
-        })
-            .then(response => {
-                if (response.ok) {
-                    fetchQueueData(); // Refresh the queue after removing
-                } else {
-                    alert("Failed to remove from queue.");
+        try {
+            const response = await fetch(urlGrade, {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to get data: ' + response.statusText);
+            }
+
+            const data = await response.json();
+            await getUserId();  
+
+            for (const grade of data) {
+                if (grade.studentId == userId) {
+                    let stugrade = [];
+                    stugrade.push(grade.grade);
+                    
+                    const assignmentDetails = await fetchAssignmentbyId(grade.assignmentId);
+                    stugrade.push(assignmentDetails);
+                    
+                    grades.push(stugrade);
                 }
-            })
-            .catch(error => console.error("Error removing from queue:", error));
-        console.log("Removed from queue:", queuer);
+            }
+
+            populateTable(grades);
+
+        } catch (error) {
+            console.error('Error fetching grades:', error);
+        }
     }
 
-    // Function to approve student who is first in line
-    function approveStudent() {
-        const queuer = {
-            teacherName: teacherName,
-            studentName: window.studentsInQueue[0],
-        };
-
-        fetch(approveUrl, {
-            ...postOptions,
-            body: JSON.stringify(queuer),
-        })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = "{{site.baseurl}}/hallpass";
-                }
-                else {
-                    alert("Failed to approve student.");
-                }
-            })
-            .catch(error => console.error("Error approving student:", error));
-    }
-
-    // Fetch data every 10 seconds
-    setInterval(fetchQueueData, 10000);
-
-    // Initial fetch
-    fetchQueueData();
+    window.onload = async function() {
+        await getUserId();
+        await getGrades(); 
+    };
 </script>
 
+<script type="module">
+    import { javaURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+    document.getElementById('assignmentSelect').addEventListener('change', fetchGrades);
+
+    async function loadAssignments() {
+        const options = {
+            URL: `${javaURI}/api/synergy/grades`,
+            method: "GET",
+            cache: "no-cache",
+        };
+        console.log(options.URL);
+        try {
+            const response = await fetch(options.URL, fetchOptions);
+            if (!response.ok) {
+                throw new Error(`Failed to load assignments: ${response.status}`);
+            }
+            const responseData = await response.json();
+            const assignmentIds = [...new Set(responseData.map(item => item.assignmentId))];
+            console.log("API Response Data:", responseData);
+            console.log("assignment IDS:", assignmentIds);
+            const assignmentSelect = document.getElementById('assignmentSelect');
+            assignmentSelect.innerHTML = "";
+            assignmentIds.forEach(id => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.text = `Assignment ${id}`;
+                assignmentSelect.add(option);
+            });
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    async function fetchGrades() {
+        const assignmentId = document.getElementById('assignmentSelect').value;
+        const options = {
+            method: "GET",
+            cache: "no-cache",
+        };
+        try {
+            const gradesResponse = await fetch(`${javaURI}/api/analytics/assignment/${assignmentId}/grades`, fetchOptions);
+            if (!gradesResponse.ok) {
+                throw new Error(`Failed to fetch grades data: ${gradesResponse.status}`);
+            }
+            const gradesText = await gradesResponse.text();
+            console.log("Grades Response Text:", gradesText);
+            if (!gradesText) {
+                throw new Error("Response body is empty");
+            }
+            const gradesData = JSON.parse(gradesText);
+            const grades = gradesData.grades;
+            console.log("grades:", grades);
+            const userResponse = await fetch(`${javaURI}/api/analytics/assignment/${assignmentId}/student/grade`, fetchOptions);
+            if (!userResponse.ok) {
+                throw new Error(`Failed to fetch user-specific grades: ${userResponse.status}`);
+            }
+            const userData = await userResponse.json();
+            console.log("Grades Data:", grades);
+            console.log("User Data:", userData);
+            createBoxPlot(grades, userData);
+            showCharts();
+            displayUserData(userData);
+        } catch (error) {
+            console.error("Error fetching or parsing grades:", error.message);
+        }
+    }
+
+    let thereIsABoxPlot = false;
+    function createBoxPlot(grades, userData) {
+        if (!thereIsABoxPlot) {
+            thereIsABoxPlot = true;
+        } else {
+            Plotly.purge(document.getElementById("boxPlot"));
+        }
+        const trace = {
+            y: grades,
+            type: 'box',
+            name: 'Grades',
+            marker: { color: 'rgba(255, 193, 7, 0.6)' },
+            line: { color: '#ffa726' }
+        };
+        const userTrace = {
+            y: [userData],
+            x: ['Grades'],  // Ensures the dot aligns with the box plot's category
+            mode: 'markers',
+            name: 'Your Grade',
+            marker: { color: 'red', size: 10 }
+        };
+
+        const data = [trace, userTrace];
+        const layout = {
+            title: 'Grades Box and Whisker Plot',
+            titlefont: { color: '#ffa726' },
+            yaxis: { title: 'Grades', zeroline: false, color: '#ffffff' },
+            paper_bgcolor: '#2c2c2e',
+            plot_bgcolor: '#2c2c2e'
+        };
+        Plotly.newPlot('boxPlot', data, layout);
+    }
+
+    function showCharts() {
+        document.getElementById('boxPlotSection').classList.add('visible');
+    }
+
+    window.onload = loadAssignments;
+
+    function displayUserData(userData) {
+        const userGradeElement = document.getElementById('userGrade');
+        if (userData) {
+            userGradeElement.textContent = `Your grade for this assignment is: ${userData}`;
+        } else {
+            console.warn("Unexpected User Data Structure:", userData);
+            userGradeElement.textContent = "No grade available for this assignment.";
+        }
+    }
+</script>

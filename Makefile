@@ -107,11 +107,8 @@ cspconvert: $(CSP_MARKDOWN_FILES)
 
 # Convert .ipynb files to Markdown with front matter, preserving directory structure
 $(DESTINATION_DIRECTORY)/%_IPYNB_2_.md: _notebooks/%.ipynb
-	@echo "Converting source $< to destination $@"
 	@mkdir -p $(@D)
-
- # Run the external shell script for notebook conversion
-	@./scripts/convert_notebooks.sh
+	@python3 -c "from scripts.convert_notebooks import convert_notebooks; convert_notebooks()"
 
 $(DESTINATION_DIRECTORY)/%_IPYNB_2_.md: _notebooks/CSP/%.ipynb
 	@echo "Converting source $< to destination $@"

@@ -5,7 +5,6 @@ layout: post
 title: 3.4 Strings Introduction
 description: Introduction to Strings
 permalink: /csp/big-idea/p3/3-4-0
-categories: ['CSP Big Ideas']
 author: Ahaan Vaidyanathan, Spencer Lyons, Vasanth Rajasekaran, Xavier Thompson
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

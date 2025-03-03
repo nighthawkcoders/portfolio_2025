@@ -5,7 +5,7 @@ layout: post
 title: Iterations In Python and JavaScript 3.8
 description: Learn about the giant world of iterations.
 permalink: /csp/big-idea/3-8/p1
-categories: ['CSP Big Ideas 3']
+categories: ['CSP Big Idea 3']
 author: Arya, Shawn, Aarav
 menu: nav/csp_units/csp_unit3_p1_fundamentals.html
 ---

@@ -1,279 +1,177 @@
 ---
-layout: none
+layout: base
 permalink: /stocks/leaderboard
 title: Leaderboard
 ---
 
 <html lang="en">
-<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leaderboard</title>
+  <link rel="stylesheet" href="{{site.baseurl}}/assets/css/portfolio.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* General Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
+    /* General Styles */
     body {
-      font-family: Arial, sans-serif;
-      background-color: #F4F4F9;
-      color: #333;
-      margin: 0;
-      padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background-color: #121212;
+        color: #ffffff;
+        margin: 0;
+        padding: 0;
     }
 
-    /* Navbar Styling */
+    /* Navigation Bar */
     .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: #001F3F; /* Dark blue background */
-      color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px 0;
+        background-color: #1c1c1c;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
-    .navbar .logo {
-      font-size: 24px;
-      font-weight: bold;
-      letter-spacing: 2px;
+    .nav-buttons {
+        display: flex;
+        gap: 15px;
     }
-    .navbar .nav-buttons {
-      display: flex;
-      gap: 20px;
+    .nav-buttons a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 6px;
+        transition: 0.3s;
     }
-    .navbar .nav-buttons a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 16px;
-      padding: 8px 16px;
-      border-radius: 4px;
-      transition: background-color 0.3s;
-    }
-    .navbar .nav-buttons a:hover {
-      background-color: #FF8C00; /* Orange hover effect */
+    .nav-buttons a:hover {
+        background-color: #ff9800;
+        transform: scale(1.1);
     }
 
-    /* Main Dashboard Layout */
+    /* Leaderboard Container */
     .dashboard {
-      display: flex;
-      gap: 20px;
-      padding: 20px;
+        padding: 40px;
+        text-align: center;
     }
 
-    .dashboard-content {
-      flex: 3;
+    /* Title Button Effect */
+    .leaderboard-title {
+        font-size: 32px;
+        font-weight: bold;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #ff8c00, #ff22a6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #ff22a6;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
     }
 
-    .sidebar {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    /* Leaderboard Table */
+    .leaderboard-table {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background: #1f1f1f;
+        border-radius: 8px;
+        box-shadow: 0px 0px 15px rgba(255, 136, 0, 0.5);
+        overflow: hidden;
     }
-
-    /* Leaderboard Table Styling */
-    section {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      padding: 20px;
-      margin: 20px 0;
-    }
-
-    h1, h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #2c3e50;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    thead {
-      background-color: #001F3F;
-      color: #fff;
-    }
-
     th, td {
-      padding: 12px 15px;
-      text-align: center;
-      border-bottom: 1px solid #ddd;
+        padding: 15px 20px;
+        text-align: left;
+    }
+    th {
+        background-color: #ff9800;
+        color: #000;
+        font-size: 18px;
+        text-transform: uppercase;
+    }
+    td {
+        background-color: #2a2a2a;
+        font-size: 16px;
+        border-bottom: 1px solid #444;
+        transition: background 0.3s;
+    }
+    tr:hover td {
+        background-color: #ff22a6;
+        color: #ffffff;
     }
 
-    tbody tr:nth-child(even) {
-      background-color: #f9f9f9;
+    /* Rank, Balance & Name Effects */
+    .rank {
+        font-weight: bold;
+        color: #ffcc00;
     }
-
-    tbody tr:hover {
-      background-color: #f1f7ff;
-      cursor: pointer;
+    .balance {
+        color: #00ff7f;
+        font-weight: bold;
     }
-
-    td:first-child {
-      font-weight: bold;
-      color: #e67e22;
+    .name {
+        font-weight: bold;
+        color: #ffffff;
     }
-
-    tbody tr:nth-child(1) td:first-child {
-      color: #f1c40f;
-      font-size: 1.2em;
-    }
-    tbody tr:nth-child(2) td:first-child {
-      color: #95a5a6;
-    }
-    tbody tr:nth-child(3) td:first-child {
-      color: #cd7f32;
-    }
-
-    /* Search Bar */
-    .search-container {
-      margin-bottom: 20px;
-      display: flex;
-    }
-    .search-container input[type="text"] {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 4px 0 0 4px;
-      outline: none;
-      font-size: 16px;
-    }
-    .search-button {
-      background-color: #FF8C00;
-      color: #fff;
-      border: none;
-      border-radius: 0 4px 4px 0;
-      padding: 12px 20px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s;
-    }
-    .search-button:hover {
-      background-color: #E07B00;
-    }
-
-    /* Summary Cards */
-    .summary-cards {
-      display: flex;
-      justify-content: space-between;
-      margin: 20px 0;
-    }
-    .card {
-      flex: 1;
-      margin: 10px;
-      padding: 20px;
-      border-radius: 8px;
-      color: #fff;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .card-orange { background-color: #FF8C00; }
-    .card-purple { background-color: #6A0DAD; }
-    .card-darkblue { background-color: #001F3F; }
-
-    .card h2 { font-size: 20px; }
-    .card p { font-size: 36px; font-weight: bold; }
   </style>
 </head>
 <body>
-
-  <!-- Navbar -->
-  <div class="navbar">
-    <div class="logo">Leaderboard</div>
-    <div class="nav-buttons">
-      <a href="#">Home</a>
-      <a href="#">Rankings</a>
-      <a href="#">Profile</a>
-    </div>
-  </div>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+      <div class="nav-buttons">
+          <a href="{{site.baseurl}}/stocks/home">Home</a>
+          <a href="{{site.baseurl}}/crypto/portfolio">Crypto</a>
+          <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
+          <a href="{{site.baseurl}}/crypto/mining">Mining</a>
+          <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
+          <a href="{{site.baseurl}}/stocks/leaderboard">Leaderboard</a>
+          <a href="{{site.baseurl}}/stocks/game">Game</a>
+          <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
+      </div>
+  </nav>
 
   <!-- Dashboard -->
   <div class="dashboard">
-    <!-- Main Content -->
-    <div class="dashboard-content">
-      <!-- Search -->
-      <div class="search-container">
-        <input type="text" placeholder="Search for a user..." />
-        <button class="search-button">Search</button>
-      </div>
-    <div class="navbar">
-        <div class="links">
-            <a href="/portfolio_2025/crypto/portfolio" id="portfolioLink">Investing Portfolio</a>
-            <a href="/portfolio_2025/crypto/mining" id="miningLink">Crypto Mining</a>
-            <a href="/portfolio_2025/crypto/team" id="TeamLink">Team Stats</a>
-            <a href="/portfolio_2025/crypto/leaderboard" id="leaderboardLink">Leaderboard</a>
-        </div>
-    </div>
-      <!-- Summary Cards -->
-      <div class="summary-cards">
-        <div class="card card-orange">
-          <h2>Top Rank</h2>
-          <p>#1</p>
-        </div>
-        <div class="card card-purple">
-          <h2>Users</h2>
-          <p>1500+</p>
-        </div>
-        <div class="card card-darkblue">
-          <h2>Average Balance</h2>
-          <p>$12,345</p>
-        </div>
-      </div>
-
-      <!-- Leaderboard Table -->
-      <section>
-        <h2>Top 10 Users by Balance</h2>
-        <table id="top-users-table">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Balance</th>
-              <th>Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Data will be inserted dynamically -->
-          </tbody>
-        </table>
-      </section>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="stock-table">
-        <h2>Your Stocks</h2>
-        <table>
-          <tr><th>Stock</th><th>Value</th></tr>
-          <tr><td>Apple</td><td>$150.00</td></tr>
-          <tr><td>Amazon</td><td>$3,200.00</td></tr>
-        </table>
-      </div>
-    </div>
+    <h1 class="leaderboard-title">Top 10 Users by Balance</h1>
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Balance</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody id="top-users-table">
+        <!-- Leaderboard Data Populated Here -->
+      </tbody>
+    </table>
   </div>
-
-  <script>
-    // Fetch leaderboard data from the server
-    fetch('http://localhost:8085/api/rankings/leaderboard')
-      .then(response => response.json())
-      .then(data => {
-        const topUsersTable = document.querySelector('#top-users-table tbody');
-        data.forEach((user, index) => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>$${Number(user.balance).toFixed(2)}</td>
-            <td>${user.name}</td>
-          `;
-          topUsersTable.appendChild(row);
-        });
-      })
-      .catch(error => console.error('Error fetching leaderboard data:', error));
-  </script>
 </body>
 </html>
+
+<script type="module">
+  import { javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+
+  async function fetchLeaderboard() {
+    try {
+      const response = await fetch(`${javaURI}/api/rankings/leaderboard`, fetchOptions);
+      if (!response.ok) throw new Error("Failed to fetch leaderboard data");
+      const data = await response.json();
+      const topUsersTable = document.querySelector("#top-users-table");
+      topUsersTable.innerHTML = "";
+
+      data.forEach((user, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="rank">${index + 1}</td>
+          <td class="balance">$${Number(user.balance).toFixed(2)}</td>
+          <td class="name">${user.name}</td>
+        `;
+        topUsersTable.appendChild(row);
+      });
+    } catch (error) {
+      console.error("Error fetching leaderboard data:", error);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", fetchLeaderboard);
+</script>

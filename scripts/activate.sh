@@ -45,7 +45,7 @@ add_to_rc() {
 alias code="code --no-sandbox"
 add_to_rc 'alias code="code --no-sandbox"'
 
-#### Github Pages Local Build support
+#### GitHub Pages Local Build support
 echo "=== GitHub pages build tools  ==="
 export GEM_HOME="$HOME/gems"
 export PATH="$HOME/gems/bin:$PATH"

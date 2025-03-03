@@ -2,7 +2,7 @@
 layout: post
 title: Quiz Questions for APCSA Unit 8
 description: Questions and Code Cells for the Quiz on Unit 8
-categories: ['CSA-Quiz']
+categories: [AP CSA]
 permalink: /csa/units/quiz8
 author: Vibha Ganji, Anusha Khobare, Avantika Daita, Matthew Wong
 ---

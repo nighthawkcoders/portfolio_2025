@@ -3,7 +3,6 @@ comments: True
 layout: post
 title: Big Idea 3.1 - Variables and Assignments
 description: College Board topics 3.1-3.2
-categories: ['Python']
 author: Nikki, Ankit, Monika, Varun
 ---
 

@@ -4,7 +4,6 @@ comments: True
 layout: post
 title: 3.10.4 JavaScript Hacks - Period 4
 description: This is student-led teaching on lists! Here you'll learn how to manipulate individual elements or items in a list using indexing.
-categories: ['CSP Big Ideas']
 author: Noah Harris (Period 4)
 menu: nav/csp_units/csp_unit3_p5_fundamentals.html
 permalink: /csp/big-idea/p4/3-10B-4

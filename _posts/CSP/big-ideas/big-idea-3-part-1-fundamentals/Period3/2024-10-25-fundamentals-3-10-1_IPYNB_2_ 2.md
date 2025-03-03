@@ -5,7 +5,6 @@ layout: post
 title: 3.10 Python Lists and Intro
 description: This is student-led teaching on lists! Here you'll learn how to manipulate individual elements or items in a list using indexing.
 permalink: /csp/big-idea/p3/3-10-1
-categories: ['CSP Big Ideas']
 author: Ryan Nguyen and Yash Patil
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

@@ -5,7 +5,6 @@ layout: post
 title: 3.8.1 Recursion Iteration and Nested For Loops P3
 description: Lesson on Iteration Recursion and Nested For Loops, including popcorn hacks, homework, and basic explanation of what is going on.
 permalink: /csp/big-idea/p3/3-8-1
-categories: ['CSP Big Ideas']
 author: Armaghan
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

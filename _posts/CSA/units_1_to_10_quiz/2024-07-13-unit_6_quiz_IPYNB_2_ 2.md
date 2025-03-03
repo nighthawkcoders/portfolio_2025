@@ -2,7 +2,7 @@
 layout: post
 title: Quiz Questions for APCSA Unit 6
 description: Questions and Code Cells for the Quiz on Unit 6
-categories: ['CSA-Quiz']
+categories: [AP CSA]
 permalink: /csa/units/quiz6
 author: Soham Kamat & Aniket Chakradeo
 ---

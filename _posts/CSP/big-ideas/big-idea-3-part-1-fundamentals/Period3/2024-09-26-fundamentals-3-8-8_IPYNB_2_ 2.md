@@ -5,7 +5,6 @@ layout: post
 title: 3.8.8 Breaking loops by checking for conditions
 description: Learn to break loops using conditional statements, and the continue function.
 permalink: /csp/big-idea/p3/3-8-8
-categories: ['CSP Big Ideas']
 author: Nikhil
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

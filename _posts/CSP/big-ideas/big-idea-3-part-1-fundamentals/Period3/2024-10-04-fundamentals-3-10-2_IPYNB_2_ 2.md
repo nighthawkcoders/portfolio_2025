@@ -5,7 +5,6 @@ layout: post
 title: 3.10 Javascript Lists (More Information)
 description: This is part 2 of the lesson. This develops lists even further, focusing on Javascript arrays!
 permalink: /csp/big-idea/p3/3-10-2
-categories: ['CSP Big Ideas']
 author: Jackson Patrick and Arush Shah
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

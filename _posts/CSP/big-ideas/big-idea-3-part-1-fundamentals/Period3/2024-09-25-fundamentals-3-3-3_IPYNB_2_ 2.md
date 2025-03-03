@@ -5,7 +5,6 @@ layout: post
 permalink: /csp/big-idea/p3/3-3-3
 title: 3.3 Mathematical Expressions; Fibonacci Sequence
 description: Student led teaching on  Mathematical Expressions. Learn how mathematical expressions involve using arithmetic operators (like addition, subtraction, multiplication, and division) to perform calculations
-categories: ['CSP Big Ideas']
 author: Max G, Johan M
 menu: /nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

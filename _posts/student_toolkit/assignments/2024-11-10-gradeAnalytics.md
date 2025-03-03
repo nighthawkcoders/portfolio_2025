@@ -30,58 +30,15 @@ show_reading_time: false
         <h2>📦 Box and Whisker Plot</h2>
         <div id="boxPlot"></div>
     </div>
-</div>
+    <div class="chart-section" id="userGradeSection">
+        <h2>🎓 Your Grade</h2>
+        <p id="userGrade">Loading your grade...</p>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+</div>
 <script type="module">
     import { javaURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
     document.getElementById('assignmentSelect').addEventListener('change', fetchGrades);
-    // Utility to get a cookie by its name
-    function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const [key, value] = cookie.trim().split('=');
-            if (key === name) {
-                return decodeURIComponent(value);
-            }
-        }
-        return null;
-    }
-    // Decodes and validates the JWT token
-    function decodeToken() {
-        const token = getCookie('jwt_java_spring');
-        if (!token) {
-            console.error("Token not found in cookies");
-            alert("You must log in to access Grade Analytics.");
-            return null;
-        }
-        try {
-            const decodedToken = jwt_decode(token); // Decode the token
-            console.log("Decoded JWT:", decodedToken.sub); // Log email or user ID
-            return token;
-        } catch (err) {
-            console.error('Error decoding token:', err);
-            alert("Invalid token. Please log in again.");
-            return null;
-        }
-    }
-    function getUserId() {
-        const token = getCookie('jwt_java_spring');
-        if (!token) {
-            console.error("Token not found in cookies");
-            alert("You must log in to access Grade Analytics.");
-            return null;
-        }
-        try {
-            const decodedToken = jwt_decode(token);
-            console.log("Decoded User ID:", decodedToken.sub); // Replace sub with the correct key if needed
-            return decodedToken.sub; // Assuming the user ID is stored in the sub field of the JWT
-        } catch (err) {
-            console.error('Error decoding token:', err);
-            alert("Invalid token. Please log in again.");
-            return null;
-        }
-    }
     // Fetch grades based on selected assignment
     // Load assignments for dropdown
     async function loadAssignments() {
@@ -115,7 +72,6 @@ show_reading_time: false
 }
 async function fetchGrades() {
     const assignmentId = document.getElementById('assignmentSelect').value;
-    const userId = getUserId();
     const options = {
         method: "GET",
         cache: "no-cache",
@@ -135,7 +91,7 @@ async function fetchGrades() {
         const grades = gradesData.grades;
         console.log("grades:", grades);
         // Fetch user-specific grades for the assignment
-        const userResponse = await fetch(`${javaURI}/api/analytics/assignment/${assignmentId}/student/${userId}/grade`, fetchOptions);
+        const userResponse = await fetch(`${javaURI}/api/analytics/assignment/${assignmentId}/student/grade`, fetchOptions);
         if (!userResponse.ok) {
             throw new Error(`Failed to fetch user-specific grades: ${userResponse.status}`);
         }
@@ -155,15 +111,26 @@ async function fetchGrades() {
 }
     let histogram;
     function createHistogram(grades) {
-        const ctx = document.getElementById('histogram').getContext('2d');        
+        const ctx = document.getElementById('histogram').getContext('2d');
         if (histogram) histogram.destroy();
+        const bins = {
+            '0-10%': grades.filter(g => g < 0.1).length,
+            '10-20%': grades.filter(g => g >= 0.1 && g < 0.2).length,
+            '20-30%': grades.filter(g => g >= 0.2 && g < 0.3).length,
+            '30-40%': grades.filter(g => g >= 0.3 && g < 0.4).length,
+            '40-50%': grades.filter(g => g >= 0.4 && g < 0.5).length,
+            '50-60%': grades.filter(g => g >= 0.5 && g < 0.6).length,
+            '60-70%': grades.filter(g => g >= 0.6 && g < 0.7).length,
+            '70-80%': grades.filter(g => g >= 0.7 && g < 0.8).length,
+            '80-90%': grades.filter(g => g >= 0.8 && g < 0.9).length,
+            '90-100%': grades.filter(g => g >= 0.9).length
+        };
         histogram = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: Array.from(new Set(grades)).sort((a, b) => a - b),
+                labels: Object.keys(bins), // 10% ranges as labels
                 datasets: [{
-                    label: 'Frequency of Grades',
-                    data: Array.from(new Set(grades)).map(grade => grades.filter(g => g === grade).length),
+                    data: Object.values(bins), // Frequencies for each range
                     backgroundColor: 'rgba(255, 193, 7, 0.6)',
                     borderColor: 'rgba(255, 193, 7, 1)',
                     borderWidth: 1
@@ -171,11 +138,22 @@ async function fetchGrades() {
             },
             options: {
                 scales: {
-                    y: { beginAtZero: true }
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Number of Students' } // Label for y-axis
+                    },
+                    x: {
+                        title: { display: true, text: 'Grade Ranges (%)' } // Label for x-axis
+                    }
                 },
                 plugins: {
-                    title: { display: true, text: 'Grades Histogram', color: '#ffa726' },
-                    legend: { labels: { color: '#ffffff' } }
+                    title: {
+                        display: true,
+                        color: '#ffa726'
+                    },
+                    legend: {
+                        labels: { color: '#ffffff' }
+                    }
                 }
             }
         });
@@ -250,5 +228,17 @@ async function fetchGrades() {
         document.getElementById('boxPlotSection').classList.add('visible');
     }
     window.onload = loadAssignments;
+    function displayUserData(userData) {
+    const userGradeElement = document.getElementById('userGrade');
+        // Check if userData is a primitive (e.g., a number or string)
+        if (userData) {
+            userGradeElement.textContent = `Your grade for this assignment is: ${userData}`;
+        }
+        else {
+            console.warn("Unexpected User Data Structure:", userData);
+            userGradeElement.textContent = "No grade available for this assignment.";
+        }
+    }
+
 
 </script>

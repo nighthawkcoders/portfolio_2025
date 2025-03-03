@@ -45,7 +45,7 @@ yes | brew install python
 echo "=== Install Jupyter Notebook ==="
 yes | brew install jupyter
 
-#### Github Pages Local Build
+#### GitHub Pages Local Build
 echo "=== GitHub pages build tools  ==="
 export GEM_HOME="$HOME/gems"
 export PATH="$HOME/gems/bin:$PATH"

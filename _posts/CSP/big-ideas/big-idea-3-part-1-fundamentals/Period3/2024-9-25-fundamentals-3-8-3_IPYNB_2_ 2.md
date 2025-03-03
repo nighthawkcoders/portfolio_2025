@@ -5,7 +5,6 @@ layout: post
 title: 3.8.3 Looping Through a List With Indexes
 description: Lesson on how to make a list, how to loop through a list, and practice problems, with explanations in between
 permalink: /csp/big-idea/p3/3-8-3
-categories: ['CSP Big Ideas']
 author: Elliot
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

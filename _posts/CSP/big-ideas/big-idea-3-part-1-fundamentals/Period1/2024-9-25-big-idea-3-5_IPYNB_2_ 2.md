@@ -5,7 +5,6 @@ layout: post
 title: 3.5 Booleans 🔄
 description: Student led teaching on Booleans. Learn how booleans are used in decision-making with logical operators (like less than or greater than).
 permalink: /csp/big-idea/3-5/p1
-categories: ['CSP Big Ideas']
 author: Bailey, Travis, Leon, Anyi
 menu: nav/csp_units/csp_unit3_p1_fundamentals.html
 ---

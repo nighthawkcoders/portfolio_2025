@@ -29,7 +29,7 @@ sudo apt-get install -y python3 python3-pip python-is-python3 python3-venv
 echo "=== Install Jupyter Notebook ==="
 sudo apt-get install -y jupyter-notebook
 
-#### Github Pages Local Build support
+#### GitHub Pages Local Build support
 echo "=== GitHub pages build tools  ==="
 export GEM_HOME="$HOME/gems"
 export PATH="$HOME/gems/bin:$PATH"

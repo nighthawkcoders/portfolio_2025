@@ -5,7 +5,6 @@ layout: post
 title: 3.7.3 Javascript Hacks
 description: Javascript example of nested conditionals
 permalink: /csp/big-idea/p3/3-7-3
-categories: ['CSP Big Ideas']
 author: Zoe, Rutvik, Avika, Jonah, Aarush
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

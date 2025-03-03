@@ -5,7 +5,6 @@ layout: post
 permalink: /csp/big-idea/p3/3-3-5
 title: 3.3 Homework Hacks (Period 3)
 description: This is the grading and submission page for 3.3, period 3. Review the rubric, and when you are ready, submit!
-categories: ['CSP Big Ideas']
 author: Trevor V
 menu: /nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

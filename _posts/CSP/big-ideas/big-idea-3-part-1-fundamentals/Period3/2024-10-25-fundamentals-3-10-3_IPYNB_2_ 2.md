@@ -5,7 +5,6 @@ layout: post
 title: 3.10 Python Hacks
 description: Following 10.1, now it's your time to show your learning! Complete the following below. These are your hacks for Python lists.
 permalink: /csp/big-idea/p3/3-10-3
-categories: ['CSP Big Ideas']
 author: Aranya
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

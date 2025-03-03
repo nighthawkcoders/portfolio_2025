@@ -1,101 +1,133 @@
 ---
-layout: post 
+layout: post
 title: Teacher Toolkit
-description: 
+description:
 permalink: /teacher
 menu: nav/homejava.html
 show_reading_time: false
 ---
 
-<div class="toolkit-buttons">
-  <a href="{{site.baseurl}}/teacher/sagai" class="toolkit-button" data-description="Tired of opening ChatGPT all day everyday? Want an AI companion with you on the site that helps you study for CSA? Look no further! Here you can use AI to generate hacks for practice, grade your hack answers and get feedback, and ask questions to your follow classmates and teachers!">
-    <img src="{{site.baseurl}}/images/toolkit-nav-buttons/sagai.png" alt="SAGAI" />
-    <span class="button-name">SAGAI</span>
-    <div class="description">
-      <p>Tired of opening ChatGPT all day everyday? Want an AI companion with you on the site that helps you study for CSA? Look no further! Here you can use AI to generate hacks for practice, grade your hack answers and get feedback, and ask questions to your follow classmates and teachers!</p>
+<div class="container">
+    <div class="student-management glow-on-hover-search"
+        onclick="location.href='{{site.baseurl}}/teacher-toolkit/period1';" style="cursor: pointer;">
+        <div class="student-management-image">
+            <img src="{{site.baseurl}}/images/toolkit-nav-buttons/studentmanagement.png" alt="student-management" />
+        </div>
+        <div class="student-management-details">
+            <h3>Student Management</h3>
+            <p>This tool lets you:</p>
+            <ul>
+                <li>Track students at each table per period</li>
+                <li>See what each student is doing and monitor assigned tasks</li>
+                <li>Track the progress of each student</li>
+                <li>View students' GitHub activity</li>
+            </ul>
+        </div>
     </div>
-  </a>
-  <a href = "{{site.baseurl}}/teacher-toolkit/period1" class="toolkit-button" data-description="View and manage student seating arrangements across all periods of our AP CSA class. Track the progress of each team, monitor tasks assigned to individuals at each table, and gain insights into each student’s GitHub activity, including their number of commits, issues, and more!">
-    <img src="{{site.baseurl}}/images/toolkit-nav-buttons/studentmanagement.png" alt="StudentManagement"/>
-    <span class="button-name">Table Management</span>
-    <div class="description">
-      <p>View and manage student seating arrangements across all periods of our AP CSA class. Track the progress of each team, monitor tasks assigned to individuals at each table, and gain insights into each student’s GitHub activity, including their number of commits, issues, and more!</p>
-    </div>
-  </a>
 </div>
 
-  <style>
-  .toolkit-buttons {
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-start;
-    height: 100vh;
-    margin: 0;
-    padding: 20px;
-  }
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto auto;
+        gap: 30px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "student-management";
+    }
 
-  .toolkit-button {
-    width: 30%;
-    height: auto;
-    background-color: transparent;
-    color: white;
-    font-size: 1.5rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    text-align: center;
-    text-decoration: none;
-    padding-bottom: 20px;
-  }
+    .student-management {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: auto;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "student-management-image student-management-details";
+        grid-area: student-management;
+    }
 
-  .toolkit-button img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 8px;
-    filter: blur(5px);
-    transition: filter 0.3s ease, transform 0.3s ease;
-  }
+    .student-management-image {
+        grid-area: student-management-image;
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
 
-  .toolkit-button .button-name {
-    position: relative;
-    z-index: 1;
-    font-size: 1.2rem;
-    margin: 10px 0;
-  }
+    }
 
-  .toolkit-button .description {
-    opacity: 0;
-    position: relative;
-    background: none
-    color: white;
-    padding: 10px;
-    text-align: center;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    white-space: normal;
-    width: 100%;
-    z-index: 1;
-    font-size: 0.8rem;
-    margin-top: 10px;
-  }
+    .student-management-details {
+        padding: 10px;
+        grid-area: student-management-details;
+    }
 
-  .toolkit-button:hover {
-    transform: scale(1.1);
-  }
+    .glow-on-hover-search {
+        border: none;
+        outline: none;
+        color: #fff;
+        background: #1e1e1e;
+        cursor: pointer;
+        position: relative;
+        z-index: 0;
+        border-radius: 10px;
+    }
 
-  .toolkit-button:hover img {
-    filter: blur(0);
-  }
+    .glow-on-hover-search:before {
+        content: '';
+        background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        background-size: 400%;
+        z-index: -1;
+        filter: blur(5px);
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+        animation: glowing 20s linear infinite;
+        opacity: 0;
+        transition: opacity .3s ease-in-out;
+        border-radius: 10px;
+    }
 
-  .toolkit-button:hover .description {
-    opacity: 1;
-    transform: translateY(10px);
-  }
+    .glow-on-hover-search:hover:before {
+        opacity: 1;
+    }
+
+    .glow-on-hover-search:after {
+        z-index: -1;
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #1e1e1e;
+        left: 0;
+        top: 0;
+        border-radius: 10px;
+    }
+
+    @keyframes glowing {
+        0% {
+            background-position: 0 0;
+        }
+
+        50% {
+            background-position: 400% 0;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    img {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    h3 {
+        margin-top: 0px !important;
+        padding-top: 0px !important;
+    }
 </style>

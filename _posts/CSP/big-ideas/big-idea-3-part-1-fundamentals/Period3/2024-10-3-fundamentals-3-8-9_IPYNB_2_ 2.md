@@ -5,7 +5,6 @@ layout: post
 title: 3.8.9 Grading Policy
 description: Rubric for how our homework will be graded
 permalink: /csp/big-idea/p3/3-8-9
-categories: ['CSP Big Ideas']
 author: Armaghan, Elliot, Nikhil, Hithin
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

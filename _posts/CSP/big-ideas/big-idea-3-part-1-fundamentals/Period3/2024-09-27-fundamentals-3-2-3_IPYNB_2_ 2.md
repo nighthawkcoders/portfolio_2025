@@ -5,7 +5,6 @@ layout: post
 title: 3.2.3 JSON implementation
 description: Student led teaching on converting from Python to JSON.
 permalink: /csp/big-idea/p3/3-2-3
-categories: ['CSP Big Ideas']
 author: Gabriela Connelly
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

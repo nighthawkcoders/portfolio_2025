@@ -5,7 +5,6 @@ layout: post
 title: 3.1.2 Python Hacks
 description: Get ready to test your knowledge on variables with this homework.
 permalink: /csp/big-idea/p3/3-1-2
-categories: ['CSP Big Ideas']
 author: Ahaan Vaidyanathan, Spencer Lyons, Vasanth Rajasekaran, Xavier Thompson
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

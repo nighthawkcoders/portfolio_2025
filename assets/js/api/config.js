@@ -8,8 +8,9 @@ if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
 }
 
 export var javaURI;
+// 127.0.0.1:8085 does not work for some machines
 if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-    javaURI = "http://localhost:8085";  // Same URI for localhost or 127.0.0.1
+        javaURI = "http://localhost:8085";
 } else {
     javaURI = "https://spring2025.nighthawkcodingsociety.com";
 }
@@ -45,7 +46,7 @@ export function login(options) {
             const errorMsg = 'Login error: ' + response.status;
             console.log(errorMsg);
             document.getElementById(options.message).textContent = errorMsg;
-            return;  // Exit early if response is not OK
+            return response;  // Exit early if response is not OK
         }
         // Success: Proceed with callback
         options.callback();

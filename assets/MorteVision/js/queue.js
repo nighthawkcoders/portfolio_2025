@@ -4,12 +4,10 @@ import { javaURI } from '../../js/api/config.js';
 let assignment = null;
 let currentQueue = [];
 
-// will remove once things are fixed
-window.person = "John Mortensen";
+let person;
 
 document.getElementById('addQueue').addEventListener('click', addToQueue);
 document.getElementById('removeQueue').addEventListener('click', removeFromQueue);
-document.getElementById('resetQueue').addEventListener('click', resetQueue);
 
 let timerInterval;
 let timerlength;
@@ -20,17 +18,21 @@ console.log(URL)
 
 // timer function to start countdown for person
 function startTimer() {
-    console.log("Timer Started")
     let time = timerlength;
+    document.getElementById('beginTimer').style.display = 'none';
     timerInterval = setInterval(() => {
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
         document.getElementById('timerDisplay').textContent =
             `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        document.title = "" + `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} | Presentation Queue`;
         time--;
         if (time < 0) {
             clearInterval(timerInterval);
             moveToDoneQueue();
+            alert("Timer is up! Your presentation is over.")
+            document.getElementById('beginTimer').style.display = 'block';
+            document.title = "Presentation Queue | Nighthawk Pages"
         }
     }, 1000);
 }
@@ -46,24 +48,53 @@ async function fetchQueue() {
     }
 }
 
+async function fetchTimerLength() {
+    console.log("test")
+    const response = await fetch(URL + `getPresentationLength/${assignment}`);
+    if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        timerlength = data;
+        document.getElementById('timerDisplay').textContent = `${Math.floor(timerlength / 60).toString().padStart(2, '0')}:${(timerlength % 60).toString().padStart(2, '0')}`;
+    }
+}
+
 // add user to waiting
 async function addToQueue() {
-    await fetch(URL + `addToWaiting/${assignment}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify([person])
+    let list = document.getElementById("notGoneList").children;
+    let names = [];
+    Array.from(list).forEach(child => {
+        names.push(child.textContent);
     });
-    fetchQueue();
+    if (names.includes(person)) {
+        await fetch(URL + `addToWaiting/${assignment}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify([person])
+        });
+        fetchQueue();
+    } else {
+        alert("ERROR: You are not in the working list.")
+    }
 }
 
 // remove user from waiting
 async function removeFromQueue() {
-    await fetch(URL + `removeToWorking/${assignment}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify([person])
+    let list = document.getElementById("waitingList").children;
+    let names = [];
+    Array.from(list).forEach(child => {
+        names.push(child.textContent);
     });
-    fetchQueue();
+    if (names.includes(person)) {
+        await fetch(URL + `removeToWorking/${assignment}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify([person])
+        });
+        fetchQueue();
+    } else {
+        alert("ERROR: You are not in the waiting list.")
+    }
 }
 
 // move user to completed
@@ -85,59 +116,70 @@ async function resetQueue() {
     fetchQueue();
 }
 
+// add/remove a group from waiting list
+async function toggleGroupInQueue() {
+    // ask for group names
+    const groupName = prompt("Enter the group name to add/remove in the waiting queue:");
+    if (!groupName || !groupName.trim()) {
+        alert("Please enter a valid group name.");
+        return;
+    }
+    
+    const trimmedGroup = groupName.trim();
+    
+    // if group is in queue, remove group, else add group to queue
+    const isInQueue = currentQueue.some(item => item === trimmedGroup);
+    
+    if (isInQueue) {        
+        // Now move the group to the completed queue endpoint
+        await fetch(URL + `doneToCompleted/${assignment}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify([trimmedGroup])
+        });
+        alert(`Moved "${trimmedGroup}" to completed queue.`);
+    } else {
+        // add to queue
+        await fetch(URL + `addToWaiting/${assignment}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify([trimmedGroup])
+        });
+        alert(`Added "${trimmedGroup}" to waiting queue.`);
+    }
+    
+    // Refresh the queue display
+    fetchQueue();
+}
+
+// Attach event listener to the toggle button
+document.getElementById('customToggleBtn').addEventListener('click', toggleGroupInQueue);
+
+
 // update display - ran periodically
 function updateQueueDisplay(queue) {
-    currentQueue = queue.queue;
+    currentQueue = queue.waiting;
 
     const notGoneList = document.getElementById('notGoneList');
     const waitingList = document.getElementById('waitingList');
     const doneList = document.getElementById('doneList');
 
-    // display users as cards
-    notGoneList.innerHTML = queue.haventGone.map(person => `<div class="card">${person}</div>`).join('');
-    waitingList.innerHTML = queue.queue.map(person => `<div class="card">${person}</div>`).join('');
-    doneList.innerHTML = queue.done.map(person => `<div class="card">${person}</div>`).join('');
-}
+    const notGoneElements = queue.working.map(person => `<div class="card">${person}</div>`);
+    notGoneList.innerHTML = notGoneElements.join('');
+    waitingList.innerHTML = queue.waiting.map(person => `<div class="card">${person}</div>`).join('');
+    doneList.innerHTML = queue.completed.map(person => `<div class="card">${person}</div>`).join('');
 
-document.getElementById('initializeQueue').addEventListener('click', initializeQueue);
-
-// get assignments, used for initialization and popup connection
-async function fetchAssignments() {
-    console.log(URL + 'debug')
-    const response = await fetch(URL + 'debug');
-    if (response.ok) {
-        const assignments = await response.json();
-        const dropdown = document.getElementById('assignmentDropdown');
-        dropdown.innerHTML = assignments.map(assignment =>
-            `<option value="${assignment.id}">${assignment.name}</option>`
-        ).join('');
+    // Check and update global person variable
+    if (!person.includes("|")) {
+        const matchingPerson = queue.working.find(p => p.includes(person));
+        if (matchingPerson) {
+            person = matchingPerson; // Update global person variable
+        }
     }
 }
 
-// need to wait for function to only fetch from certain period
-async function fetchPeople() {
-    const response = await fetch(javaURI + '/api/people');
-    if (response.ok) {
-        const people = await response.json();
-        return people.map(person => person.name);
-    }
-    return [];
-}
 
-async function initializeQueue() {
-    timerlength = parseInt(document.getElementById("durationInput").value);
-    const assignmentId = document.getElementById('assignmentDropdown').value;
-    // const peopleList = await fetchPeople();
-    const peopleList = ["John Mortensen", "Person 1", "Person 2"];
-
-    await fetch(URL + `initQueue/${assignmentId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(peopleList)
-    });
-    assignment = assignmentId;
-    fetchQueue();
-}
+document.getElementById('beginTimer').addEventListener('click', startTimer);
 
 // Start the interval to periodically update the queue
 function startQueueUpdateInterval(intervalInSeconds) {
@@ -145,6 +187,7 @@ function startQueueUpdateInterval(intervalInSeconds) {
     queueUpdateInterval = setInterval(() => {
         console.log("Updating queue...");
         fetchQueue();
+        fetchTimerLength();
     }, intervalInSeconds * 1000);
 }
 
@@ -154,18 +197,47 @@ function stopQueueUpdateInterval() {
 }
 
 window.addEventListener('load', () => {
+    fetchQueue();
+    fetchUser();
     showAssignmentModal();
 });
 
-function showAssignmentModal() {
+async function fetchUser() {
+    const response = await fetch(javaURI + `/api/person/get`, {
+        method: 'GET',
+        cache: "no-cache",
+        credentials: 'include',
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-Origin': 'client' 
+        }
+    });
+    
+    if (response.ok) {
+        const userInfo = await response.json();
+        person = userInfo.name;
+
+        console.log(typeof person);
+        if (typeof person == 'undefined') {
+            alert("Error: You are not logged in. Redirecting you to the login page.")
+            let loc = window.location.href
+            loc = loc => loc.split('/').slice(0, -2).join('/') || loc;
+            window.location.href = loc + "/toolkit-login"
+        }
+    }
+}
+
+async function showAssignmentModal() {
     const modal = document.getElementById('assignmentModal');
     const modalDropdown = document.getElementById('modalAssignmentDropdown');
-    
-    // Fetch assignments and populate the dropdown
-    fetchAssignments().then(() => {
-        const dropdown = document.getElementById('assignmentDropdown');
-        modalDropdown.innerHTML = dropdown.innerHTML; // Use the same data as the main dropdown
-    });
+
+    const response = await fetch(URL + 'debug');
+    if (response.ok) {
+        const assignments = await response.json();
+        modalDropdown.innerHTML = assignments.map(assignment =>
+            `<option value="${assignment.id}">${assignment.name}</option>`
+        ).join('');
+    }
 
     modal.style.display = 'block';
 
@@ -176,6 +248,7 @@ function showAssignmentModal() {
             assignment = selectedAssignment; // Set the global assignment variable
             fetchQueue();
             startQueueUpdateInterval(10);
+            fetchTimerLength();
             modal.style.display = 'none';
         } else {
             alert('Please select an assignment.');

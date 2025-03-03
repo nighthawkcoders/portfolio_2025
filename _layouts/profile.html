@@ -1,0 +1,886 @@
+---
+title: Profile
+layout: aesthetihawk
+active_tab: profile
+---
+
+<style>
+    .main-info {
+        display: grid;
+        /* grid-template-columns: 500px 500px; */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 500px)); /* Responsive grid */
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+        gap: 30px 30px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "header header"
+            "name-info uid-info"
+            "email-info password-info"
+            "kasm-info class-info"
+            "pfp-info dummy";
+        grid-area: main-info;
+    }
+
+    @media (min-width: 1400PX) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .header {
+        grid-area: header;
+    }
+
+    .name-info {
+        display: grid;
+        grid-template-columns: 1fr max-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "name-details name-icon";
+        grid-area: name-info;
+    }
+
+    .name-details {
+        grid-area: name-details;
+    }
+
+    .name-icon {
+        grid-area: name-icon;
+    }
+
+    .uid-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "uid-details uid-icon";
+        grid-area: uid-info;
+    }
+
+    .uid-details {
+        grid-area: uid-details;
+    }
+
+    .uid-icon {
+        grid-area: uid-icon;
+    }
+
+    .email-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "email-details email-icon";
+        grid-area: email-info;
+    }
+
+    .email-details {
+        grid-area: email-details;
+    }
+
+    .email-icon {
+        grid-area: email-icon;
+    }
+
+    .password-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "password-details password-icon";
+        grid-area: password-info;
+    }
+
+    .password-details {
+        grid-area: password-details;
+    }
+
+    .password-icon {
+        grid-area: password-icon;
+    }
+
+    .kasm-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "kasm-details kasm-icon";
+        grid-area: kasm-info;
+    }
+
+    .kasm-details {
+        grid-area: kasm-details;
+    }
+
+    .kasm-icon {
+        grid-area: kasm-icon;
+    }
+
+    .class-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "class-details class-icon";
+        grid-area: class-info;
+    }
+
+    .class-details {
+        grid-area: class-details;
+    }
+
+    .class-icon {
+        grid-area: class-icon;
+    }
+
+    .pfp-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "pfp-details pfp-icon";
+        grid-area: pfp-info;
+    }
+
+    .pfp-details {
+        grid-area: pfp-details;
+    }
+
+    .pfp-icon {
+        grid-area: pfp-icon;
+    }
+
+    .dummy-info {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "dummy-details dummy-icon";
+        grid-area: dummy-info;
+    }
+
+    .dummy-details {
+        grid-area: dummy-details;
+    }
+
+    .dummy-icon {
+        grid-area: dummy-icon;
+    }
+
+    .card {
+        /* colors */
+        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* sizing */
+        box-sizing: border-box;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+
+        /* spacing */
+        padding: 30px;
+
+        /* other */
+        cursor: pointer;
+    }
+
+    .change-info-card {
+        /* colors */
+        backdrop-filter: blur(30px);
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* spacing */
+        padding: 30px;
+        width: min-content;
+        text-align: center;
+
+        /* positioning for centering */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        /* other */
+        z-index: 999;
+    }
+
+    input {
+        /* colors */
+        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
+        color: white;
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* spacing */
+        padding: 15px;
+        margin: 10px;
+
+        /* other */
+        font-size: large;
+    }
+
+    .close {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+
+        cursor: pointer;
+    }
+
+    /* CHECKBOX STUFF ================================ */
+    /* The container-checkbox */
+    .container-checkbox {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Hide the browser's default checkbox */
+    .container-checkbox input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 5px;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container-checkbox:hover input~.checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .container-checkbox input:checked~.checkmark {
+        background-color: #2196F3;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container-checkbox input:checked~.checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container-checkbox .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+</style>
+
+<!-- change name box -->
+<div id="change-name" class="change-info-card" style="visibility: hidden;">
+    <ion-icon name="person-outline" size="large"></ion-icon>
+    <h1>Name</h1>
+    <form onsubmit="return changeName(event)">
+        <input type="text" id="nameInput" placeholder="Enter new name.">
+        <input type="submit" value="Save changes">
+    </form>
+    <div class="close" onclick="document.getElementById('change-name').style.visibility = 'hidden'">
+        <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+    </div>
+</div>
+
+<!-- change user ID box -->
+<div id="change-uid" class="change-info-card" style="visibility: hidden;">
+    <ion-icon name="id-card-outline" size="large"></ion-icon>
+    <h1>User ID</h1>
+    <form onsubmit="return changeUid(event)">
+        <input type="text" id="uidInput" placeholder="Enter new user ID.">
+        <input type="submit" value="Save changes">
+    </form>
+    <div class="close" onclick="document.getElementById('change-uid').style.visibility = 'hidden'">
+        <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+    </div>
+</div>
+
+<!-- change email box -->
+<div id="change-email" class="change-info-card" style="visibility: hidden;">
+    <ion-icon name="mail-outline" size="large"></ion-icon>
+    <h1>Email</h1>
+    <form onsubmit="return changeEmail(event)">
+        <input type="text" id="emailInput" placeholder="Enter new email.">
+        <input type="submit" value="Save changes">
+    </form>
+    <div class="close" onclick="document.getElementById('change-email').style.visibility = 'hidden'">
+        <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+    </div>
+</div>
+
+<!-- change password box -->
+<div id="change-password" class="change-info-card" style="visibility: hidden;">
+    <ion-icon name="mail-outline" size="large"></ion-icon>
+    <h1>Password</h1>
+    <form onsubmit="return changePassword(event)">
+        <input type="password" id="passwordInput" placeholder="Enter new password.">
+        <input type="submit" value="Save changes">
+    </form>
+    <div class="close" onclick="document.getElementById('change-password').style.visibility = 'hidden'">
+        <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+    </div>
+</div>
+
+<!-- change kasm box -->
+<div id="change-kasm" class="change-info-card" style="visibility: hidden;">
+    <ion-icon name="server-outline" size="large"></ion-icon>
+    <h1>Kasm</h1>
+    <form>
+        <label class="container-checkbox" style="white-space: nowrap;">I need a Kasm server.
+            <input type="checkbox" checked="checked" id="kasm-checkbox" onchange="window.changeKasmServerStatus(event)">
+            <span class="checkmark"></span>
+        </label>
+    </form>
+    <div class="close" onclick="document.getElementById('change-kasm').style.visibility = 'hidden'">
+        <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+    </div>
+</div>
+
+
+<!-- change class box -->
+<div id="change-class" class="change-info-card" style="visibility: hidden;">
+    <ion-icon name="school-outline" size="large"></ion-icon>
+    <h1>Class Info</h1>
+    <form onsubmit="return changeClass(event)">
+        <select id="classInput" name="class">
+            <option value="CSA">Computer Science Advanced</option>
+            <option value="CSP">Computer Science Principles</option>
+            <option value="CSSE">Computer Science and Software Engineering</option>
+            <option value="Robotics">Engineering Robotics</option>
+        </select>
+
+        <input type="text" id="classInputYear" placeholder="Enter class year (YYYY).">
+
+        <input type="submit" value="Save changes">
+    </form>
+    <div class="close" onclick="document.getElementById('change-class').style.visibility = 'hidden'">
+        <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+    </div>
+</div>
+
+<!-- change profile pic box -->
+<div id="change-pfp" class="change-info-card" style="visibility: hidden;">
+    <ion-icon name="image-outline" size="large"></ion-icon>
+    <h1>Profile Picture</h1>
+    <form onsubmit="return changeProfilePicture(event)">
+        <label class="container-checkbox" style="white-space: nowrap; padding-left: 0px;">Click to upload a profile
+            picture.
+            <input type="file" id="profilePictureInput" name="filename" style="visibility: hidden;">
+            <input type="submit" style="visibility: hidden;">
+            <ion-icon name="cloud-upload-outline"></ion-icon>
+        </label>
+        <input type="submit" value="Save changes">
+        <br>
+        <p><em>Note: you will have to reload the page after uploading the file.</em></p>
+    </form>
+    <div class="close" onclick="document.getElementById('change-pfp').style.visibility = 'hidden'">
+        <ion-icon name="close-outline" size="large" class="close"></ion-icon>
+    </div>
+</div>
+
+<!-- main user info cards -->
+<!-- your personal information -->
+<div class="main-info">
+    <!-- the info header at the top of the page -->
+    <div class="header">
+        <h1>Personal Information</h1>
+        <p>Manage your personal information, including name, user ID, email, class specific information, and
+            more.</p>
+    </div>
+
+    <!-- name card -->
+    <div class="name-info card" onclick="document.getElementById('change-name').style.visibility = 'visible'" data-tilt
+        data-tilt-reverse="true" data-tilt-perspective="10000" data-tilt-glare data-tilt-max-glare="0.5">
+        <div class="name-details">
+            <h3>Name</h3>
+            <p id="name"></p>
+        </div>
+        <div class="name-icon">
+            <ion-icon name="person-outline" size="large"></ion-icon>
+        </div>
+    </div>
+
+    <!-- uid card -->
+    <div class="uid-info card" onclick="document.getElementById('change-uid').style.visibility = 'visible'" data-tilt
+        data-tilt-reverse="true" data-tilt-perspective="10000" data-tilt-glare data-tilt-max-glare="0.5">
+        <div class="uid-details">
+            <h3>User ID</h3>
+            <p id="uid"></p>
+        </div>
+        <div class="uid-icon">
+            <ion-icon name="id-card-outline" size="large"></ion-icon>
+        </div>
+    </div>
+
+    <!-- email card -->
+    <div class="email-info card" onclick="document.getElementById('change-email').style.visibility = 'visible'"
+        data-tilt data-tilt-reverse="true" data-tilt-perspective="10000" data-tilt-glare data-tilt-max-glare="0.5">
+        <div class="email-details">
+            <h3>Email</h3>
+            <p id="email"></p>
+        </div>
+        <div class="email-icon">
+            <ion-icon name="mail-outline" size="large"></ion-icon>
+        </div>
+    </div>
+
+    <!-- password card -->
+    <div class="password-info card" onclick="document.getElementById('change-password').style.visibility = 'visible'" data-tilt
+        data-tilt-reverse="true" data-tilt-perspective="10000" data-tilt-glare data-tilt-max-glare="0.5">
+        <div class="password-details">
+            <h3>Password</h3>
+            <p>Click to change your password.</p>
+        </div>
+        <div class="password-icon">
+            <ion-icon name="lock-closed-outline" size="large"></ion-icon>
+        </div>
+    </div>
+
+    <!-- kasm card -->
+    <div class="kasm-info card" onclick="document.getElementById('change-kasm').style.visibility = 'visible'" data-tilt
+        data-tilt-reverse="true" data-tilt-perspective="10000" data-tilt-glare data-tilt-max-glare="0.5">
+        <div class="kasm-details">
+            <h3>Kasm</h3>
+            <p id="kasm"></p>
+        </div>
+        <div class="kasm-icon">
+            <ion-icon name="server-outline" size="large"></ion-icon>
+        </div>
+    </div>
+
+    <!-- class card -->
+    <div class="class-info card" onclick="document.getElementById('change-class').style.visibility = 'visible'"
+        data-tilt data-tilt-reverse="true" data-tilt-perspective="10000" data-tilt-glare data-tilt-max-glare="0.5">
+        <div class="class-details">
+            <h3>Class Info</h3>
+            <p>CSA 2025</p>
+        </div>
+        <div class="class-icon">
+            <ion-icon name="school-outline" size="large"></ion-icon>
+        </div>
+    </div>
+
+    <!-- pfp card -->
+    <div class="pfp-info card" onclick="document.getElementById('change-pfp').style.visibility = 'visible'" data-tilt
+        data-tilt-reverse="true" data-tilt-perspective="10000" data-tilt-glare data-tilt-max-glare="0.5">
+        <div class="pfp-details">
+            <h3>Profile Picture</h3>
+            <p>Click to change or add your profile picture.</p>
+        </div>
+        <div class="pfp-icon">
+            <ion-icon name="image-outline" size="large"></ion-icon>
+        </div>
+    </div>
+</div>
+
+<!-- icons -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<!-- js tilt feature -->
+<script src="{{ site.baseurl }}/scripts/tilt.js"></script>
+
+<script type="module">
+    import { javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+    import { putUpdate, postUpdate, deleteData, logoutUserJava } from "{{site.baseurl}}/assets/js/api/profile.js";
+
+    // this runs on page load
+    document.addEventListener('DOMContentLoaded', async function () {
+        localStorage.setItem('activeTab', 'profile');
+
+        try {
+            await loadUserData();
+        } catch (error) {
+            console.error('Initialization error:', error.message);
+        }
+    });
+
+    // loading the user data to display
+    window.loadUserData = async function () {
+        try {
+            // fetch the data
+            const name = await window.fetchName();
+            const uid = await window.fetchUid();
+            const email = await window.fetchEmail();
+            const kasm = await window.fetchKasmStatus();
+
+            // if the fetch failed, set that as the text content; otherwise show
+            if (name == null) {
+                document.getElementById("name").textContent = "Failed to load. Are you logged in?";
+            }
+            else {
+                document.getElementById("name").textContent = name;
+            }
+            if (uid == null) {
+                document.getElementById("uid").textContent = "Failed to load. Are you logged in?";
+            }
+            else {
+                document.getElementById("uid").textContent = uid;
+            }
+            if (email == null) {
+                document.getElementById("email").textContent = "Failed to load. Are you logged in?";
+            }
+            else {
+                document.getElementById("email").textContent = email;
+            }
+            if (kasm == null) {
+                document.getElementById("kasm").textContent = "Failed to load. Are you logged in?";
+            }
+        } catch (error) {
+            console.error('Error setting placeholders:', error.message);
+        }
+    }
+
+    // FETCH COMMANDS ========
+    window.fetchName = async function () {
+        const URL = javaURI + "/api/person/get"; // Adjusted endpoint
+
+        try {
+            const response = await fetch(URL, fetchOptions);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch Name: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.name;
+        }
+        catch (error) {
+            document.getElementById("name").textContent = "Failed to load. Are you logged in?";
+            console.error('Error fetching Name:', error.message);
+            return null;
+        }
+    };
+
+    window.fetchUid = async function () {
+        const URL = javaURI + "/api/person/get"; // Adjusted endpoint
+        try {
+            const response = await fetch(URL, fetchOptions);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch Name: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.uid;
+        }
+        catch (error) {
+            document.getElementById("uid").textContent = "Failed to load. Are you logged in?";
+            console.error('Error fetching Name:', error.message);
+            return null;
+        }
+    };
+
+    window.fetchEmail = async function () {
+        const URL = javaURI + "/api/person/get"; // Adjusted endpoint
+
+        try {
+            const response = await fetch(URL, fetchOptions);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch UID: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.email;
+        }
+        catch (error) {
+            document.getElementById("email").textContent = "Failed to load. Are you logged in?";
+            console.error('Error fetching UID:', error.message);
+            return null;
+        }
+    };
+
+    window.fetchKasmStatus = async function () {
+        const URL = javaURI + "/api/person/get"; // Adjusted endpoint
+
+        try {
+            const response = await fetch(URL, fetchOptions);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch kasm_server_needed: ${response.status}`);
+            }
+
+            const userData = await response.json();
+            const kasmServerNeeded = userData.kasmServerNeeded
+
+            // Update checkbox state based on fetched value
+            if (kasmServerNeeded) {
+                document.getElementById("kasm").textContent = "Kasm Enabled";
+                document.getElementById('kasm-checkbox').checked = kasmServerNeeded;
+            }
+            else {
+                document.getElementById("kasm").textContent = "Kasm Disabled";
+                document.getElementById('kasm-checkbox').checked = kasmServerNeeded;
+            }
+
+            return kasmServerNeeded;
+        } catch (error) {
+            console.error('Error fetching kasm_server_needed:', error.message);
+            return null;
+        }
+    }
+
+
+    // UPDATE COMMANDS =======
+    window.changeName = async function (event) {
+        event.preventDefault(); // Prevent the form from refreshing the page
+
+        const name = document.getElementById("nameInput").value.trim(); // Get and trim input value
+
+        // send the post request
+        if (name) {
+            const URL = javaURI + "/api/person/update";
+            const options = {
+                URL,
+                body: { name },
+                callback: () => {
+                    console.log('Name updated successfully!');
+                }
+            };
+            try {
+                await postUpdate(options);
+            } catch (error) {
+                console.error('Error updating Name:', error.message);
+            }
+        }
+
+        document.getElementById("name").textContent = name; //reload the content
+    }
+
+    window.changeUid = async function (event) {
+        event.preventDefault(); // Prevent the form from refreshing the page
+
+        const uid = document.getElementById("uidInput").value.trim(); // Get and trim input value
+
+        // send the post request
+        if (uid) {
+            const URL = javaURI + "/api/person/update";
+            const options = {
+                URL,
+                body: { uid },
+                callback: () => {
+                    console.log('Uid updated successfully!');
+                }
+            };
+            try {
+                await postUpdate(options);
+            } catch (error) {
+                console.error('Error updating uid:', error.message);
+            }
+        }
+
+        document.getElementById("uid").textContent = uid; //reload the content
+    }
+
+    window.changeEmail = async function (event) {
+        event.preventDefault(); // Prevent the form from refreshing the page
+
+        const email = document.getElementById("emailInput").value.trim(); // Get and trim input value
+
+        // send the post request
+        if (email) {
+            const URL = javaURI + "/api/person/update";
+            const options = {
+                URL,
+                body: { email },
+                callback: () => {
+                    console.log('Email updated successfully!');
+                }
+            };
+            try {
+                await postUpdate(options);
+            } catch (error) {
+                console.error('Error updating email:', error.message);
+            }
+        }
+
+        document.getElementById("email").textContent = email; //reload the content
+    }
+
+    window.changePassword = async function (event) {
+        event.preventDefault(); // Prevent the form from refreshing the page
+
+        const password = document.getElementById("passwordInput").value.trim(); // Get and trim input value
+
+        if (password) {
+            const URL = javaURI + "/api/person/update"; // Adjusted endpoint
+            const options = {
+                URL,
+                body: { password }, // Adjust the message area as needed
+                callback: () => {
+                    console.log('Password updated successfully!');
+                    window.location.href = '/portfolio_2025/toolkit-login'
+                }
+            };
+            try {
+                alert("You updated your password, so you will automatically be logged out. Be sure to remember your password!");
+                await postUpdate(options);
+                await logoutUserJava();
+            } catch (error) {
+                console.error('Error updating password:', error.message);
+            }
+        }
+    }
+
+    window.changeKasmServerStatus = async function (event) {
+        // select the checkbox and scan for updates (did they check or uncheck it?)
+        const checkbox = event.target;
+        const newKasmServerNeeded = checkbox.checked;
+
+        const URL = javaURI + "/api/person/update"; // Adjusted endpoint
+
+        // newKasmServerNeeded is a boolean, so you can just send it directly
+        const options = {
+            URL,
+            body: { kasmServerNeeded: newKasmServerNeeded },
+            callback: () => {
+                console.log('Kasm Server Needed updated successfully!');
+            }
+        };
+        try {
+            await postUpdate(options);
+        } catch (error) {
+            console.error('Error updating kasm_server_needed:', error.message);
+        }
+
+        // Update checkbox state text based on new value
+        if (newKasmServerNeeded) {
+            document.getElementById("kasm").textContent = "Kasm Enabled";
+        } else {
+            document.getElementById("kasm").textContent = "Kasm Disabled";
+        }
+    }
+
+    window.changeClass = async function (event) {
+        event.preventDefault(); // Prevent the form from refreshing the page
+
+        // no java code on profile java for this; collaboration with mort required
+    }
+    
+
+    window.changeProfilePicture = async function (event) {
+        event.preventDefault(); // Prevent the form from refreshing the page
+
+        // select the file
+        const fileInput = document.getElementById('profilePictureInput');
+        const file = fileInput.files[0];
+
+        // all this does is update the image in the sidebar (doesnt actually send img to backend)
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const profileImageBox = document.getElementById('headerPfp');
+                profileImageBox.innerHTML = `<img src="${reader.result}" alt="Profile Picture">`;
+            };
+            reader.readAsDataURL(file);
+        }
+        if (!file) return;
+
+        // this is the code that ACTUALLY sends the file to the backend
+        try {
+            const base64String = await convertToBase64(file);
+            await sendProfilePicture(base64String);
+            console.log('Profile picture uploaded successfully!');
+        } catch (error) {
+            console.error('Error uploading profile picture:', error.message);
+        }
+
+    }
+
+    // helper function to convert a file to base64 for payload
+    async function convertToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file);
+        });
+    }
+
+
+    // helper function to send the new pfp given the base64 data
+    async function sendProfilePicture(base64String) {
+        const URL = javaURI + "/api/person/update"; // Adjust endpoint as needed
+
+        // Create options object for PUT request
+        const options = {
+            URL,
+            body: { pfp: base64String },
+            message: 'profile-message', // Adjust the message area as needed
+            callback: () => {
+                console.log('Profile picture uploaded successfully!');
+                // Handle success response as needed
+            }
+        };
+
+        try {
+            await postUpdate(options);
+        } catch (error) {
+            console.error('Error uploading profile picture:', error.message);
+        }
+    }
+
+</script>

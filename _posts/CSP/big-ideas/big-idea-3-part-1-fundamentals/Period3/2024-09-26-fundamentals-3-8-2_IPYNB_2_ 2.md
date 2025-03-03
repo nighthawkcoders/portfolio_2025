@@ -5,7 +5,6 @@ layout: post
 title: 3.8.2 Use While loops to print strings with booleans
 description: Learn to use while loops to repeat code
 permalink: /csp/big-idea/p3/3-8-2
-categories: ['CSP Big Ideas']
 author: Hithin
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

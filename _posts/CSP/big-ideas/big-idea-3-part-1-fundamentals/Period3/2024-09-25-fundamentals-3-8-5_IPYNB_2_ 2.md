@@ -5,7 +5,6 @@ layout: post
 title: 3.8.5 Nested If Statements
 description: Learn what a nested if statement is and does, practice problems for getting familiar with nested if statements
 permalink: /csp/big-idea/p3/3-8-5
-categories: ['CSP Big Ideas']
 author: Elliot
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

@@ -1,192 +1,229 @@
 ---
 layout: post
-title: BlackJack
+title: Blackjack
 permalink: /gamify/blackjack
 ---
 
-<title>Blackjack Game</title>
 <style>
     body {
         font-family: Arial, sans-serif;
-        background-color: #1e1e1e;
-        color: #ffffff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
+        text-align: center;
+        background-color: #121212;
+        color: white;
     }
     .container {
-        text-align: center;
-        background-color: #2b2b2b;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        width: 40%;
+        margin: auto;
+        background-color: #222;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px #fff;
     }
     button {
-        margin-top: 10px;
+        background-color: black;
+        color: white;
+        border: 1px solid white;
         padding: 10px;
-        border: none;
-        border-radius: 5px;
-        background-color: #f39c12;
-        color: #1e1e1e;
+        margin: 5px;
         cursor: pointer;
+    }
+    button:disabled {
+        background-color: grey;
+        cursor: not-allowed;
+    }
+    .error {
+        color: red;
         font-weight: bold;
     }
-    button:hover {
-        background-color: #e67e22;
-    }
-    .hand {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
     .card {
-        width: 60px;
-        height: 90px;
-        background: white;
+        display: inline-block;
+        width: 50px;
+        height: 75px;
         border-radius: 5px;
-        color: black;
+        border: 2px solid white;
         text-align: center;
-        line-height: 90px;
+        line-height: 75px;
+        font-size: 20px;
+        font-weight: bold;
+        margin: 5px;
+        background-color: white;
+        color: black;
+        position: relative;
     }
-    #error {
+    .hearts, .diamonds {
         color: red;
-        margin-top: 10px;
+    }
+    .clubs, .spades {
+        color: black;
     }
 </style>
+
 <div class="container">
     <h1>Blackjack Game</h1>
-    <label>Bet Amount:</label>
-    <input type="range" id="betAmountSlider" min="1000" max="100000" step="100" value="1000" oninput="updateBetAmount(this.value)">
-    <span id="betAmountDisplay">$1000</span>
-    <br>
-    <button onclick="startGame()">Start Game</button>
-    <button onclick="hit()" id="hit-btn" disabled>Hit</button>
-    <button onclick="stand()" id="stand-btn" disabled>Stand</button>
-    <button onclick="exitGame()">Exit</button>
-    <div>
-        <h3>Dealer's Hand</h3>
-        <div id="dealer-hand" class="hand"></div>
-        <h3>Your Hand</h3>
-        <div id="player-hand" class="hand"></div>
-    </div>
-    <div id="result"></div>
-    <div id="error"></div>
+    <label for="betAmount">Bet Amount:</label>
+    <input type="range" id="betAmount" min="1000" max="1000000" value="1000" step="1000">
+    <span id="betValue">$1,000</span>
+    <button id="startGame">Start Game</button>
+    <button id="hit" disabled>Hit</button>
+    <button id="stand" disabled>Stand</button>
+    <button id="exit">Exit</button>
+    <h2>Dealer's Hand</h2>
+    <div id="dealerHand"></div>
+    <h2>Your Hand</h2>
+    <div id="playerHand"></div>
+    <p id="gameStatus" class="error"></p>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
-<script>
-    const baseUrl = 'http://localhost:8085/api/casino/blackjack';
-    let token = "";
-    // Retrieve cookie value by name
-    function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const [key, value] = cookie.trim().split('=');
-            if (key === name) return decodeURIComponent(value);
+<script type="module">
+    import { javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+
+    const API_URL = `${javaURI}/api/casino/blackjack`;
+    let uid = "";
+
+    async function getUID() {
+        console.log("Fetching UID...");
+        try {
+            const response = await fetch(`${javaURI}/api/person/get`, fetchOptions);
+            if (!response.ok) throw new Error(`Server response: ${response.status}`);
+
+            const data = await response.json();
+            if (!data || !data.uid) throw new Error("UID not found in response");
+
+            uid = data.uid;
+            console.log("UID:", uid);
+        } catch (error) {
+            console.error("Error fetching UID:", error);
+            document.getElementById("gameStatus").innerText = "Error fetching UID. Please log in.";
         }
-        return null;
     }
-    // Update the bet amount display
-    function updateBetAmount(value) {
-        document.getElementById("betAmountDisplay").innerText = `$${value}`;
+
+    function updateBetDisplay() {
+        let betValue = document.getElementById("betAmount").value;
+        document.getElementById("betValue").innerText = `$${Number(betValue).toLocaleString()}`;
     }
-    // Start a new blackjack game
-    async function startGame() {
-        token = getCookie('jwt_java_spring');
-        if (!token) {
-            document.getElementById("error").innerText = "Token is missing. Please log in.";
+
+    // Ensure the event listener is correctly set up
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("betAmount").addEventListener("input", updateBetDisplay);
+    });
+
+    document.getElementById("startGame").addEventListener("click", async function () {
+        try {
+            await getUID();
+            const bet = parseInt(document.getElementById("betAmount").value);
+            const requestData = { uid, betAmount: bet };
+
+            const response = await fetch(`${API_URL}/start`, {
+                ...fetchOptions,
+                method: "POST",
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) throw new Error("Failed to start game.");
+            const data = await response.json();
+            updateUI(data);
+        } catch (error) {
+            document.getElementById("gameStatus").innerText = error.message;
+        }
+    });
+
+    document.getElementById("hit").addEventListener("click", async function () {
+        try {
+            const requestData = { uid };
+            const response = await fetch(`${API_URL}/hit`, {
+                ...fetchOptions,
+                method: "POST",
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) throw new Error("Failed to hit.");
+            const data = await response.json();
+            updateUI(data);
+        } catch (error) {
+            document.getElementById("gameStatus").innerText = error.message;
+        }
+    });
+
+    document.getElementById("stand").addEventListener("click", async function () {
+        try {
+            const requestData = { uid };
+            const response = await fetch(`${API_URL}/stand`, {
+                ...fetchOptions,
+                method: "POST",
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) throw new Error("Failed to stand.");
+            const data = await response.json();
+            updateUI(data);
+        } catch (error) {
+            document.getElementById("gameStatus").innerText = error.message;
+        }
+    });
+
+    function updateUI(data) {
+        console.log("API Response:", data);
+
+        let gameState;
+        try {
+            gameState = typeof data.gameState === "string" ? JSON.parse(data.gameState) : data.gameState;
+        } catch (error) {
+            console.error("Failed to parse gameState:", error);
+            document.getElementById("gameStatus").innerText = "Error processing game state.";
             return;
         }
-        const decodedToken = jwt_decode(token);
-        const email = decodedToken.sub;
-        const betAmount = document.getElementById("betAmountSlider").value;
-        try {
-            const response = await fetch(`${baseUrl}/start`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({ email, betAmount: parseFloat(betAmount) })
-            });
-            if (!response.ok) throw new Error("Failed to start the game");
-            const gameData = await response.json();
-            updateUI(gameData);
-            document.getElementById("hit-btn").disabled = false;
-            document.getElementById("stand-btn").disabled = false;
-        } catch (error) {
-            document.getElementById("error").innerText = error.message;
+
+        if (!gameState || !gameState.playerHand || !gameState.dealerHand) {
+            console.error("Invalid gameState format:", gameState);
+            document.getElementById("gameStatus").innerText = "Unexpected response format. Please check the API.";
+            return;
         }
-    }
-    // Perform the 'Hit' action
-    async function hit() {
-        try {
-            const response = await fetch(`${baseUrl}/hit`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            const gameData = await response.json();
-            updateUI(gameData);
-            if (gameData.gameStateMap.result === "LOSE") {
-                document.getElementById("result").innerText = "Bust! You lose.";
-                endGame();
+
+        displayCards(gameState.playerHand, "playerHand");
+        displayCards(gameState.dealerHand, "dealerHand");
+
+        document.getElementById("gameStatus").innerText = `Player Score: ${gameState.playerScore} | Dealer Score: ${gameState.dealerScore}`;
+
+        if (data.status === "INACTIVE") {
+            let resultMessage;
+            if (gameState.playerScore > 21) {
+                resultMessage = "💥 You busted! Dealer wins.";
+            } else if (gameState.dealerScore > 21 || gameState.playerScore > gameState.dealerScore) {
+                resultMessage = "🎉 You win!";
+            } else if (gameState.playerScore < gameState.dealerScore) {
+                resultMessage = "Dealer wins! 😞";
+            } else {
+                resultMessage = "It's a draw! 🤝";
             }
-        } catch (error) {
-            document.getElementById("error").innerText = error.message;
+            document.getElementById("gameStatus").innerText = resultMessage;
         }
+
+        document.getElementById("hit").disabled = data.status === "INACTIVE";
+        document.getElementById("stand").disabled = data.status === "INACTIVE";
     }
-    // Perform the 'Stand' action
-    async function stand() {
-        try {
-            const response = await fetch(`${baseUrl}/stand`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            const gameData = await response.json();
-            updateUI(gameData);
-            const resultMessage = gameData.gameStateMap.result === "WIN" ? "You Win!" : "You Lose!";
-            document.getElementById("result").innerText = resultMessage;
-            endGame();
-        } catch (error) {
-            document.getElementById("error").innerText = error.message;
-        }
-    }
-    // Update the game's user interface
-    function updateUI(gameData) {
-        displayHand("dealer-hand", gameData.gameStateMap.dealerHand);
-        displayHand("player-hand", gameData.gameStateMap.playerHand);
-    }
-    // Display a hand of cards in the UI
-    function displayHand(elementId, hand) {
-        const container = document.getElementById(elementId);
-        container.innerHTML = "";
-        hand.forEach(card => {
-            const div = document.createElement("div");
-            div.classList.add("card");
-            div.innerText = card;
-            container.appendChild(div);
+
+    function displayCards(cards, elementId) {
+        const cardContainer = document.getElementById(elementId);
+        cardContainer.innerHTML = "";
+
+        cards.forEach(card => {
+            const cardElement = document.createElement("div");
+            cardElement.classList.add("card");
+
+            let rank = card.slice(0, -1);
+            let suit = card.slice(-1);
+
+            let suitSymbol = "";
+            let suitClass = "";
+            switch (suit) {
+                case "H": suitSymbol = "♥"; suitClass = "hearts"; break;
+                case "D": suitSymbol = "♦"; suitClass = "diamonds"; break;
+                case "C": suitSymbol = "♣"; suitClass = "clubs"; break;
+                case "S": suitSymbol = "♠"; suitClass = "spades"; break;
+            }
+
+            cardElement.innerHTML = `<span class="${suitClass}">${rank} ${suitSymbol}</span>`;
+            cardContainer.appendChild(cardElement);
         });
-    }
-    // Reset the game interface
-    function exitGame() {
-        document.getElementById("dealer-hand").innerHTML = "";
-        document.getElementById("player-hand").innerHTML = "";
-        document.getElementById("result").innerText = "";
-        document.getElementById("error").innerText = "";
-        document.getElementById("hit-btn").disabled = true;
-        document.getElementById("stand-btn").disabled = true;
-    }
-    // Disable further actions at the end of the game
-    function endGame() {
-        document.getElementById("hit-btn").disabled = true;
-        document.getElementById("stand-btn").disabled = true;
     }
 </script>

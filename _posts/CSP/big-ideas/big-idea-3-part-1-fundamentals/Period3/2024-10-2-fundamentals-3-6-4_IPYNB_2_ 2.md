@@ -4,7 +4,6 @@ comments: True
 layout: post
 title: 3.6.4 Fun Conditionals Quiz!
 permalink: /csp/big-idea/p3/3-6-4
-categories: ['CSP Big Ideas']
 author: Zoe, Avika, Rutvik, Jonah, Aarush
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

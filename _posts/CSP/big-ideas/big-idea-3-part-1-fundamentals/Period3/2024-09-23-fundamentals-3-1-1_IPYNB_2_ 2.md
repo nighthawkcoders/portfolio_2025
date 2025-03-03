@@ -5,7 +5,6 @@ layout: post
 title: 3.1.1 Python Variables
 description: This is a student taught lesson on Python Variables, here you'll learn key concepts from Big Idea 3!
 permalink: /csp/big-idea/p3/3-1-1
-categories: ['CSP Big Ideas']
 author: Ahaan Vaidyanathan, Spencer Lyons, Vasanth Rajasekaran, Xavier Thompson
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

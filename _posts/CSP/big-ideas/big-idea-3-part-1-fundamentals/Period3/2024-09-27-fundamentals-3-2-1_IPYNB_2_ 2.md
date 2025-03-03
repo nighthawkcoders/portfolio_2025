@@ -5,7 +5,6 @@ layout: post
 title: 3.2.1 Data Types Part 1
 description: Student led teaching on data types and when to use them.
 permalink: /csp/big-idea/p3/3-2-1
-categories: ['CSP Big Ideas']
 author: Michelle Kuruvilla
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

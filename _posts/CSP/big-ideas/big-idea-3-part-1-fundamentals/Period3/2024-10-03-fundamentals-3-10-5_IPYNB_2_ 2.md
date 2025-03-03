@@ -5,7 +5,6 @@ layout: post
 title: 3.10 Homework and Submission
 description: This is the grading and submission page for 3.10, period 3. Review the rubric, and when you are ready, submit!
 permalink: /csp/big-idea/p3/3-10-5
-categories: ['CSP Big Ideas']
 author: Ryan Nguyen
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

@@ -2,7 +2,7 @@
 layout: post
 title: GitHub Pages Jekyll
 description: Learn about the power of GitHub Pages and Jekyll
-categories: ['Github Pages']
+categories: ['GitHub Pages']
 permalink: /github/pages/jekyll
 menu: nav/github_pages.html
 toc: True

@@ -2,7 +2,7 @@
 layout: post
 title: Quiz Questions for APCSA Unit 2
 description: Quiz Questions and Code Cells for APCSA Unit 2
-categories: ['CSA-Quiz']
+categories: [AP CSA]
 permalink: /csa/units/quiz2
 menu: nav/CSA_Units/csa_unit2.html
 author: Soham Kamat & Aniket Chakradeo

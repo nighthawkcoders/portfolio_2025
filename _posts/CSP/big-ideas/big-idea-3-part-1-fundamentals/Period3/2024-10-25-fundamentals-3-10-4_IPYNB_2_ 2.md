@@ -5,7 +5,6 @@ layout: post
 title: 3.10 Javascript Hacks
 description: This builds off the initial 3.10.2 lesson. Here you'll find the popcorn hacks (classwork) and hacks (homework) for arrays!
 permalink: /csp/big-idea/p3/3-10-4
-categories: ['CSP Big Ideas']
 author: Arush Shah and Ryan Nguyen
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---

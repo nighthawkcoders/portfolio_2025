@@ -2,7 +2,6 @@
 layout: post
 title: Big Idea 3.10 Part 1- Creating Lists
 description: Learn more about lists and how to create them!
-categories: ['CSP Big Ideas']
 permalink: /csp/big-idea/p1/3-10
 menu: nav/csp_units/csp_unit3_p1_fundamentals.html
 toc: True

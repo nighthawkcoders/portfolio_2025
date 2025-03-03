@@ -5,7 +5,6 @@ layout: post
 title: 3.2.2 Data Types Part 2
 description: None
 permalink: /csp/big-idea/p3/3-2-2
-categories: ['CSP Big Ideas']
 author: Gabriela Connelly, Michelle Kuruvilla
 menu: nav/csp_units/csp_unit3_p3_fundamentals.html
 ---
