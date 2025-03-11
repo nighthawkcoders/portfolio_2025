@@ -2,7 +2,7 @@
 layout: post 
 title: Course Descriptions
 description: An overview of Computer Science pathway at Del Norte High School
-author: John Mortensen, Vivian Ni, Bria Gilliam
+author: Evan Svetina, Nikhil Ekambaram, West Stefany, Zhengji Li, Ruhaan Bansal, Aarav Lohiya, Rachit Jaiswal
 image: /images/mario_animation.png
 hide: true
 menu: nav/home.html
