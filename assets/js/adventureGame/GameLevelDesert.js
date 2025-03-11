@@ -5,6 +5,7 @@ import Npc from './Npc.js';
 import Quiz from './Quiz.js';
 import GameControl from './GameControl.js';
 import GameLevelStarWars from './GameLevelStarWars.js';
+import GameLevelMeteorBlaster from './GameLevelMeteorBlaster.js';
 
 class GameLevelDesert {
   constructor(gameEnv) {
@@ -147,6 +148,7 @@ class GameLevelDesert {
       down: {row: 1, start: 0, columns: 6 },  // This is the stationary npc, down is default 
       hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
       // Linux command quiz
+
       quiz: { 
         title: "Jupyter Notebook Command Quiz",
         questions: [
@@ -165,10 +167,23 @@ class GameLevelDesert {
       reaction: function() {
         alert(sprite_greet_robot);
       },
+
       interact: function() {
-        let quiz = new Quiz(); // Create a new Quiz instance
-        quiz.initialize();
-        quiz.openPanel(sprite_data_robot.quiz);
+        // Set a primary game reference from the game environment
+        let primaryGame = gameEnv.gameControl;
+        // Define the game in game level
+        let levelArray = [GameLevelMeteorBlaster];
+        // Define a new GameControl instance with the StarWars level
+        let gameInGame = new GameControl(path,levelArray);
+        // Pause the primary game 
+        primaryGame.pause();
+        // Start the game in game
+        gameInGame.start();
+        // Setup "callback" function to allow transition from game in gaame to the underlying game
+        gameInGame.gameOver = function() {
+          // Call .resume on primary game
+          primaryGame.resume();
+        }
       }
     }
 
