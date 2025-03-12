@@ -49,7 +49,7 @@ description: Hello world
 <style>
   /* Background */
   body {
-    background: url('ender_background.jpg') no-repeat center center fixed;
+    background: url('/portfolio_2025/CSSE/assets/ender_background.png') no-repeat center center fixed;
     background-size: cover;
     font-family: 'Arial', sans-serif;
     color: #fff;
