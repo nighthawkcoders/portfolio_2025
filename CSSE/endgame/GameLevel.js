@@ -1,5 +1,6 @@
 // GameLevel.js
 import GameEnv from "./GameEnv.js"
+import NPC from "./NPC.js"
 
 class GameLevel {
 
@@ -25,6 +26,10 @@ class GameLevel {
       let gameObject = new gameObjectClass.class(gameObjectClass.data, this.gameEnv)
       this.gameEnv.gameObjects.push(gameObject)
     }
+
+    // Add the NPC to the game objects
+    let npc = new NPC({}, this.gameEnv)
+    this.gameEnv.gameObjects.push(npc)
 
     // Initialize the game level if it has an initialize method
     if (typeof this.gameLevel.initialize === "function") {
