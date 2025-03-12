@@ -1,7 +1,6 @@
 ---
 layout: base
 title: Rachit's CSSE2 Group Blog
-permalink: /CSSE2-Rachit/
 description: Hello world
 ---
 
