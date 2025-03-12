@@ -132,8 +132,61 @@ class GameLevelDesert {
           quiz.openPanel(sprite_data_octocat.quiz);
         }
     }
-  
 
+    const sprite_src_stocks = path + "/images/gamify/slotmachine.png"; // Path to the NPC sprite
+    const sprite_greet_stocks = "Teleport to the stock market?";
+    
+    const sprite_data_stocks = {
+        id: 'Stock-NPC',
+        greeting: sprite_greet_stocks,
+        src: sprite_src_stocks,
+        SCALE_FACTOR: 10,
+        ANIMATION_RATE: 50,
+        pixels: {height: 256, width: 256},
+        INIT_POSITION: { x: width * 0.75, y: height * 0.6 },
+        orientation: {rows: 5, columns: 1},
+        down: {row: 0, start: 0, columns: 1 },
+        hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
+        // Reaction when player approaches NPC
+        reaction: function() {
+            alert(sprite_greet_stocks);
+        },
+        // Interact when player presses "E"
+        interact: function() {
+            const confirmTeleport = window.confirm("Teleport to the stock market?");
+            if (confirmTeleport) {
+                window.location.href = "https://your-casino-link.com"; // Replace with your link
+            }
+        }
+    };
+
+    const sprite_src_crypto = path + "/images/gamify/bitcoin.png"; // Path to the NPC sprite
+    const sprite_greet_crypto = "Teleport to the crypto hub?";
+    
+    const sprite_data_crypto = {
+        id: 'Crypto-NPC',
+        greeting: sprite_greet_crypto,
+        src: sprite_src_crypto,
+        SCALE_FACTOR: 10,
+        ANIMATION_RATE: 50,
+        pixels: {height: 512, width: 512},
+        INIT_POSITION: { x: width / 3, y: height / 3 },
+        orientation: {rows: 5, columns: 1},
+        down: {row: 0, start: 0, columns: 1 },
+        hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
+        // Reaction when player approaches NPC
+        reaction: function() {
+            alert(sprite_greet_crypto);
+        },
+        // Interact when player presses "E"
+        interact: function() {
+            const confirmTeleport = window.confirm("Teleport to crypto hub?");
+            if (confirmTeleport) {
+                window.location.href = "https://nighthawkcoders.github.io/portfolio_2025/stocks/home"; // Replace with your link
+            }
+        }
+    };
+    
     const sprite_src_robot = path + "/images/gamify/robot.png"; // be sure to include the path
     const sprite_greet_robot = "Hi I am Robot, the Jupyter Notebook mascot.  I am very happy to spend some linux shell time with you!";
     const sprite_data_robot = {
@@ -174,7 +227,7 @@ class GameLevelDesert {
         // Define the game in game level
         let levelArray = [GameLevelMeteorBlaster];
         // Define a new GameControl instance with the StarWars level
-        let gameInGame = new GameControl(path,levelArray);
+        let gameInGame = new GameControl(gameEnv.game, levelArray);
         // Pause the primary game 
         primaryGame.pause();
         // Start the game in game
@@ -240,6 +293,8 @@ class GameLevelDesert {
       { class: Npc, data: sprite_data_octocat },
       { class: Npc, data: sprite_data_robot },
       { class: Npc, data: sprite_data_r2d2 },
+      { class: Npc, data: sprite_data_stocks },
+      { class: Npc, data: sprite_data_crypto}
     ];
     
   }

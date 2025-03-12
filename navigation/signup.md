@@ -49,6 +49,12 @@ search_exclude: true
       </p>
       <p>
         <label>
+          SID:
+          <input type="text" name="sid" id="sid" required>
+        </label>
+      </p>
+      <p>
+        <label>
           Password:
           <input type="password" name="signupPassword" id="signupPassword" required>
         </label>
@@ -82,6 +88,7 @@ search_exclude: true
       }),
       body: JSON.stringify({
         uid: document.getElementById("signupUid").value,
+        sid: document.getElementById("sid").value,
         email: document.getElementById("signupUid").value + "@gmail.com",
         dob: "11-01-2024",  // Static date for now, you can modify this
         name: document.getElementById("name").value,
@@ -99,6 +106,7 @@ search_exclude: true
       }),
       body: JSON.stringify({
         uid: document.getElementById("signupUid").value,
+        sid: document.getElementById("sid").value,
         email: document.getElementById("signupUid").value + "@gmail.com",
         dob: "11-01-2024",  // Static date for now, you can modify this
         name: document.getElementById("name").value,
@@ -124,7 +132,7 @@ search_exclude: true
         document.getElementById("signupMessage").innerText = "Error: " + error.message;
         console.error('Error during signup:', error);
       });
-    // Send the request to the server
+
     fetch(signupOptionsPython.URL, signupOptionsPython)
       .then(response => response.json())
       .then(data => {
@@ -138,5 +146,5 @@ search_exclude: true
         document.getElementById("signupMessage").innerText = "Error: " + error.message;
         console.error('Error during signup:', error);
       });
-    };
+  };
 </script>
