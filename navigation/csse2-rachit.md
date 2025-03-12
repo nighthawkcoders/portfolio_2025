@@ -13,11 +13,11 @@ description: Hello world
 <div id="sidebar">
   <button id="close-sidebar">&times;</button>
   <ul>
-    <li><a href="#">Game Overview</a></li>
-    <li><a href="#">Latest Updates</a></li>
-    <li><a href="#">How to Play</a></li>
-    <li><a href="#">Our Team</a></li>
-    <li><a href="#">Contact</a></li>
+    <li><a href="https://github.com/Rachit-CSSE2">Github Organization</a></li>
+    <li><a href="https://github.com/Rachit-CSSE2/portfolio_2025">Github Repository</a></li>
+    <li><a href="https://github.com/orgs/Rachit-CSSE2/projects/1/views/1">Scrum Board</a></li>
+    <li><a href="https://poway.instructure.com/courses/164879">Canvas</a></li>
+    <li><a href="https://join.slack.com/t/cs-se-hq/shared_invite/zt-31odi3kw2-D0mci9mNfsEthKr_8ILTXg">Slack</a></li>
   </ul>
 </div>
 
@@ -30,7 +30,7 @@ description: Hello world
 <div class="content-container">
   <div class="game-info">
     <h2>About Our Game</h2>
-    <p>Welcome to our Ender Dragon game! Experience thrilling battles, epic quests, and the ultimate challenge of facing the Ender Dragon. Build, strategize, and conquer in a world where every decision matters. Are you ready?</p>
+    <p>Welcome to our Ender Dragon game! This game uses an RPG game base using adventureGame and uses Platformer 4.x for the individual levels. Are you ready?</p>
   </div>
 
   <div class="post-list">
