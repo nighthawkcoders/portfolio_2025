@@ -3,7 +3,7 @@ toc: false
 comments: false
 layout: post
 title: Team Teaching Trimester 2
-description: This is a list of which tables teach what topics for the Trimester 2 Team Teaches
+description: List of who teaches in the team teaches
 type: ccc
 ---
 
