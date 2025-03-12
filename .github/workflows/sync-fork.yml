@@ -1,0 +1,35 @@
+name: Sync Fork with Upstream
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'  # Runs twice at noon and midnight
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout forked repository
+        uses: actions/checkout@v4
+        with:
+          ref: main  # Change to your default branch if needed
+          fetch-depth: 0
+
+      - name: Add Upstream Remote
+        run: |
+          git remote add upstream https://github.com/nighthawkcoders/portfolio_2025
+          git fetch upstream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge Upstream Changes
+        run: |
+          git checkout main
+          git merge --ff-only upstream/main || git merge upstream/main --no-edit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Changes to Fork
+        run: git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
