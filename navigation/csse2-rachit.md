@@ -10,7 +10,7 @@ description: Hello world
   {% for post in site.posts %}
     {% if post.path contains '_posts/CSSE/Rachit-CSSE2/' %}
       <li>
-        <a href="{{ post.url }}">{{ post.title }}</a> - {{ post.date | date: "%B %d, %Y" }}
+        <a href="/portfolio_2025{{ post.url }}">{{ post.title }}</a> - {{ post.date | date: "%B %d, %Y" }}
         <p>{{ post.description }}</p>
       </li>
     {% endif %}
