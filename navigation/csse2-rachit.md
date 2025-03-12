@@ -1,6 +1,6 @@
 ---
 layout: base
-title: Rachit's CSSE2 Group Blog
+title: Rachit's CSSE 2 Team
 description: Hello world
 ---
 
