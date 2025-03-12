@@ -15,7 +15,7 @@ type: ccc
 |---------|----------|
 | [Evan Svetina](https://github.com/EvanSvetina) (Manager)   | [Ruhaan Bansal](https://github.com/Ruhaan-Bansal) (Manager)  |
 | [West Stefany](https://github.com/THEGAMER221148)    |  [Nikhil Ekambaram](https://github.com/Nikhile22427)    |
-|   | [Zhengji Li](https://github.com/xinjiav2)          |
+|  None | [Zhengji Li](https://github.com/xinjiav2)          |
 
 
 
