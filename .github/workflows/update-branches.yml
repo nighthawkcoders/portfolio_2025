@@ -34,7 +34,7 @@ jobs:
       - name: Merge `main` into other branches and Log Results
         run: |
           for branch in $(git branch -r | grep -v main | awk -F'origin/' '{print $2}'); do
-            git stash  # Stash untracked changes
+            git stash  # Stash any local changes
             git checkout $branch || continue  # Skip if checkout fails
 
             echo "Attempting to merge main into $branch..." | tee -a logs/branch_update_log.txt
@@ -47,8 +47,19 @@ jobs:
               echo "- ✅ Successfully updated $branch" | tee -a logs/branch_update_log.txt
               git push origin $branch
             else
-              echo "- ⚠️ Skipped $branch due to merge conflicts" | tee -a logs/branch_update_log.txt
-              git merge --abort
+              echo "- ⚠️ Merge conflict detected in $branch" | tee -a logs/branch_update_log.txt
+
+              # Check if logs/branch_update_log.txt is the only conflict
+              if git diff --name-only --diff-filter=U | grep -q "^logs/branch_update_log.txt$" && [ $(git diff --name-only --diff-filter=U | wc -l) -eq 1 ]; then
+                echo "- 🛠️ Auto-resolving logs/branch_update_log.txt in favor of main" | tee -a logs/branch_update_log.txt
+                git checkout --theirs logs/branch_update_log.txt
+                git add logs/branch_update_log.txt
+                git commit -m "Auto-resolved log file conflict from main"
+                git push origin $branch
+              else
+                echo "- ❌ Skipping $branch due to other merge conflicts" | tee -a logs/branch_update_log.txt
+                git merge --abort
+              fi
             fi
 
             git stash pop || echo "No stashed changes to restore"
