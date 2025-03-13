@@ -1,0 +1,57 @@
+name: Update All Branches from Main
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # Runs every 4 hours
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  update-branches:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push updates
+
+    steps:
+      - name: Set Git Identity
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all branches
+
+      - name: Ensure logs directory exists
+        run: mkdir -p logs
+
+      - name: Append new log entry to log file
+        run: |
+          TIMESTAMP=$(date)
+          echo "" >> logs/branch_update_log.txt
+          echo "--- [$TIMESTAMP] - Sync Fork with Upstream ---" >> logs/branch_update_log.txt
+          echo "" >> logs/branch_update_log.txt
+
+      - name: Get all branches except main
+        id: branches
+        run: |
+          echo "BRANCHES=$(git branch -r | grep -v main | awk -F'origin/' '{print $2}' | tr '\n' ' ')" >> $GITHUB_ENV
+
+      - name: Merge main into other branches
+        run: |
+          for branch in $BRANCHES; do
+            git checkout $branch
+            if git merge origin/main --no-edit; then
+              echo "- ✅ Merged into \`$branch\`" >> logs/branch_update_log.txt
+              git push origin $branch
+            else
+              echo "- ❌ Conflict detected in \`$branch\`, skipping..." >> logs/branch_update_log.txt
+              git merge --abort
+            fi
+          done
+
+      - name: Commit log files
+        run: |
+          git add logs/branch_update_log.txt
+          git commit -m "Update branch update logs" || echo "No new changes to commit"
+          git push origin main || echo "No log updates to push"
