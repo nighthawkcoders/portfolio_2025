@@ -12,6 +12,11 @@ jobs:
       contents: write  # Required to push updates
 
     steps:
+      - name: Set Git Identity
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions@github.com"
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -44,11 +49,6 @@ jobs:
               git merge --abort
             fi
           done
-
-      - name: Set Git Identity (Locally) 
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "github-actions@github.com"
 
       - name: Commit log files
         run: |
