@@ -2,7 +2,7 @@ name: Update All Branches from Main
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # Runs every 12 hours
+    - cron: '0 */4 * * *'  # Runs every 4 hours
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Required to push updates
+      pull-requests: write  # Required to create PRs
 
     steps:
       - name: Set Git Identity (Fix Empty Ident Error)
@@ -22,43 +23,79 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all branches
 
-      - name: Ensure logs directory exists
-        run: mkdir -p logs
-
-      - name: Append new log entry to log file
+      - name: Ensure logs directory and log file exist
         run: |
-          TIMESTAMP=$(date)
-          echo "" >> logs/branch_update_log.txt
-          echo "--- [$TIMESTAMP] - Sync Fork with Upstream ---" >> logs/branch_update_log.txt
-          echo "" >> logs/branch_update_log.txt
+          mkdir -p logs
+          touch logs/branch_update_log.txt  # Creates the file if it doesn’t exist
 
-      - name: Get all branches except main
-        id: branches
-        run: |
-          echo "BRANCHES=$(git branch -r | grep -v main | awk -F'origin/' '{print $2}' | tr '\n' ' ')" >> $GITHUB_ENV
+      - name: Initialize Update Log
+        run: echo "--- Branch Update Log ---" > logs/branch_update_log.txt
 
-      - name: Merge main into other branches
+      - name: Merge `main` into other branches and Log Results
         run: |
-          for branch in $BRANCHES; do
-            git checkout $branch
+          for branch in $(git branch -r | grep -v main | awk -F'origin/' '{print $2}'); do
+            git stash  # Stash any local changes
+            git checkout $branch || continue  # Skip if checkout fails
+
+            echo "Attempting to merge main into $branch..." | tee -a logs/branch_update_log.txt
+
+            # Ensure log file is committed before merging
+            git add logs/branch_update_log.txt
+            git commit -m "Ensure log file is tracked before merging" || echo "No changes to commit"
+
             if git merge origin/main --no-edit; then
-              echo "- ✅ Merged into \`$branch\`" >> logs/branch_update_log.txt
+              echo "- ✅ Successfully updated $branch" | tee -a logs/branch_update_log.txt
               git push origin $branch
             else
-              echo "- ❌ Conflict detected in \`$branch\`, skipping..." >> logs/branch_update_log.txt
-              git merge --abort
+              echo "- ⚠️ Merge conflict detected in $branch" | tee -a logs/branch_update_log.txt
+
+              # Check if logs/branch_update_log.txt is the only conflict
+              if git diff --name-only --diff-filter=U | grep -q "^logs/branch_update_log.txt$" && [ $(git diff --name-only --diff-filter=U | wc -l) -eq 1 ]; then
+                echo "- 🛠️ Auto-resolving logs/branch_update_log.txt in favor of main" | tee -a logs/branch_update_log.txt
+                git checkout --theirs logs/branch_update_log.txt
+                git add logs/branch_update_log.txt
+                git commit -m "Auto-resolved log file conflict from main"
+                git push origin $branch
+              else
+                echo "- ❌ Skipping $branch due to other merge conflicts" | tee -a logs/branch_update_log.txt
+                git merge --abort
+              fi
             fi
+
+            git stash pop || echo "No stashed changes to restore"
           done
 
-      - name: Ensure Git Tracks Log File (Fix .gitignore Issues)
+      - name: Commit Log File (Ensure Change is Detected)
         run: |
-          git rm -r --cached logs/branch_update_log.txt || true
           git add -f logs/branch_update_log.txt
+          git update-index --refresh
+          if git diff --staged --quiet; then
+            echo "HAS_CHANGES=false" >> $GITHUB_ENV
+          else
+            git commit -m "Update branch update logs"
+            echo "HAS_CHANGES=true" >> $GITHUB_ENV
+          fi
 
-      - name: Commit log files (Fix Silent Push Errors)
+      - name: Delete Old PR Branches
         run: |
-          git commit -m "Update branch update logs" || echo "No new changes to commit"
+          for branch in $(git branch -r | grep 'origin/update-logs-' | awk -F'origin/' '{print $2}'); do
+            echo "Deleting old branch: $branch"
+            git push origin --delete $branch
+          done
+        continue-on-error: true  # Avoid breaking workflow if no old branches exist
 
-      - name: Force Push Changes to Main (Fix Branch Issues)
+      - name: Create a new branch for PR
+        if: env.HAS_CHANGES == 'true'
         run: |
-          git push origin HEAD:main --force || echo "No log updates to push"
+          BRANCH_NAME="update-logs-$(date +'%Y%m%d-%H%M%S')"
+          git checkout -b $BRANCH_NAME
+          git push origin $BRANCH_NAME
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Create Pull Request and Leave it Open
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          PR_BODY=$(cat logs/branch_update_log.txt)
+          gh pr create --title "Automated Log Update" --body "$PR_BODY" --base main --head ${{ env.BRANCH_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
