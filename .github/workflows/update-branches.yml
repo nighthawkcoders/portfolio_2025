@@ -2,7 +2,7 @@ name: Update All Branches from Main
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # Runs every 12 hours
+    - cron: '0 */4 * * *'  # Runs every 12 hours
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Required to push updates
-      pull-requests: write  # Required to create and merge PRs
+      pull-requests: write  # Required to create PRs
 
     steps:
       - name: Set Git Identity (Fix Empty Ident Error)
@@ -60,36 +60,9 @@ jobs:
           git push origin $BRANCH_NAME
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
-      - name: Create Pull Request
-        if: env.HAS_CHANGES == 'true'
-        id: create_pr
-        run: |
-          PR_URL=$(gh pr create --title "Automated Log Update" --body "This PR updates the branch update logs." --base main --head ${{ env.BRANCH_NAME }})
-          PR_NUMBER=$(echo "$PR_URL" | grep -oE '[0-9]+$')
-          echo "PULL_REQUEST_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Approve the PR
+      - name: Create Pull Request and Leave it Open
         if: env.HAS_CHANGES == 'true'
         run: |
-          gh pr review --approve $PULL_REQUEST_NUMBER --repo $GITHUB_REPOSITORY
+          gh pr create --title "Automated Log Update" --body "This PR updates the branch update logs." --base main --head ${{ env.BRANCH_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Merge the PR Automatically (Ensure Updates Are Applied)
-        if: env.HAS_CHANGES == 'true'
-        run: |
-          gh pr merge --squash --admin --repo $GITHUB_REPOSITORY
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Merge main into other branches (Fix Checkout Error)
-        run: |
-          for branch in $(git branch -r | grep -v main | awk -F'origin/' '{print $2}'); do
-            git stash  # Stash local changes before switching branches
-            git checkout $branch || continue  # Skip if checkout fails
-            git merge origin/main --no-edit || echo "Skipping merge due to conflicts"
-            git push origin $branch || echo "No changes to push for $branch"
-            git stash pop || echo "No stashed changes to restore"
-          done
