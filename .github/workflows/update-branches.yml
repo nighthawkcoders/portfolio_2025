@@ -2,7 +2,7 @@ name: Update All Branches from Main
 
 on:
   schedule:
-    - cron: '0 */4 * * *'  # Runs every 4 hours
+    - cron: '0 */12 * * *'  # Runs every 12 hours
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Required to push updates
+      pull-requests: write  # Required to create and merge PRs
 
     steps:
       - name: Set Git Identity (Fix Empty Ident Error)
@@ -39,7 +40,7 @@ jobs:
           git add -f logs/branch_update_log.txt
           git update-index --refresh  # Ensure Git recognizes changes
 
-      - name: Check if There Are Changes
+      - name: Check if There Are Changes (Fix Silent Push Errors)
         id: git_status
         run: |
           if git diff --quiet && git diff --staged --quiet; then
@@ -50,20 +51,42 @@ jobs:
             echo "HAS_CHANGES=true" >> $GITHUB_ENV
           fi
 
-      - name: Commit log files if changes exist (Fix Silent Push Errors)
+      - name: Create a new branch for PR
         if: env.HAS_CHANGES == 'true'
         run: |
+          BRANCH_NAME="update-logs-$(date +'%Y%m%d-%H%M%S')"
+          git checkout -b $BRANCH_NAME
           git commit -m "Update branch update logs"
+          git push origin $BRANCH_NAME
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
-      - name: Push Changes to Main (Ensure Updates Are Applied)
+      - name: Create Pull Request
         if: env.HAS_CHANGES == 'true'
         run: |
-          git push origin main --force || echo "No log updates to push"
+          gh pr create --title "Automated Log Update" --body "This PR updates the branch update logs." --base main --head ${{ env.BRANCH_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Approve the PR
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          gh pr review --approve --repo $GITHUB_REPOSITORY
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge the PR Automatically (Ensure Updates Are Applied)
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          gh pr merge --squash --admin --repo $GITHUB_REPOSITORY
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge main into other branches (Fix Checkout Error)
         run: |
-          for branch in $BRANCHES; do
+          for branch in $(git branch -r | grep -v main | awk -F'origin/' '{print $2}'); do
+            git stash  # Stash local changes before switching branches
             git checkout $branch || continue  # Skip if checkout fails
             git merge origin/main --no-edit || echo "Skipping merge due to conflicts"
             git push origin $branch || echo "No changes to push for $branch"
+            git stash pop || echo "No stashed changes to restore"
           done
