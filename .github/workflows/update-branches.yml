@@ -2,7 +2,7 @@ name: Update All Branches from Main
 
 on:
   schedule:
-    - cron: '0 */4 * * *'  # Runs every 4 hours
+    - cron: '0 */12 * * *'  # Runs every 12 hours
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
       contents: write  # Required to push updates
 
     steps:
-      - name: Set Git Identity
+      - name: Set Git Identity (Fix Empty Ident Error)
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "github-actions@github.com"
@@ -50,8 +50,15 @@ jobs:
             fi
           done
 
-      - name: Commit log files
+      - name: Ensure Git Tracks Log File (Fix .gitignore Issues)
         run: |
-          git add logs/branch_update_log.txt
+          git rm -r --cached logs/branch_update_log.txt || true
+          git add -f logs/branch_update_log.txt
+
+      - name: Commit log files (Fix Silent Push Errors)
+        run: |
           git commit -m "Update branch update logs" || echo "No new changes to commit"
-          git push origin main || echo "No log updates to push"
+
+      - name: Force Push Changes to Main (Fix Branch Issues)
+        run: |
+          git push origin HEAD:main --force || echo "No log updates to push"
