@@ -62,15 +62,18 @@ jobs:
 
       - name: Create Pull Request
         if: env.HAS_CHANGES == 'true'
+        id: create_pr
         run: |
-          gh pr create --title "Automated Log Update" --body "This PR updates the branch update logs." --base main --head ${{ env.BRANCH_NAME }}
+          PR_URL=$(gh pr create --title "Automated Log Update" --body "This PR updates the branch update logs." --base main --head ${{ env.BRANCH_NAME }})
+          PR_NUMBER=$(echo "$PR_URL" | grep -oE '[0-9]+$')
+          echo "PULL_REQUEST_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Approve the PR
         if: env.HAS_CHANGES == 'true'
         run: |
-          gh pr review --approve --repo $GITHUB_REPOSITORY
+          gh pr review --approve $PULL_REQUEST_NUMBER --repo $GITHUB_REPOSITORY
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
