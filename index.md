@@ -2,7 +2,7 @@
 layout: post 
 title: Home Page
 description: An overview of Computer Science pathway at Del Norte High School
-author: Evan Svetina, Nikhil Ekambaram, West Stefany, Zhengji Li, Ruhaan Bansal, Aarav Lohiya, Rachit Jaiswal
+author: Evan Svetina, Nikhil Ekambaram, West Stefany, Zhengji Li, Ruhaan Bansal, Rachit Jaiswal
 image: /images/mario_animation.png
 hide: true
 menu: nav/home.html
