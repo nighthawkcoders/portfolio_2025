@@ -4,7 +4,7 @@ title: Rachit's CSSE 2
 description: Hello world
 ---
 
-# Table of Contents
+# Rachit's CSSE 2!
 
 <!-- Sidebar Trigger -->
 <button id="sidebar-btn">☰ Menu</button>
