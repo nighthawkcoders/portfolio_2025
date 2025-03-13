@@ -34,10 +34,15 @@ jobs:
       - name: Merge `main` into other branches and Log Results
         run: |
           for branch in $(git branch -r | grep -v main | awk -F'origin/' '{print $2}'); do
-            git stash  # Save any local changes
+            git stash  # Stash untracked changes
             git checkout $branch || continue  # Skip if checkout fails
-            
+
             echo "Attempting to merge main into $branch..." | tee -a logs/branch_update_log.txt
+
+            # Ensure log file is committed before merging
+            git add logs/branch_update_log.txt
+            git commit -m "Ensure log file is tracked before merging" || echo "No changes to commit"
+
             if git merge origin/main --no-edit; then
               echo "- ✅ Successfully updated $branch" | tee -a logs/branch_update_log.txt
               git push origin $branch
@@ -45,6 +50,7 @@ jobs:
               echo "- ⚠️ Skipped $branch due to merge conflicts" | tee -a logs/branch_update_log.txt
               git merge --abort
             fi
+
             git stash pop || echo "No stashed changes to restore"
           done
 
