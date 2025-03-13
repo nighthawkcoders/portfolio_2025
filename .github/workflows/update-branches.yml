@@ -33,34 +33,42 @@ jobs:
 
       - name: Merge `main` into other branches and Log Results
         run: |
+          echo "--- Branch Update Log ---" > logs/branch_update_log.txt
+          TIMESTAMP=$(date)
+          echo "Update run at: $TIMESTAMP" >> logs/branch_update_log.txt
+          echo "" >> logs/branch_update_log.txt
+
           for branch in $(git branch -r | grep -v main | awk -F'origin/' '{print $2}'); do
             git stash  # Stash any local changes
-            git checkout $branch || continue  # Skip if checkout fails
+            git checkout $branch || { echo "- ❌ $branch: Checkout failed" >> logs/branch_update_log.txt; continue; }
 
-            echo "Attempting to merge main into $branch..." | tee -a logs/branch_update_log.txt
+            echo "- 🔄 Attempting to merge main into $branch..." | tee -a logs/branch_update_log.txt
 
             # Ensure log file is committed before merging
             git add logs/branch_update_log.txt
             git commit -m "Ensure log file is tracked before merging" || echo "No changes to commit"
 
             if git merge origin/main --no-edit; then
-              echo "- ✅ Successfully updated $branch" | tee -a logs/branch_update_log.txt
+              echo "- ✅ $branch: Successfully updated" | tee -a logs/branch_update_log.txt
               git push origin $branch
             else
-              echo "- ⚠️ Merge conflict detected in $branch" | tee -a logs/branch_update_log.txt
+              echo "- ⚠️ $branch: Merge conflict detected" | tee -a logs/branch_update_log.txt
 
               # Check if logs/branch_update_log.txt is the only conflict
               if git diff --name-only --diff-filter=U | grep -q "^logs/branch_update_log.txt$" && [ $(git diff --name-only --diff-filter=U | wc -l) -eq 1 ]; then
-                echo "- 🛠️ Auto-resolving logs/branch_update_log.txt in favor of main" | tee -a logs/branch_update_log.txt
+                echo "- 🛠️ $branch: Auto-resolving logs/branch_update_log.txt" | tee -a logs/branch_update_log.txt
                 git checkout --theirs logs/branch_update_log.txt
                 git add logs/branch_update_log.txt
                 git commit -m "Auto-resolved log file conflict from main"
                 git push origin $branch
               else
-                echo "- ❌ Skipping $branch due to other merge conflicts" | tee -a logs/branch_update_log.txt
+                echo "- ❌ $branch: Skipped due to other merge conflicts" | tee -a logs/branch_update_log.txt
                 git merge --abort
               fi
             fi
+
+            git stash pop || echo "No stashed changes to restore"
+          done
 
             git stash pop || echo "No stashed changes to restore"
           done
