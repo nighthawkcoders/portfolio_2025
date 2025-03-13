@@ -8,11 +8,10 @@ import { checkGameImages } from "./debug-helper.js"
 class GameLevelMeteorBlaster {
   constructor(gameEnv) {
     this.gameEnv = gameEnv
-    let width = gameEnv.innerWidth
-    let height = gameEnv.innerHeight
-    let path = gameEnv.path
+    const width = gameEnv.innerWidth
+    const height = gameEnv.innerHeight
+    const path = gameEnv.path
 
-    console.log("Game path:", path)  // Debug log
     checkGameImages(path)
 
     this.score = 0
@@ -31,14 +30,14 @@ class GameLevelMeteorBlaster {
     this.quiz = new Quiz()
     this.quiz.initialize()
 
-    const image_src_space = path + "/images/gamify/space.png"  // be sure to include the path
+    const image_src_space = path + "/images/gamify/space.png"
     const image_data_space = {
       id: "Space-Background",
       src: image_src_space,
       pixels: { height: 857, width: 1200 },
     }
 
-    const sprite_src_ufo = path + "/images/gamify/ufo.png"  // be sure to include the path
+    const sprite_src_ufo = path + "/images/gamify/ufo.png"
     const UFO_SCALE_FACTOR = 5
     this.playerData = {
       id: "Ufo",
@@ -62,10 +61,9 @@ class GameLevelMeteorBlaster {
       hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
     }
 
-    const laser_image = path + "/images/gamify/laser_bolt.png"  // be sure to include the path
     this.laserData = {
       id: "Laser",
-      src: laser_image,
+      src: path + "/images/gamify/laser_bolt.png",
       SCALE_FACTOR: 20,
       ANIMATION_RATE: 50,
       pixels: { height: 500, width: 500 },
@@ -73,22 +71,15 @@ class GameLevelMeteorBlaster {
       down: { row: 0, start: 0, columns: 1 },
     }
 
-    const meteor_image = path + "/images/gamify/meteor.png"  // be sure to include the path
     this.meteorData = {
       id: "Meteor",
-      src: meteor_image,
+      src: path + "/images/gamify/meteor.png",
       SCALE_FACTOR: 6,
       ANIMATION_RATE: 50,
       pixels: { height: 100, width: 100 },
       orientation: { rows: 1, columns: 1 },
       down: { row: 0, start: 0, columns: 1 },
     }
-
-    // Log all image paths for debugging
-    console.log("Space image path:", image_src_space)
-    console.log("UFO image path:", sprite_src_ufo)
-    console.log("Laser image path:", laser_image)
-    console.log("Meteor image path:", meteor_image)
 
     this.classes = [
       { class: Background, data: image_data_space },

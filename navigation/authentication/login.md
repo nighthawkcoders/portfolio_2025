@@ -347,7 +347,7 @@ show_reading_time: false
                         console.error("Error after account creation:", newLoginError.message);
                     });
             } else {
-                alert("Logged in!");
+                console.log("Logged in!");
             }
         });
 };
