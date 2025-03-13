@@ -45,13 +45,13 @@ jobs:
             fi
           done
 
-      - name: Set Git Identity  # ✅ Fix for "Committer identity unknown"
+      - name: Set Git Identity (Locally) 
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "github-actions@github.com"
+          git config user.name "GitHub Actions Bot"
+          git config user.email "github-actions@github.com"
 
       - name: Commit log files
         run: |
           git add logs/branch_update_log.txt
-          git commit -m "Update branch update logs"
+          git commit -m "Update branch update logs" || echo "No new changes to commit"
           git push origin main || echo "No log updates to push"
