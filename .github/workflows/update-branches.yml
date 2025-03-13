@@ -2,7 +2,7 @@ name: Update All Branches from Main
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # Runs every 12 hours
+    - cron: '0 */4 * * *'  # Runs every 4 hours
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -22,43 +22,48 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all branches
 
-      - name: Ensure logs directory exists
-        run: mkdir -p logs
+      - name: Ensure logs directory and log file exist
+        run: |
+          mkdir -p logs
+          touch logs/branch_update_log.txt  # Creates the file if it doesn’t exist
 
-      - name: Append new log entry to log file
+      - name: Append new log entry to log file (Ensure Change is Detected)
         run: |
           TIMESTAMP=$(date)
-          echo "" >> logs/branch_update_log.txt
           echo "--- [$TIMESTAMP] - Sync Fork with Upstream ---" >> logs/branch_update_log.txt
+          echo "- ✅ Log updated at: $TIMESTAMP" >> logs/branch_update_log.txt
           echo "" >> logs/branch_update_log.txt
-
-      - name: Get all branches except main
-        id: branches
-        run: |
-          echo "BRANCHES=$(git branch -r | grep -v main | awk -F'origin/' '{print $2}' | tr '\n' ' ')" >> $GITHUB_ENV
-
-      - name: Merge main into other branches
-        run: |
-          for branch in $BRANCHES; do
-            git checkout $branch
-            if git merge origin/main --no-edit; then
-              echo "- ✅ Merged into \`$branch\`" >> logs/branch_update_log.txt
-              git push origin $branch
-            else
-              echo "- ❌ Conflict detected in \`$branch\`, skipping..." >> logs/branch_update_log.txt
-              git merge --abort
-            fi
-          done
 
       - name: Ensure Git Tracks Log File (Fix .gitignore Issues)
         run: |
-          git rm -r --cached logs/branch_update_log.txt || true
           git add -f logs/branch_update_log.txt
+          git update-index --refresh  # Ensure Git recognizes changes
 
-      - name: Commit log files (Fix Silent Push Errors)
+      - name: Check if There Are Changes
+        id: git_status
         run: |
-          git commit -m "Update branch update logs" || echo "No new changes to commit"
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes detected."
+            echo "HAS_CHANGES=false" >> $GITHUB_ENV
+          else
+            echo "Changes detected."
+            echo "HAS_CHANGES=true" >> $GITHUB_ENV
+          fi
 
-      - name: Force Push Changes to Main (Fix Branch Issues)
+      - name: Commit log files if changes exist (Fix Silent Push Errors)
+        if: env.HAS_CHANGES == 'true'
         run: |
-          git push origin HEAD:main --force || echo "No log updates to push"
+          git commit -m "Update branch update logs"
+
+      - name: Push Changes to Main (Ensure Updates Are Applied)
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          git push origin main --force || echo "No log updates to push"
+
+      - name: Merge main into other branches (Fix Checkout Error)
+        run: |
+          for branch in $BRANCHES; do
+            git checkout $branch || continue  # Skip if checkout fails
+            git merge origin/main --no-edit || echo "Skipping merge due to conflicts"
+            git push origin $branch || echo "No changes to push for $branch"
+          done
