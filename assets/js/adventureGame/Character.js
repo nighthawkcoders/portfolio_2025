@@ -255,13 +255,18 @@ class Character extends GameObject {
      * remove canvas element of object
      * remove object from this.gameEnv.gameObjects array
      */
-    destroy() {
-        const index = this.gameEnv.gameObjects.indexOf(this);
-        if (index !== -1) {
-            // Remove the canvas from the DOM
-            this.canvas.parentNode.removeChild(this.canvas);
-            this.gameEnv.gameObjects.splice(index, 1);
-        }
+    destroy()
+    {
+      // Check if canvas exists before trying to remove it
+      if (this.canvas && this.canvas.parentNode) {
+        this.canvas.parentNode.removeChild(this.canvas)
+      }
+    
+      // Remove from gameObjects array if not already removed
+      const index = this.gameEnv.gameObjects.indexOf(this)
+      if (index !== -1) {
+        this.gameEnv.gameObjects.splice(index, 1)
+      }
     }
     
 }
