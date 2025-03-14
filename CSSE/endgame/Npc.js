@@ -1,16 +1,21 @@
 import Character from "./Character.js";
 
-class Npc extends Character {
+class NPC extends Character {
     constructor(data = null, gameEnv = null) {
         super(data, gameEnv);
         this.interact = data?.interact; // Interact function
         this.currentQuestionIndex = 0;
         this.alertTimeout = null;
+        this.interacted = false;
         this.bindInteractKeyListeners();
     }
 
     update() {
         this.draw();
+        if (this.checkInteraction() && !this.interacted) {
+            this.interacted = true;
+            this.triggerLevelChange();
+        }
     }
 
     bindInteractKeyListeners() {
@@ -43,6 +48,21 @@ class Npc extends Character {
             this.interact();
         }
     }
+
+    checkInteraction() {
+        // Placeholder for interaction logic
+        // Return true if the player interacts with the NPC
+        return true;
+    }
+
+    triggerLevelChange() {
+        // Trigger the level change
+        this.gameEnv.gameControl.loadLevel('PlatformerLevel');
+    }
+
+    destroy() {
+        // Cleanup if necessary
+    }
 }
 
-export default Npc;
+export default NPC;
