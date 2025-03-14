@@ -1,223 +1,224 @@
-/**
- * The GameObject class serves as a base class for all game objects.
- * It mimics an interface by defining abstract methods that must be implemented
- * by any subclass. This ensures that all game objects have a consistent interfaces
- * and can be managed uniformly within GameControl.js.
- * 
- * @class GameObject
- * @method draw - Draws the object on the canvas. Must be implemented by subclasses.
- * @method update - Updates the object's state. Must be implemented by subclasses.
- * @method resize - Resizes the object based on the canvas size. Must be implemented by subclasses.
- * @method destroy - Removes the object from the game environment. Must be implemented by subclasses.
- * @method collisionChecks - Checks for collisions with other game objects.
- * @method isCollision - Detects collisions with other game objects.
- * @method handleCollisionEvent - Updates the collisions array when player is touching the object.
- * @method handleReaction - Handles player reaction / state updates to the collision.
- */
+import GameEnv from './GameEnv.js';
+import Socket from './platformer3x/Multiplayer.js';
+
 class GameObject {
-    /**
-     * Constructor for the GameObject class.
-     * Throws an error if an attempt is made to instantiate this class directly,
-     * as it is intended to be used as a base class.
-     */
-    constructor(gameEnv = null) {
-        if (new.target === GameObject) {
-            throw new TypeError("Cannot construct GameObject instances directly");
-        }
-        this.gameEnv = gameEnv; // GameEnv instance
+    // container for all game objects in game
+    constructor(canvas, image, data) {
+        this.x = 0;
+        this.y = 0;
+        this.frame = 0;
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.image = image;
+        this.width = image.width;  // from Image() width
+        this.height = image.height; // from Image() height
         this.collisionWidth = 0;
         this.collisionHeight = 0;
+        this.aspect_ratio = this.width / this.height;
+        this.speedRatio = data?.speedRatio || 0;
+        this.speed = GameEnv.gameSpeed * this.speedRatio;
+        this.invert = true;
         this.collisionData = {};
-        this.hitbox = {};
-        this.state = {
-            collisionEvents: [],
-            movement: { up: true, down: true, left: true, right: true },
-        };
+        this.jsonifiedElement = '';
+        this.shouldBeSynced = false; //if the object should be synced with the server
+        this.hitbox = data?.hitbox || {};
+        // Add this object to the game object array so collision can be detected
+        // among other things
+        GameEnv.gameObjects.push(this); 
     }
 
-    /**
-     * Updates the object's state.
-     * This method must be implemented by subclasses.
-     * @abstract
-     */
-    update() {
-        throw new Error("Method 'update()' must be implemented.");
+    // extract change from Game Objects into JSON
+    serialize() {
+        this.logElement();
     }
 
-    /**
-     * Draws the object on the canvas.
-     * This method must be implemented by subclasses.
-     * @abstract
-     */
-    draw() {
-        throw new Error("Method 'draw()' must be implemented.");
+    // log Character element change
+    logElement() {
+        var jsonifiedElement = this.stringifyElement();
+        if (jsonifiedElement !== this.jsonifiedElement) {
+            //console.log(jsonifiedElement);
+            this.jsonifiedElement = jsonifiedElement;
+            if (this.shouldBeSynced && !GameEnv.inTransition) {
+                Socket.sendData("update",this.jsonifiedElement);
+            }
+        }
     }
 
-    /**
-     * Resizes the object based on the canvas size.
-     * This method must be implemented by subclasses.
-     * @abstract
-     */
-    resize() {
-        throw new Error("Method 'resize()' must be implemented.");
+    // strigify Character key data
+    stringifyElement() {
+        var element = this.canvas;
+        if (element && element.id) {
+            // Convert the relevant properties of the element to a string for comparison
+            return {
+                id: element.id,
+                width: element.width,
+                height: element.height,
+                style: element.style.cssText,
+                position: {
+                    left: element.style.left,
+                    top: element.style.top
+                },
+                filter: element.style.filter,
+                tag: GameEnv.currentLevel.tag,
+                x: this.x / GameEnv.innerWidth,
+                y: (this.y - GameEnv.top) / (GameEnv.bottom - GameEnv.top),
+                frameY: this.frameY
+            };
+        }
     }
 
-    /**
-     * Removes the object from the game environment.
-     * This method must be implemented by subclasses.
-     * @abstract
-     */
+    // X position getter and setter
+    getX() {
+        return this.x;
+    }
+
+    setX(x) {
+        if (x < 0) {
+            x = 0;
+        }
+        this.x = x;
+    }
+
+    // Y position getter and setter
+    getY() {
+        return this.y;
+    }
+
+    setY(y) {
+        if (y < GameEnv.top) {
+            y = GameEnv.top;
+        }
+        if (y > GameEnv.bottom) {
+            y = GameEnv.bottom;
+        }
+        this.y = y;
+    }
+
+    updateInfo(json) {
+        var element = this.canvas;
+        if (json.id === element.id) {
+            console.log("runs", json.width, json.height)
+            this.canvas.width = json.width;
+            this.canvas.height = json.height;
+            this.canvas.style.filter = json.filter;
+            var element = this.canvas;
+            //this.x = json.x * GameEnv.innerWidth;
+            //this.y = (json.y * (GameEnv.bottom - GameEnv.top)) + GameEnv.top;
+            this.frameY = json.frameY
+        }
+        return json.id === element.id
+    }
+
+    /* Destroy Game Object
+    * remove canvas element of object
+    * remove object from GameObject array
+    */
     destroy() {
-        throw new Error("Method 'destroy()' must be implemented.");
+        const index = GameEnv.gameObjects.indexOf(this);
+        if (index !== -1) {
+            // Remove the canvas from the DOM
+            this.canvas.parentNode.removeChild(this.canvas);
+            GameEnv.gameObjects.splice(index, 1);
+        }
     }
 
-    /** Collision checks
-     * uses Player isCollision to detect hit
-     * calls collisionAction on hit
-     */
-    collisionChecks() {
-        let collisionDetected = false;
+    
+    /* Default collision action is no action
+     * override when you extend for custom action
+    */
+    collisionAction(){
+        // no action
+    }
 
-        for (var gameObj of this.gameEnv.gameObjects) {
-            if (gameObj.canvas && this != gameObj) {
+    /* Default floor action is no action
+     * override when you extend for custom action
+    */
+    floorAction(){
+        // no action
+    }
+
+    /* Collision checks
+     * uses GameObject isCollision to detect hit
+     * calls collisionAction on hit
+    */
+    collisionChecks() {
+        for (var gameObj of GameEnv.gameObjects){
+            if (this != gameObj ) {
                 this.isCollision(gameObj);
-                if (this.collisionData.hit) {
-                    collisionDetected = true;
-                    this.handleCollisionEvent();
+                if (this.collisionData.hit){
+                    this.collisionAction();
+                }
+                if (this.collisionData.atFloor) {
+                    this.floorAction();
                 }
             }
         }
-
-        if (!collisionDetected) {
-            this.state.collisionEvents = [];
-        }
     }
 
-    /** Collision detection method
-     * usage: if (object.isCollision(platform)) { // action }
-     */
+    /* Collision detection method
+     * usage: if (player.isCollision(platform)) { // action }
+    */
     isCollision(other) {
         // Bounding rectangles from Canvas
         const thisRect = this.canvas.getBoundingClientRect();
         const otherRect = other.canvas.getBoundingClientRect();
+    
+        // Calculate center points of rectangles
+        const thisCenterX = (thisRect.left + thisRect.right) / 2;
+        const otherCenterX = (otherRect.left + otherRect.right) / 2;
 
-        // Calculate hitbox constants for this object
-        const thisWidthReduction = thisRect.width * (this.hitbox?.widthPercentage || 0.0);
-        const thisHeightReduction = thisRect.height * (this.hitbox?.heightPercentage || 0.0);
-
-        // Calculate hitbox constants for other object
-        const otherWidthReduction = otherRect.width * (other.hitbox?.widthPercentage || 0.0);
-        const otherHeightReduction = otherRect.height * (other.hitbox?.heightPercentage || 0.0);
-
-        // Build hitbox by subtracting reductions from the left, right, and top
-        const thisLeft = thisRect.left + thisWidthReduction;
-        const thisTop = thisRect.top + thisHeightReduction;
-        const thisRight = thisRect.right - thisWidthReduction;
+        // Calculate new center points of rectangles
+        const thisRectWidth = thisRect.right - thisRect.left;
+        const thisRectLeftNew = otherCenterX - thisRectWidth / 2;
+    
+        // Calculate hitbox constants
+        var widthPercentage = this.hitbox?.widthPercentage || 0.0;
+        var heightPercentage = this.hitbox?.heightPercentage || 0.0;
+    
+        // Calculate hitbox reductions from the width and height
+        const widthReduction = thisRect.width * widthPercentage;
+        const heightReduction = thisRect.height * heightPercentage;
+    
+        // Build hitbox by subtracting reductions from the left, right, top, and bottom
+        const thisLeft = thisRect.left + widthReduction;
+        const thisTop = thisRect.top + heightReduction;
+        const thisRight = thisRect.right - widthReduction;
         const thisBottom = thisRect.bottom;
+        const tolerance = 10; // Adjust as needed
 
-        const otherLeft = otherRect.left + otherWidthReduction;
-        const otherTop = otherRect.top + otherHeightReduction;
-        const otherRight = otherRect.right - otherWidthReduction;
-        const otherBottom = otherRect.bottom;
-
+        // Determine if this object's bottom exactly aligns with the other object's top
+        const onTopofOther = Math.abs(thisBottom - otherRect.top) <= tolerance;
         // Determine hit and touch points of hit
-        const hit = (
-            thisLeft < otherRight &&
-            thisRight > otherLeft &&
-            thisTop < otherBottom &&
-            thisBottom > otherTop
-        );
-
-        const touchPoints = {
-            this: {
-                id: this.canvas.id,
-                greet: this.spriteData.greeting,
-                top: thisBottom > otherTop && thisTop < otherTop,
-                bottom: thisTop < otherBottom && thisBottom > otherBottom,
-                left: thisRight > otherLeft && thisLeft < otherLeft,
-                right: thisLeft < otherRight && thisRight > otherRight,
-            },
-            other: {
-                id: other.canvas.id,
-                greet: other.spriteData.greeting,
-                reaction: other.spriteData.reaction,
-                top: otherBottom > thisTop && otherTop < thisTop,
-                bottom: otherTop < thisBottom && otherBottom > thisBottom,
-                left: otherRight > thisLeft && otherLeft < thisLeft,
-                right: otherLeft < thisRight && otherRight > thisRight,
+        this.collisionData = {
+            newX: thisRectLeftNew, // proportionally adjust left to center over other object
+            hit: (
+                thisLeft < otherRect.right &&
+                thisRight > otherRect.left &&
+                thisTop < otherRect.bottom &&
+                thisBottom > otherRect.top
+            ),
+            atFloor: (GameEnv.bottom <= this.y),
+            touchPoints: {
+                this: {
+                    id: this.canvas.id,
+                    top: thisRect.bottom > otherRect.top,
+                    bottom: (thisRect.bottom <= otherRect.top) && !(Math.abs(thisRect.bottom - otherRect.bottom) <= GameEnv.gravity),
+                    left: thisCenterX > otherCenterX,
+                    right: thisCenterX < otherCenterX,
+                    onTopofOther: onTopofOther
+                },
+                other: {
+                    id: other.canvas.id,
+                    top: thisRect.bottom < otherRect.top,
+                    bottom: (thisRect.bottom >= otherRect.top) && !(Math.abs(thisRect.bottom - otherRect.bottom) <= GameEnv.gravity),
+                    left: thisCenterX < otherCenterX, 
+                    right: thisCenterX > otherCenterX,
+                },
             },
         };
 
-        this.collisionData = { hit, touchPoints };
     }
-
-    /**
-     * Update the collisions array when player is touching the object
-     * @param {*} objectID 
-     */
-    handleCollisionEvent() {
-        const objectOther = this.collisionData.touchPoints.other;
-        // check if the collision type is not already in the collisions array
-        if (!this.state.collisionEvents.includes(objectOther.id)) {
-            // add the collisionType to the collisions array, making it the current collision
-            this.state.collisionEvents.push(objectOther.id);
-            this.handleCollisionReaction(objectOther);
-        }
-        this.handleCollisionState();
-    }
-
-    /**
-     * Handles the reaction to the collision, this could be overridden by subclasses
-     * @param {*} other 
-     */
-    handleCollisionReaction(other) {
-        if (other.reaction && typeof other.reaction === "function") {
-            other.reaction();
-            return;
-        }
-        console.log(other.greet);
-    }
-
-    /**
-     * Handles Player state updates related to the collision
-     */
-    handleCollisionState() {
-        // handle player reaction based on collision type
-        if (this.state.collisionEvents.length > 0) {
-            const touchPoints = this.collisionData.touchPoints.this;
-
-            // Reset movement to allow all directions initially
-            this.state.movement = { up: true, down: true, left: true, right: true };
-
-            if (touchPoints.top) {
-                this.state.movement.down = false;
-                if (this.velocity.y > 0) {
-                    this.velocity.y = 0;
-                }
-            }
-
-            if (touchPoints.bottom) {
-                this.state.movement.up = false;
-                if (this.velocity.y < 0) {
-                    this.velocity.y = 0;
-                }
-            }
-
-            if (touchPoints.right) {
-                this.state.movement.left = false;
-                if (this.velocity.x < 0) {
-                    this.velocity.x = 0;
-                }
-            }
-
-            if (touchPoints.left) {
-                this.state.movement.right = false;
-                if (this.velocity.x > 0) {
-                    this.velocity.x = 0;
-                }
-            }
-        }
-    }
+    
 }
 
 export default GameObject;
