@@ -1,7 +1,7 @@
 // To build GameLevels, each contains GameObjects from below imports
 import Background from './Background.js';
 import Player from './Player.js';
-import Npc from './Npc.js';
+import Npc from './NPC.js';
 import Quiz from './Quiz.js';
 import GameControl from './GameControl.js';
 import GameLevelStarWars from './GameLevelStarWars.js';
