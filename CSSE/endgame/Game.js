@@ -1,6 +1,7 @@
 import GameControl from './GameControl.js';
-import GameLevelWater from "./GameLevelWater.js";
-import GameLevelDesert from "./GameLevelDesert.js";
+import GameLevel from "./GameLevel.js";
+import GameLevelPlatformEndA from "./GameLevelPlatformENDA.js";
+import GameLevelPlatformEndB from "./GameLevelPlatformENDB.js";
 class Game {
     // initialize user and launch GameControl 
     static main(environment) {
