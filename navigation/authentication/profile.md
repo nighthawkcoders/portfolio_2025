@@ -536,15 +536,16 @@ show_reading_time: false
         }
     }
 
-    // Function to convert file to base64
+
     async function convertToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result.split[','](1)); // Remove the prefix part of the result
-            reader.onerror = error => reject(error);
-            reader.readAsDataURL(file);
-        });
-    }
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]); // Corrected split method
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+}
+
 
     // Function to send profile picture to server
     async function sendProfilePicture(base64String) {

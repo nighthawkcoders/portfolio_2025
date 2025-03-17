@@ -48,9 +48,6 @@ class GameControl {
 
     /**
      * The main game loop 
-     * 1. Updates the current level
-     * 2. Handles the level start
-     * 3. Requests the next frame
      */
     gameLoop() {
         // If the level is not set to continue, handle the level end condition 
@@ -62,8 +59,10 @@ class GameControl {
         if (this.isPaused) {
             return;
         }
+        // Level updates
         this.currentLevel.update();
         this.handleInLevelLogic();
+        // Recurse at frame rate speed
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
