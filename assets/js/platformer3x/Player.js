@@ -57,6 +57,6 @@ function gameLoop() {
     player.update();
     // ...other game loop logic...
     requestAnimationFrame(gameLoop);
-}
+}[]
 
 gameLoop();

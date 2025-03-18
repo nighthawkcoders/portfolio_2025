@@ -1,7 +1,12 @@
 // GameLevel.js key objective is to load and intialize GameObject(s) for a level.
 import GameEnv from './GameEnv.js';
-import Socket from './platformer3x/Multiplayer.js';
-import Character from './platformer3x/Character.js';
+import Socket from './Multiplayer.js';
+import Character from './Character.js';
+import Background from './Background.js';
+import Npc from './NPC.js';
+import GameControl from './GameControl.js';
+import GameLevelPlatformEndA from './GameLevelPlatformENDA.js';
+import GameLevelPlatformEndB from './GameLevelPlatformENDB.js';
 
 /**
  * The GameLevel class represents a level in the game.
@@ -127,4 +132,90 @@ class GameLevel {
     }
 }
 
+class GameLevelNew {
+  constructor(gameEnv) {
+    // Values dependent on this.gameEnv.create()
+    let width = gameEnv.innerWidth;
+    let height = gameEnv.innerHeight;
+    let path = gameEnv.path;
+
+    // Background data
+    const image_src_background = path + "/images/gamify/desert.png"; // be sure to include the path
+    const image_data_background = {
+        name: 'background',
+        greeting: "Welcome to the new level!",
+        src: image_src_background,
+        pixels: {height: 580, width: 1038}
+    };
+
+    // NPC data for Tux 
+    const sprite_src_tux = path + "/images/gamify/ender_dragon.png"; // be sure to include the path
+    const sprite_greet_tux = "Hi I am Tux, the Linux mascot.  I am very happy to spend some linux shell time with you!";
+    const sprite_data_tux = {
+        id: 'Tux',
+        greeting: sprite_greet_tux,
+        src: sprite_src_tux,
+        SCALE_FACTOR: 8,  // Adjust this based on your scaling needs
+        ANIMATION_RATE: 50,
+        pixels: {height: 4800, width: 4800},
+        INIT_POSITION: { x: (width / 2), y: (height / 2)},
+        orientation: {rows: 16, columns: 16 },
+        down: {row: 1, start: 0, columns: 1 },  // This is the stationary npc, down is default 
+        hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
+        reaction: function() {
+          alert(sprite_greet_tux);
+        },
+        interact: function() {
+          // Transition to a new level (e.g., GameLevelPlatformEndA)
+          let primaryGame = gameEnv.gameControl;
+          let levelArray = [GameLevelPlatformEndA];
+          let gameInGame = new GameControl(gameEnv.game, levelArray);
+          primaryGame.pause();
+          gameInGame.start();
+          gameInGame.gameOver = function() {
+            primaryGame.resume();
+          }
+        }
+    };
+
+    // NPC data for Octocat
+    const sprite_src_octocat = path + "/images/gamify/octocat.png"; // be sure to include the path
+    const sprite_greet_octocat = "Hi I am Octocat! I am the GitHub code code code collaboration mascot";
+    const sprite_data_octocat = {
+        id: 'Octocat',
+        greeting: sprite_greet_octocat,
+        src: sprite_src_octocat,
+        SCALE_FACTOR: 10,  // Adjust this based on your scaling needs
+        ANIMATION_RATE: 50,
+        pixels: {height: 301, width: 801},
+        INIT_POSITION: { x: (width / 4), y: (height / 4)},
+        orientation: {rows: 1, columns: 4 },
+        down: {row: 0, start: 0, columns: 3 },  // This is the stationary npc, down is default 
+        hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
+        reaction: function() {
+          alert(sprite_greet_octocat);
+        },
+        interact: function() {
+          // Transition to a new level (e.g., GameLevelPlatformEndB)
+          let primaryGame = gameEnv.gameControl;
+          let levelArray = [GameLevelPlatformEndB];
+          let gameInGame = new GameControl(gameEnv.game, levelArray);
+          primaryGame.pause();
+          gameInGame.start();
+          gameInGame.gameOver = function() {
+            primaryGame.resume();
+          }
+        }
+    };
+
+    // List of objects definitions for this level
+    this.classes = [
+      { class: Background, data: image_data_background },
+      { class: Npc, data: sprite_data_tux },
+      { class: Npc, data: sprite_data_octocat },
+    ];
+  }
+}
+
 export default GameLevel;
+export { GameLevelNew };
