@@ -23,24 +23,24 @@ class GameLevelDesert {
         pixels: {height: 580, width: 1038}
     };
 
-    // Player 1 (Red Square) data
+    // Red Square data
     const player1_data = {
         id: 'Player1',
         greeting: "I am Player 1, ready for adventure!",
         SCALE_FACTOR: 10,
         INIT_POSITION: { x: width / 4, y: height / 2 },
-        color: 'red', // Define the color for Player 1
+        color: 'red', // color
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
         keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
     };
 
-    // Player 2 (Green Square) data
+    // Green Square data
     const player2_data = {
         id: 'Player2',
         greeting: "I am Player 2, ready for adventure!",
         SCALE_FACTOR: 10,
         INIT_POSITION: { x: (3 * width) / 4, y: height / 2 },
-        color: 'green', // Define the color for Player 2
+        color: 'green', // color
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
         keypress: { up: 38, left: 37, down: 40, right: 39 } // Arrow keys
     };
