@@ -24,7 +24,8 @@ class GameLevelDesert {
     };
 
 
-    const sprite_src_chillguy = path + "/images/gamify/chillguyv2.png";
+    // Player data for Chillguy
+    const sprite_src_chillguy = path + "/images/gamify/chillguyv2.png"; // be sure to include the path
     const CHILLGUY_SCALE_FACTOR = 5;
     const sprite_data_chillguy = {
         id: 'Chill Guy',
@@ -33,37 +34,25 @@ class GameLevelDesert {
         SCALE_FACTOR: CHILLGUY_SCALE_FACTOR,
         STEP_FACTOR: 1000,
         ANIMATION_RATE: 50,
-        INIT_POSITION: { x: 0, y: height - (height / CHILLGUY_SCALE_FACTOR) }, 
-        pixels: { height: 1024, width: 384 },
-        orientation: { rows: 3, columns: 4 },
-        down: { row: 0, start: 0, columns: 3 },
-        downStationary: { row: 4, start: 0, columns: 3 },
-        left: { row: 2, start: 0, columns: 3 },
-        leftStationary: { row: 6, start: 0, columns: 3 },
-        right: { row: 1, start: 0, columns: 3 },
-        rightStationary: { row: 5, start: 0, columns: 3 },
-        up: { row: 3, start: 0, columns: 3 },
-        upStationary: { row: 7, start: 0, columns: 3 },
+        INIT_POSITION: { x: 0, y: height - (height/CHILLGUY_SCALE_FACTOR) }, 
+        pixels: {height: 1024, width: 384},
+        orientation: {rows: 3, columns: 4 },
+        down: {row: 0, start: 0, columns: 3 },
+        downStationary: {row: 4, start:0, columns: 3},
+        downRight: {row: 1, start: 0, columns: 3, rotate: Math.PI/16 },
+        downLeft: {row: 2, start: 0, columns: 3, rotate: -Math.PI/16 },
+        left: {row: 2, start: 0, columns: 3 },
+        leftStationary: {row: 6, start:0, columns: 3},
+        right: {row: 1, start: 0, columns: 3 },
+        rightStationary:{row: 5, start:0, columns: 3},
+        up: {row: 3, start: 0, columns: 3 },
+        upStationary:{row: 7, start:0, columns: 3},
+        upLeft: {row: 2, start: 0, columns: 3, rotate: Math.PI/16 },
+        upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/16 },
         hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
-        keypress: { up: 87, left: 65, down: 83, right: 68 }, // W, A, S, D
-        activeKeys: new Set(),
-
-        handleKeyPress(event) {
-            this.activeKeys.add(event.keyCode);
-            this.updateAnimation();
-        },
-
-        handleKeyRelease(event) {
-            this.activeKeys.delete(event.keyCode);
-            this.updateAnimation();
-        },
-
-        updateAnimation() {
-            if (this.activeKeys.size === 0) {
-                this.currentAnimation = this.downStationary;
-            }
-        }
+        keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
     };
+
 
     // NPC data for Tux 
     const sprite_src_tux = path + "/images/gamify/tux.png"; // be sure to include the path
