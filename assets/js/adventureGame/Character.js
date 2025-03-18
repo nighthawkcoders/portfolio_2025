@@ -84,7 +84,7 @@ class Character extends GameObject {
             // Initialize animation properties
             this.frameIndex = 0; // index reference to current frame
             this.frameCounter = 0; // count each frame rate refresh
-            this.direction = 'down'; // Initial direction
+            this.direction = 'right'; // Initial direction
             this.spriteData = data;
         } else {
             throw new Error('Sprite data is required');
@@ -115,21 +115,37 @@ class Character extends GameObject {
      * 
      * This method renders the object using the sprite sheet if provided, otherwise a red square.
      */
+    // Add this code to Character.js, replacing the draw method:
+
+    /**
+     * Draws the object on the canvas.
+     * 
+     * This method renders the object using the sprite sheet if provided, otherwise a red square.
+     */
     draw() {
         if (this.spriteSheet) {
             // Sprite Sheet frame size: pixels = total pixels / total frames
             const frameWidth = this.spriteData.pixels.width / this.spriteData.orientation.columns;
             const frameHeight = this.spriteData.pixels.height / this.spriteData.orientation.rows;
-    
+
             // Sprite Sheet direction data source (e.g., front, left, right, back)
-            const directionData = this.spriteData[this.direction];
-    
+            // Check if the current direction exists in spriteData, otherwise fallback to 'down'
+            const directionData = this.spriteData[this.direction] || this.spriteData.down;
+
+            if (!directionData) {
+                console.error(`Direction data not found for ${this.direction} or 'down'`, this.spriteData);
+                // Render something visible to indicate the error
+                this.ctx.fillStyle = 'magenta';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                return;
+            }
+
             // Sprite Sheet x and y declarations to store coordinates of current frame
             let frameX, frameY;
             // Sprite Sheet x and y current frame: coordinate = (index) * (pixels)
             frameX = (directionData.start + this.frameIndex) * frameWidth;
             frameY = directionData.row * frameHeight;
-    
+
             // Set up the canvas dimensions and styles
             this.canvas.width = frameWidth;
             this.canvas.height = frameHeight;
@@ -138,10 +154,10 @@ class Character extends GameObject {
             this.canvas.style.position = 'absolute';
             this.canvas.style.left = `${this.position.x}px`;
             this.canvas.style.top = `${this.gameEnv.top+this.position.y}px`;
-    
+
             // Clear the canvas before drawing
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-   
+
             // Apply transformations for rotation and mirroring
             if (directionData.rotate || directionData.mirror || directionData.spin) {
                 // Translate to the context to the center of the sprite
@@ -172,7 +188,7 @@ class Character extends GameObject {
                 0, 0, this.canvas.width, this.canvas.height // Destination rectangle
             );
             
-    
+
             // Update the frame index for animation at a slower rate
             this.frameCounter++;
             if (this.frameCounter % this.animationRate === 0) {
@@ -184,7 +200,6 @@ class Character extends GameObject {
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
     }
-
 
     /**
      * Move the object and ensures it stays within the canvas boundaries.
