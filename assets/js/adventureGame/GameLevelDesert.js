@@ -23,32 +23,27 @@ class GameLevelDesert {
         pixels: {height: 580, width: 1038}
     };
 
-
-    // Player data for Chillguy
-    const sprite_src_chillguy = path + "/images/gamify/chillguy.png"; // be sure to include the path
-    const CHILLGUY_SCALE_FACTOR = 5;
-    const sprite_data_chillguy = {
-        id: 'Chill Guy',
-        greeting: "Hi I am Chill Guy, the desert wanderer. I am looking for wisdom and adventure!",
-        src: sprite_src_chillguy,
-        SCALE_FACTOR: CHILLGUY_SCALE_FACTOR,
-        STEP_FACTOR: 1000,
-        ANIMATION_RATE: 50,
-        INIT_POSITION: { x: 0, y: height - (height/CHILLGUY_SCALE_FACTOR) }, 
-        pixels: {height: 384, width: 512},
-        orientation: {rows: 3, columns: 4 },
-        down: {row: 0, start: 0, columns: 3 },
-        downRight: {row: 1, start: 0, columns: 3, rotate: Math.PI/16 },
-        downLeft: {row: 2, start: 0, columns: 3, rotate: -Math.PI/16 },
-        left: {row: 2, start: 0, columns: 3 },
-        right: {row: 1, start: 0, columns: 3 },
-        up: {row: 3, start: 0, columns: 3 },
-        upLeft: {row: 2, start: 0, columns: 3, rotate: Math.PI/16 },
-        upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/16 },
-        hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
+    // Player 1 (Red Square) data
+    const player1_data = {
+        id: 'Player1',
+        greeting: "I am Player 1, ready for adventure!",
+        SCALE_FACTOR: 10,
+        INIT_POSITION: { x: width / 4, y: height / 2 },
+        color: 'red', // Define the color for Player 1
+        hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
         keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
     };
 
+    // Player 2 (Green Square) data
+    const player2_data = {
+        id: 'Player2',
+        greeting: "I am Player 2, ready for adventure!",
+        SCALE_FACTOR: 10,
+        INIT_POSITION: { x: (3 * width) / 4, y: height / 2 },
+        color: 'green', // Define the color for Player 2
+        hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
+        keypress: { up: 38, left: 37, down: 40, right: 39 } // Arrow keys
+    };
 
     // NPC data for Tux 
     const sprite_src_tux = path + "/images/gamify/tux.png"; // be sure to include the path
@@ -288,7 +283,8 @@ class GameLevelDesert {
     // List of objects defnitions for this level
     this.classes = [
       { class: Background, data: image_data_desert },
-      { class: Player, data: sprite_data_chillguy },
+      { class: Player, data: player1_data },
+      { class: Player, data: player2_data },
       { class: Npc, data: sprite_data_tux },
       { class: Npc, data: sprite_data_octocat },
       { class: Npc, data: sprite_data_robot },
