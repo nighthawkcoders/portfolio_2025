@@ -34,13 +34,13 @@ class GameLevelDesert {
         keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
     };
 
-    // Green Square data
+    // Player 2 (Green Square) data
     const player2_data = {
         id: 'Player2',
         greeting: "I am Player 2, ready for adventure!",
         SCALE_FACTOR: 10,
         INIT_POSITION: { x: (3 * width) / 4, y: height / 2 },
-        color: 'green', // color
+        color: 'green', // Define the color for Player 2
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
         keypress: { up: 38, left: 37, down: 40, right: 39 } // Arrow keys
     };
@@ -283,8 +283,7 @@ class GameLevelDesert {
     // List of objects defnitions for this level
     this.classes = [
       { class: Background, data: image_data_desert },
-      { class: Player, data: player1_data },
-      { class: Player, data: player2_data },
+      { class: Player, data: sprite_data_chillguy },
       { class: Npc, data: sprite_data_tux },
       { class: Npc, data: sprite_data_octocat },
       { class: Npc, data: sprite_data_robot },
