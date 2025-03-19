@@ -1,6 +1,7 @@
 import GameControl from './GameControl.js';
 import GameLevelWater from "./GameLevelWater.js";
 import GameLevelDesert from "./GameLevelDesert.js";
+import GameLevelStarWars from "./GameLevelStarWars.js";
 class Game {
     // initialize user and launch GameControl 
     static main(environment) {
@@ -24,7 +25,7 @@ class Game {
         this.initStatsUI();
         
         // start the game
-        const gameLevelClasses = [GameLevelDesert, GameLevelWater]
+        const gameLevelClasses = [GameLevelDesert, GameLevelWater, GameLevelStarWars]
         new GameControl(this, gameLevelClasses).start();
     }
 
@@ -122,6 +123,7 @@ class Game {
             <div>Balance: <span id="balance">0</span></div>
             <div>Chat Score: <span id="chatScore">0</span></div>
             <div>Questions Answered: <span id="questionsAnswered">0</span></div>
+            <div>Health: <span id="Snowspeeder.health">0</span></div>
         `;
         document.body.appendChild(statsContainer);
     }

@@ -66,7 +66,7 @@ class Player extends Character {
      * Update the player's velocity and direction based on the pressed keys.
      */
     updateVelocityAndDirection() {
-        this.velocity.x = 0.2;
+        this.velocity.x = 0;
         this.velocity.y = 0;
 
         // Multi-key movements (diagonals: upLeft, upRight, downLeft, downRight)
