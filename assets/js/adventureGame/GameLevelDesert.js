@@ -23,16 +23,6 @@ class GameLevelDesert {
         pixels: {height: 580, width: 1038}
     };
 
-    // Red Square data
-    const player1_data = {
-        id: 'Player1',
-        greeting: "I am Player 1, ready for adventure!",
-        SCALE_FACTOR: 10,
-        INIT_POSITION: { x: width / 4, y: height / 2 },
-        color: 'red', // color
-        hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
-        keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
-    };
 
     // Player 2 (Green Square) data
     const player2_data = {
@@ -44,7 +34,7 @@ class GameLevelDesert {
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
         keypress: { up: 38, left: 37, down: 40, right: 39 } // Arrow keys
     };
-    const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
+    const sprite_src_chillguy = path + "/images/gamify/chillguy.png"; //chill guy playere data
     const CHILLGUY_SCALE_FACTOR = 5;
     const sprite_data_chillguy = {
         id: 'Chill Guy',
@@ -72,7 +62,7 @@ class GameLevelDesert {
         // Hitbox (adjust for collision detection)
         hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
         // Movement keys
-        keypress: { up: 73, left: 74, down: 75, right: 76 }, // W, A, S, D
+        keypress: { up: 87, left: 65, down: 83, right: 68 }, // W, A, S, D
 
         // Track active movement keys
         activeKeys: new Set(),
