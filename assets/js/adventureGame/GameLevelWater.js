@@ -45,6 +45,7 @@ class GameLevelWater {
         upLeft: {row: 1, start: 0, columns: 2, mirror: true, rotate: -Math.Pi/16 }, // mirror is used to flip the sprite
         upRight: {row: 1, start: 0, columns: 2, rotate: Math.Pi/16 },
         hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
+        absVelocity: 0.2, //slower than snowspeeder
         keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
     };
 

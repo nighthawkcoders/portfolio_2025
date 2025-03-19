@@ -213,6 +213,7 @@ class Character extends GameObject {
         // Update or change position according to velocity events
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
+        // Update position based on direction
         if (this.direction == "right"){
             this.position.x += this.absVelocity;
         }
@@ -220,10 +221,10 @@ class Character extends GameObject {
             this.position.x -= this.absVelocity;
         }
         if (this.direction == "up"){
-            this.position.y += this.absVelocity;
+            this.position.y -= this.absVelocity;
         }
         if (this.direction == "down"){
-            this.position.y -= this.absVelocity;
+            this.position.y += this.absVelocity;
         }
 
         // Ensure the object stays within the canvas boundaries
