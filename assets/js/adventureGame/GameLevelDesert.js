@@ -44,7 +44,58 @@ class GameLevelDesert {
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
         keypress: { up: 38, left: 37, down: 40, right: 39 } // Arrow keys
     };
+    const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
+    const CHILLGUY_SCALE_FACTOR = 5;
+    const sprite_data_chillguy = {
+        id: 'Chill Guy',
+        greeting: "Hi, I am Chill Guy, the desert wanderer. I am looking for wisdom and adventure!",
+        src: sprite_src_chillguy,
+        SCALE_FACTOR: CHILLGUY_SCALE_FACTOR,
+        STEP_FACTOR: 1000,
+        ANIMATION_RATE: 50,
+        INIT_POSITION: { x: 0, y: height - (height / CHILLGUY_SCALE_FACTOR) }, 
+        pixels: { height: 1024, width: 384 }, // Adjusted to match the provided sprite sheet
+        orientation: { rows: 8, columns: 3 }, // 8 total rows (4 movement + 4 stationary)
 
+        // Movement animations (3-frame animations)
+        down: { row: 0, start: 0, columns: 3 },
+        left: { row: 2, start: 0, columns: 3 },
+        right: { row: 1, start: 0, columns: 3 },
+        up: { row: 3, start: 0, columns: 3 },
+
+        // Stationary animations (Single-frame)
+        downStationary: { row: 4, start: 1, columns: 1 },
+        leftStationary: { row: 6, start: 1, columns: 1 },
+        rightStationary: { row: 5, start: 1, columns: 1 },
+        upStationary: { row: 7, start: 1, columns: 1 },
+
+        // Hitbox (adjust for collision detection)
+        hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
+        // Movement keys
+        keypress: { up: 73, left: 74, down: 75, right: 76 }, // W, A, S, D
+
+        // Track active movement keys
+        activeKeys: new Set(),
+
+        // Handles key press (activates movement animation)
+        handleKeyPress(event) {
+            this.activeKeys.add(event.keyCode);
+            this.updateAnimation();
+        },
+
+        // Handles key release (switches to stationary animation when no keys are held)
+        handleKeyRelease(event) {
+            this.activeKeys.delete(event.keyCode);
+            this.updateAnimation();
+        },
+
+        // Updates animation based on active keys
+        updateAnimation() {
+            if (this.activeKeys.size === 0) {
+                this.currentAnimation = this.downStationary; // Default to facing forward
+            }
+        }
+    };
     // NPC data for Tux 
     const sprite_src_tux = path + "/images/gamify/tux.png"; // be sure to include the path
     const sprite_greet_tux = "Hi I am Tux, the Linux mascot.  I am very happy to spend some linux shell time with you!";
