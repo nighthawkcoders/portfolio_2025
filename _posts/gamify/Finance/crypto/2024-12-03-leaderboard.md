@@ -114,19 +114,14 @@ title: Leaderboard
     }
   </style>
 <body>
-  <!-- Navigation Bar -->
-  <nav class="navbar">
-      <div class="nav-buttons">
-          <a href="{{site.baseurl}}/stocks/home">Home</a>
-          <a href="{{site.baseurl}}/crypto/portfolio">Crypto</a>
-          <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
-          <a href="{{site.baseurl}}/crypto/mining">Mining</a>
-          <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
-          <a href="{{site.baseurl}}/stocks/leaderboard">Leaderboard</a>
-          <a href="{{site.baseurl}}/stocks/game">Game</a>
-          <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
-      </div>
-  </nav>
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <div class="nav-buttons">
+        <a href="{{site.baseurl}}/stocks/leaderboard">Leaderboard</a>
+        <a href="{{site.baseurl}}/crypto/team-selection">Team viewer</a>
+        <a href="{{site.baseurl}}/stocks/leaderboard">Team selector</a>
+    </div>
+</nav>
 
   <!-- Dashboard -->
   <div class="dashboard">

@@ -129,7 +129,6 @@ title: Stocks Portfolio
         <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
         <a href="{{site.baseurl}}/crypto/mining">Mining</a>
         <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
-        <a href="{{site.baseurl}}/stocks/leaderboard">Leaderboard</a>
         <a href="{{site.baseurl}}/stocks/game">Game</a>
         <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
 
