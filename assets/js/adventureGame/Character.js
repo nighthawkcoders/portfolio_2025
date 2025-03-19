@@ -26,6 +26,7 @@ const INIT_POSITION = { x: 0, y: 0 };
  * @property {number} height - The height of the object.
  * @property {number} xVelocity - The velocity of the object along the x-axis.
  * @property {number} yVelocity - The velocity of the object along the y-axis.
+ * @property {number} absVelocity - The extra little constant speed the player will feel on gameLevelStarWars and gameLevelWater
  * @property {Image} spriteSheet - The sprite sheet image for the object.
  * @property {number} frameIndex - The current frame index for animation.
  * @property {number} frameCount - The total number of frames for each direction.
@@ -92,6 +93,7 @@ class Character extends GameObject {
 
         // Initialize the object's position and velocity
         this.velocity = { x: 0, y: 0 };
+        this.absVelocity = 0.3; // small boost in any direction
 
         // Set the initial size and velocity of the object
         this.resize();
@@ -211,6 +213,18 @@ class Character extends GameObject {
         // Update or change position according to velocity events
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
+        if (this.direction == "right"){
+            this.position.x += this.absVelocity;
+        }
+        if (this.direction == "left"){
+            this.position.x -= this.absVelocity;
+        }
+        if (this.direction == "up"){
+            this.position.y += this.absVelocity;
+        }
+        if (this.direction == "down"){
+            this.position.y -= this.absVelocity;
+        }
 
         // Ensure the object stays within the canvas boundaries
         // Bottom of the canvas
