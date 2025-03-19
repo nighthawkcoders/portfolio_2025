@@ -34,7 +34,7 @@ class GameLevelDesert {
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
         keypress: { up: 38, left: 37, down: 40, right: 39 } // Arrow keys
     };
-    const sprite_src_chillguy = path + "/images/gamify/chillguy.png"; //chill guy playere data
+    const sprite_src_chillguy = path + "/images/gamify/chillguyv2.png"; //chill guy playere data
     const CHILLGUY_SCALE_FACTOR = 5;
     const sprite_data_chillguy = {
         id: 'Chill Guy',
