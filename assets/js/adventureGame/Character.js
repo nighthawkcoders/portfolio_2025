@@ -214,16 +214,16 @@ class Character extends GameObject {
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
         // Update position based on direction
-        if (this.direction == "right"){
+        if (this.direction == "right" || this.direction == "idleRight"){
             this.position.x += this.absVelocity;
         }
-        if (this.direction == "left"){
+        if (this.direction == "left" || this.direction == "idleLeft"){
             this.position.x -= this.absVelocity;
         }
-        if (this.direction == "up"){
+        if (this.direction == "up" || this.direction == "idleUp"){
             this.position.y -= this.absVelocity;
         }
-        if (this.direction == "down"){
+        if (this.direction == "down" || this.direction == "idleDown"){
             this.position.y += this.absVelocity;
         }
 
