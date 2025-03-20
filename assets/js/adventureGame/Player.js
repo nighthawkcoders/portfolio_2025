@@ -25,7 +25,6 @@ class Player extends Character {
         super(data, gameEnv);
         this.keypress = data?.keypress || {up: 87, left: 65, down: 83, right: 68};
         this.pressedKeys = {}; // active keys array
-        this.firction = 0.1;
         this.bindMovementKeyListners();
     }
 
@@ -68,38 +67,39 @@ class Player extends Character {
      * Update the player's velocity and direction based on the pressed keys.
      */
     updateVelocityAndDirection() {
-        this.velocity.x = 0;
-        this.velocity.y = 0;
+        this.velocity.x /= 5;
+        this.velocity.y /= 5;
+        console.log(this.velocity.x);
 
         // Multi-key movements (diagonals: upLeft, upRight, downLeft, downRight)
         if (this.pressedKeys[this.keypress.up] && this.pressedKeys[this.keypress.left]) {
-            this.velocity.y -= this.yVelocity;
-            this.velocity.x -= this.xVelocity;
+            this.velocity.y -= 5;
+            this.velocity.x -= 5;
             this.direction = 'upLeft';
         } else if (this.pressedKeys[this.keypress.up] && this.pressedKeys[this.keypress.right]) {
-            this.velocity.y -= this.yVelocity;
-            this.velocity.x += this.xVelocity;
+            this.velocity.y -= 5;
+            this.velocity.x += 5;
             this.direction = 'upRight';
         } else if (this.pressedKeys[this.keypress.down] && this.pressedKeys[this.keypress.left]) {
-            this.velocity.y += this.yVelocity;
-            this.velocity.x -= this.xVelocity;
+            this.velocity.y += 5;
+            this.velocity.x -= 5;
             this.direction = 'downLeft';
         } else if (this.pressedKeys[this.keypress.down] && this.pressedKeys[this.keypress.right]) {
-            this.velocity.y += this.yVelocity;
-            this.velocity.x += this.xVelocity;
+            this.velocity.y += 5;
+            this.velocity.x += 5;
             this.direction = 'downRight';
         // Single key movements (left, right, up, down) 
         } else if (this.pressedKeys[this.keypress.up]) {
-            this.velocity.y -= this.yVelocity;
+            this.velocity.y -= 5;
             this.direction = 'up';
         } else if (this.pressedKeys[this.keypress.left]) {
-            this.velocity.x -= this.xVelocity;
+            this.velocity.x -= 5;
             this.direction = 'left';
         } else if (this.pressedKeys[this.keypress.down]) {
-            this.velocity.y += this.yVelocity;
+            this.velocity.y += 5;
             this.direction = 'down';
         } else if (this.pressedKeys[this.keypress.right]) {
-            this.velocity.x += this.xVelocity;
+            this.velocity.x += 5;
             this.direction = 'right';
         } else {
             // Set the direction to an idle version based on the last direction
