@@ -168,7 +168,7 @@
     <div class="map-container">
         <img src="https://i.ibb.co/tMQ1mTy6/map.png" alt="Map">
     </div>
-    <input type="text" id="barcode-input" autofocus style="position:absolute; left:-9999px;">
+    <input maxlength="7" type="text" id="barcode-input" autofocus style="position:absolute; left:-9999px;">
 
 </div>
 
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     barcodeInput.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
-            let barcode = barcodeInput.value.trim();
+            let barcode = barcodeInput.value.trim().slice(0,7);
             console.log("Scanned Barcode:", barcode);
 
             // Check if barcode is empty
@@ -340,27 +340,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 })
             }
-            //fetch("/scan-barcode", {
-                //method: "POST",
-               // headers: { "Content-Type": "application/json" },
-              //  body: JSON.stringify({ student_id: barcode })
-            //})
-            //.then(response => response.json())
-            //.then(resp => {
-               /// if (resp.student) {
-                    //users[resp.student] = barcode;
-                    //saveUsers(); // Save updated users list
-                   // console.log("User added:", resp.student);
-                   // localStorage.setItem('timeout', getTime())
-                 //   console.log('timeout', getTime());
-               // } else {
-                 //   console.log("Invalid response:", resp);
-               // }
-             //   location.reload();
-            //})
-           // .catch(error => console.error("Error:", error));
-
-            // Clear input field and refocus
+           
             barcodeInput.value = "";
         }
     });
@@ -483,6 +463,81 @@ function removeFromQueue() {
 }
 
 console.log("Script loaded successfully");
+
+function autoRemoveQueue() {
+    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+    if (storedUsers.length === 0) return;
+
+    function processNextUser(index) {
+        if (index >= storedUsers.length) {
+            localStorage.removeItem('users'); // Clear storage after all users are removed
+            document.getElementById('current-away').innerHTML = 'Nobody';
+            check_glow();
+            return;
+        }
+
+        const currentAway = storedUsers[index];
+        const timeIn = localStorage.getItem("timeIn");
+        const timeOut = getTime();
+        const time = `${timeOut}-${timeIn}`;
+
+        const postOptions = {
+            ...fetchOptions2,
+            method: 'POST',
+            body: JSON.stringify({
+                studentEmail: currentAway,
+                timeIn: time
+            }),
+        };
+
+        fetch(tinkleURL, postOptions)
+            .then(response => {
+                if (response.ok) {
+                    console.log(`Time added for ${currentAway}`);
+                } else {
+                    console.error(`Failed to add time for ${currentAway}`);
+                }
+            })
+            .finally(() => {
+                removeUser(currentAway); // Remove user from storage
+                setTimeout(() => {
+                    location.reload(); // Reload after processing each user
+                    processNextUser(index + 1); // Continue after reload
+                }, 500); // Delay to ensure reload takes effect
+            });
+    }
+
+    processNextUser(0);
+}
+
+setTimeout(autoRemoveQueue, 600000);
+
+const bellSchedule = {
+    "regDay": ["08:35", "09:41", "10:55", "11:32", "12:42", "13:13", "14:24", "15:35"],
+    "lateStart": ["09:35", "10:34", "11:38", "12:57", "13:27", "14:31", "15:35"],
+};
+
+const normDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+function checkTimeAndRun() {
+    const now = new Date();
+    const currentTime = now.toTimeString().slice(0, 5); // Get current time in "HH:MM" format
+    const today = now.toLocaleDateString("en-US", { weekday: "long" });
+
+    if (normDays.includes(today)) {
+        console.log(`Today's schedule (${today} - Regular Day):`);
+
+        if (bellSchedule.regDay.includes(currentTime)) {
+            console.log(`Executing functions at ${currentTime}...`);
+            autoRemoveQueue();
+        }
+    }
+}
+
+// Check every minute
+//setInterval(checkTimeAndRun, 60000);
+
 
 </script>
 <!-- </body> -->
