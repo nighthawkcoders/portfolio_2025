@@ -69,7 +69,6 @@ class Player extends Character {
     updateVelocityAndDirection() {
         this.velocity.x /= 5;
         this.velocity.y /= 5;
-        console.log(this.velocity.x);
 
         // Multi-key movements (diagonals: upLeft, upRight, downLeft, downRight)
         if (this.pressedKeys[this.keypress.up] && this.pressedKeys[this.keypress.left]) {
