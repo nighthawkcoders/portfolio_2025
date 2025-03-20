@@ -57,6 +57,7 @@ class Player extends Character {
         // remove the lifted key from the active keys array
         if (keyCode in this.pressedKeys) {
             delete this.pressedKeys[keyCode];
+            
         }
         // adjust the velocity and direction based on the remaining keys
         this.updateVelocityAndDirection();
@@ -99,6 +100,17 @@ class Player extends Character {
         } else if (this.pressedKeys[this.keypress.right]) {
             this.velocity.x += this.xVelocity;
             this.direction = 'right';
+        } else {
+            // Set the direction to an idle version based on the last direction
+            if (this.direction === 'up') {
+                this.direction = 'idleUp';
+            } else if (this.direction === 'down') {
+                this.direction = 'idleDown';
+            } else if (this.direction === 'left') {
+                this.direction = 'idleLeft';
+            } else if (this.direction === 'right') {
+                this.direction = 'idleRight';
+            }
         }
     }
 

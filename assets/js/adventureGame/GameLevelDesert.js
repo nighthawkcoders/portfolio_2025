@@ -25,7 +25,7 @@ class GameLevelDesert {
 
 
     // Player data for Chillguy
-    const sprite_src_chillguy = path + "/images/gamify/chillguy.png"; // be sure to include the path
+    const sprite_src_chillguy = path + "/images/gamify/chillguyv2.png"; // be sure to include the path
     const CHILLGUY_SCALE_FACTOR = 5;
     const sprite_data_chillguy = {
         id: 'Chill Guy',
@@ -33,19 +33,23 @@ class GameLevelDesert {
         src: sprite_src_chillguy,
         SCALE_FACTOR: CHILLGUY_SCALE_FACTOR,
         STEP_FACTOR: 1000,
-        ANIMATION_RATE: 50,
+        ANIMATION_RATE: 20,
         INIT_POSITION: { x: 0, y: height - (height/CHILLGUY_SCALE_FACTOR) }, 
-        pixels: {height: 384, width: 512},
-        orientation: {rows: 3, columns: 4 },
-        down: {row: 0, start: 0, columns: 3 },
-        downRight: {row: 1, start: 0, columns: 3, rotate: Math.PI/16 },
-        downLeft: {row: 2, start: 0, columns: 3, rotate: -Math.PI/16 },
-        left: {row: 2, start: 0, columns: 3 },
-        right: {row: 1, start: 0, columns: 3 },
-        up: {row: 3, start: 0, columns: 3 },
-        upLeft: {row: 2, start: 0, columns: 3, rotate: Math.PI/16 },
-        upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/16 },
-        hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
+        pixels: {height: 1024, width: 512},
+        orientation: {rows: 8, columns: 4 },
+        down: {row: 0, start: 0, columns: 4 },
+        downRight: {row: 1, start: 0, columns: 4, rotate: Math.PI/16 },
+        downLeft: {row: 2, start: 0, columns: 4, rotate: -Math.PI/16 },
+        left: {row: 2, start: 0, columns: 4 },
+        right: {row: 1, start: 0, columns: 4 },
+        up: {row: 3, start: 0, columns: 4 },
+        upLeft: {row: 2, start: 0, columns: 4, rotate: Math.PI/16 },
+        upRight: {row: 1, start: 0, columns: 4, rotate: -Math.PI/16 },
+        idleUp: {row: 7, start: 0, columns: 4 },
+        idleDown: {row: 4, start: 0, columns: 4 },
+        idleLeft: {row: 6, start: 0, columns: 4 },
+        idleRight: {row: 5, start: 0, columns: 4 },
+        hitbox: { widthPercentage: 0.25, heightPercentage: 0.1 },
         keypress: { up: 87, left: 65, down: 83, right: 68 }, // W, A, S, D
         absVelocity: 0 //Note: chillguy has a hard coded exception to this value. changing it shouldn't do anything.
     };
