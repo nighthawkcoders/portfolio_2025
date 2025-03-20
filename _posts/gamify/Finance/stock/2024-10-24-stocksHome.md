@@ -321,7 +321,6 @@ title: Stocks Home
             <div id="output" style="color: red; padding-top: 10px;"></div>
         </div>
         <!-- Sidebar -->
-        <!-- Sidebar -->
 <div class="sidebar">
     <div class="your-stocks">
         <h3>Your Stocks</h3>
@@ -332,32 +331,33 @@ title: Stocks Home
             </tr>
         </table>
     </div>
-<div class="crypto-history">
-    <h3>Your Crypto Transaction History</h3>
-    <table id="cryptoHistoryTable">
-        <tr>
-            <th>Type</th>
-            <th>Crypto Amount</th>
-            <th>Dollar Value</th>
-            <th>Timestamp</th>
-        </tr>
-    </table>
-    <button class="view-full-history-btn" onclick="openHistoryModal()">View Full History</button>
-</div>
 
-<!-- Modal for Full History -->
-<div id="historyModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeHistoryModal()">&times;</span>
-        <h3>Full Crypto Transaction History</h3>
-        <table id="fullCryptoHistoryTable">
+    <!-- ✅ Crypto Holdings (sidebar) -->
+    <div class="crypto-history">
+        <h3>Your Crypto</h3>
+        <table id="cryptoHoldingsTable">
             <tr>
-                <th>Type</th>
-                <th>Crypto Amount</th>
-                <th>Dollar Value</th>
-                <th>Timestamp</th>
+                <th>Crypto</th>
+                <th>Amount</th>
             </tr>
         </table>
+        <button class="view-full-history-btn" onclick="openHistoryModal()">Show Full History</button>
+    </div>
+
+    <!-- ✅ Modal for Full Transaction History -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeHistoryModal()">&times;</span>
+            <h3>Full Crypto Transaction History</h3>
+            <table id="fullCryptoHistoryTable">
+                <tr>
+                    <th>Type</th>
+                    <th>Crypto Amount</th>
+                    <th>Dollar Value</th>
+                    <th>Timestamp</th>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -591,13 +591,13 @@ async function updateCryptoHistoryTable() {
     try {
         const email = localStorage.getItem("userEmail");
         if (!email) {
-            console.warn("User email not found in localStorage.");
+            console.warn("🚨 User email not found!");
             return;
         }
 
-        console.log(`Fetching transaction history for email: ${email}`);
-
+        console.log(`Fetching transaction history for: ${email}`);
         const response = await fetch(javaURI + `/api/crypto/history?email=${encodeURIComponent(email)}`);
+
         if (!response.ok) {
             throw new Error(`Error fetching transaction history: ${response.statusText}`);
         }
@@ -607,60 +607,43 @@ async function updateCryptoHistoryTable() {
 
         let cryptoHistoryString = transactionData.cryptoHistory;
         if (!cryptoHistoryString || cryptoHistoryString.trim() === "") {
-            console.warn("No transaction history found.");
+            console.warn("🚨 No transaction history found!");
             return;
         }
 
         const transactionHistory = cryptoHistoryString.split("\n").filter(entry => entry.trim() !== "");
         console.log("Parsed Transaction History:", transactionHistory);
 
-        const table = document.getElementById("cryptoHistoryTable");
-        const fullTable = document.getElementById("fullCryptoHistoryTable");
-        if (!table || !fullTable) {
-            console.error("Table elements not found.");
-            return;
-        }
+        setTimeout(() => {
+            const fullTable = document.getElementById("fullCryptoHistoryTable");
 
-        // Clear existing table rows (except header)
-        table.innerHTML = `
-            <tr>
-                <th>Type</th>
-                <th>Crypto Amount</th>
-                <th>Dollar Value</th>
-                <th>Timestamp</th>
-            </tr>`;
-        fullTable.innerHTML = table.innerHTML; // Clone structure for modal
-
-        // 🟢 **Balance Tracking Fix**
-        let runningBalance = 100000; // ✅ Start at $100,000
-        let labels = [];
-        let balances = [];
-
-        transactionHistory.forEach(transaction => {
-            const rowData = parseTransaction(transaction);
-            if (rowData) {
-                const row = createTransactionRow(rowData);
-                table.appendChild(row);
-                fullTable.appendChild(row.cloneNode(true));
-
-                // 🟢 **Apply transaction to running balance**
-                const transactionAmount = parseFloat(rowData.value.replace("$", ""));
-                runningBalance += rowData.type === "Bought" ? -transactionAmount : transactionAmount;
-
-                // Store for graph plotting
-                labels.push(rowData.timestamp);
-                balances.push(runningBalance);
+            if (!fullTable) {
+                console.error("🚨 Transaction history table not found!");
+                return;
             }
-        });
 
-        // Render updated chart with correct running balance
-        renderCryptoBalanceChart(labels, balances);
+            // Clear old rows (except headers)
+            fullTable.innerHTML = `
+                <tr>
+                    <th>Type</th>
+                    <th>Crypto Amount</th>
+                    <th>Dollar Value</th>
+                    <th>Timestamp</th>
+                </tr>`;
+
+            transactionHistory.forEach(transaction => {
+                const rowData = parseTransaction(transaction);
+                if (rowData) {
+                    const row = createTransactionRow(rowData);
+                    fullTable.appendChild(row);
+                }
+            });
+        }, 500); // Ensure modal loads before updating
 
     } catch (error) {
-        console.error("Error updating Crypto Transaction History:", error);
+        console.error("🚨 Error updating crypto transaction history:", error);
     }
 }
-
 
 /* 🛠️ Function to Parse Transaction Details */
 function parseTransaction(transaction) {
@@ -689,6 +672,23 @@ function createTransactionRow({ type, amount, value, timestamp }) {
     `;
     return row;
 }
+
+/* 🖼️ Modal Functions */
+// Open Modal Function
+window.openHistoryModal = function() {
+    document.getElementById("historyModal").style.display = "block";
+    setTimeout(updateCryptoHistoryTable, 500); // Load history when modal opens
+};
+
+window.closeHistoryModal = function() {
+    document.getElementById("historyModal").style.display = "none";
+};
+
+
+// ✅ Call function when page loads, ensuring tables exist
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(updateCryptoHistoryTable, 1000); // ✅ Wait 1 second to ensure elements are loaded
+});
 
 function renderCryptoBalanceChart(labels, balances) {
     const ctx = document.getElementById("cryptoBalanceChart").getContext("2d");
@@ -741,13 +741,106 @@ function renderCryptoBalanceChart(labels, balances) {
     });
 }
 
+async function getCryptoHoldings() {
+    try {
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+            console.warn("User email not found in localStorage.");
+            return [];
+        }
+
+        console.log(`Fetching crypto holdings for email: ${email}`);
+
+        const response = await fetch(javaURI + `/api/crypto/holdings?email=${encodeURIComponent(email)}`);
+        if (!response.ok) {
+            throw new Error(`Error fetching crypto holdings: ${response.statusText}`);
+        }
+
+        const holdingsData = await response.json();
+        console.log("Crypto Holdings Response:", holdingsData);
+
+        let holdingsString = holdingsData.holdings;
+        if (!holdingsString || holdingsString.trim() === "") {
+            console.warn("No crypto holdings found.");
+            return [];
+        }
+
+        const holdingsArray = holdingsString.split(",").map(holding => {
+            const [cryptoId, amount] = holding.split(":");
+            return { cryptoId: cryptoId.trim(), amount: parseFloat(amount).toFixed(6) }; // Format amount to 6 decimals
+        });
+
+        return holdingsArray;
+    } catch (error) {
+        console.error("Error fetching Crypto Holdings:", error);
+        return [];
+    }
+}
+
+async function updateCryptoHoldingsTable() {
+    try {
+        const holdings = await getCryptoHoldings();
+        const table = document.getElementById("cryptoHoldingsTable");
+
+        if (!table) {
+            console.error("🚨 Crypto holdings table not found!");
+            return;
+        }
+
+        // Clear table except headers
+        table.innerHTML = `
+            <tr>
+                <th>Crypto</th>
+                <th>Amount</th>
+            </tr>`;
+
+        if (holdings.length === 0) {
+            table.innerHTML += `<tr><td colspan="2" style="text-align: center;">No crypto holdings</td></tr>`;
+            return;
+        }
+
+        for (const { cryptoId, amount } of holdings) {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${cryptoId.toUpperCase()}</td><td>${amount}</td>`;
+            table.appendChild(row);
+        }
+    } catch (error) {
+        console.error("🚨 Error updating crypto holdings:", error);
+    }
+}
+
+
+// ✅ Call function when page loads
+document.addEventListener("DOMContentLoaded", () => {
+    updateCryptoHoldingsTable();
+});
+
+async function getCryptoPrice(cryptoId) {
+    try {
+        const response = await fetch(javaURI + `/api/crypto/price?cryptoId=${encodeURIComponent(cryptoId)}`);
+        const data = await response.json();
+        console.log(`Price for ${cryptoId}:`, data);
+        return data?.price ?? 0; // Default to 0 if price is not found
+    } catch (error) {
+        console.error(`Error fetching price for ${cryptoId}:`, error);
+        return 0;
+    }
+}
+
+// ✅ Update crypto holdings table on page load
+document.addEventListener("DOMContentLoaded", () => {
+    updateCryptoHoldingsTable();
+});
+
 
 
 /* 🖼️ Modal Functions */
 // Open Modal Function
 window.openHistoryModal = function() {
     document.getElementById("historyModal").style.display = "block";
+    updateCryptoHistoryTable(); // ✅ Call history update when modal opens
 }
+
 
 // Close Modal Function
 window.closeHistoryModal = function() {
