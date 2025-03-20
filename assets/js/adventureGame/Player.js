@@ -25,6 +25,7 @@ class Player extends Character {
         super(data, gameEnv);
         this.keypress = data?.keypress || {up: 87, left: 65, down: 83, right: 68};
         this.pressedKeys = {}; // active keys array
+        this.firction = 0.1;
         this.bindMovementKeyListners();
     }
 
