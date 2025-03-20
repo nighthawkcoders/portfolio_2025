@@ -93,7 +93,7 @@ class Character extends GameObject {
 
         // Initialize the object's position and velocity
         this.velocity = { x: 0, y: 0 };
-        this.absVelocity = 0.3; // small boost in any direction
+        this.absVelocity = 0.5; // small boost in any direction
 
         // Set the initial size and velocity of the object
         this.resize();
