@@ -50,8 +50,7 @@ class GameLevelDesert {
         idleLeft: {row: 6, start: 0, columns: 4 },
         idleRight: {row: 5, start: 0, columns: 4 },
         hitbox: { widthPercentage: 0.25, heightPercentage: 0.1 },
-        keypress: { up: 87, left: 65, down: 83, right: 68 }, // W, A, S, D
-        absVelocity: 0 //Note: chillguy has a hard coded exception to this value. changing it shouldn't do anything.
+        keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
     };
 
 
