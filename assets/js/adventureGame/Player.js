@@ -57,6 +57,7 @@ class Player extends Character {
         // remove the lifted key from the active keys array
         if (keyCode in this.pressedKeys) {
             delete this.pressedKeys[keyCode];
+            
         }
         // adjust the velocity and direction based on the remaining keys
         this.updateVelocityAndDirection();
@@ -66,39 +67,51 @@ class Player extends Character {
      * Update the player's velocity and direction based on the pressed keys.
      */
     updateVelocityAndDirection() {
-        this.velocity.x = 0;
-        this.velocity.y = 0;
+        this.velocity.x /= 5;
+        this.velocity.y /= 5;
+        console.log(this.velocity.x);
 
         // Multi-key movements (diagonals: upLeft, upRight, downLeft, downRight)
         if (this.pressedKeys[this.keypress.up] && this.pressedKeys[this.keypress.left]) {
-            this.velocity.y -= this.yVelocity;
-            this.velocity.x -= this.xVelocity;
+            this.velocity.y -= 5;
+            this.velocity.x -= 5;
             this.direction = 'upLeft';
         } else if (this.pressedKeys[this.keypress.up] && this.pressedKeys[this.keypress.right]) {
-            this.velocity.y -= this.yVelocity;
-            this.velocity.x += this.xVelocity;
+            this.velocity.y -= 5;
+            this.velocity.x += 5;
             this.direction = 'upRight';
         } else if (this.pressedKeys[this.keypress.down] && this.pressedKeys[this.keypress.left]) {
-            this.velocity.y += this.yVelocity;
-            this.velocity.x -= this.xVelocity;
+            this.velocity.y += 5;
+            this.velocity.x -= 5;
             this.direction = 'downLeft';
         } else if (this.pressedKeys[this.keypress.down] && this.pressedKeys[this.keypress.right]) {
-            this.velocity.y += this.yVelocity;
-            this.velocity.x += this.xVelocity;
+            this.velocity.y += 5;
+            this.velocity.x += 5;
             this.direction = 'downRight';
         // Single key movements (left, right, up, down) 
         } else if (this.pressedKeys[this.keypress.up]) {
-            this.velocity.y -= this.yVelocity;
+            this.velocity.y -= 5;
             this.direction = 'up';
         } else if (this.pressedKeys[this.keypress.left]) {
-            this.velocity.x -= this.xVelocity;
+            this.velocity.x -= 5;
             this.direction = 'left';
         } else if (this.pressedKeys[this.keypress.down]) {
-            this.velocity.y += this.yVelocity;
+            this.velocity.y += 5;
             this.direction = 'down';
         } else if (this.pressedKeys[this.keypress.right]) {
-            this.velocity.x += this.xVelocity;
+            this.velocity.x += 5;
             this.direction = 'right';
+        } else {
+            // Set the direction to an idle version based on the last direction
+            if (this.direction === 'up') {
+                this.direction = 'idleUp';
+            } else if (this.direction === 'down') {
+                this.direction = 'idleDown';
+            } else if (this.direction === 'left') {
+                this.direction = 'idleLeft';
+            } else if (this.direction === 'right') {
+                this.direction = 'idleRight';
+            }
         }
     }
 
