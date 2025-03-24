@@ -32,9 +32,6 @@ let globalPeer;
 socket.onmessage = async function (event) {
     const messageData = JSON.parse(event.data);
     switch (messageData["context"]) {
-        case "broadcastRequestServer":
-            await watch()
-        break;
         case "viewerOfferServer":
             viewerOfferServer(messageData);
             break;
