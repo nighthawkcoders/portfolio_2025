@@ -32,11 +32,11 @@ class GameLevelDesert {
         greeting: "Hi I am Chill Guy, the desert wanderer. I am looking for wisdom and adventure!",
         src: sprite_src_chillguy,
         SCALE_FACTOR: CHILLGUY_SCALE_FACTOR,
-        STEP_FACTOR: 1000,
+        STEP_FACTOR: 600,
         ANIMATION_RATE: 16, //lower numbers for these factors = faster rate bc mort divides 1 by these numbers, then that becomes rate. e.g - 1/16 = 0.0625 which is larger/faster than 1/50 which is 0.02.
         INIT_POSITION: { x: 0, y: height - (height/CHILLGUY_SCALE_FACTOR) }, 
         pixels: {height: 1024, width: 512},
-        orientation: {rows: 8, columns: 4 },
+        orientation: {rows: 8, columns: 4, direction: 'right'},
         down: {row: 0, start: 0, columns: 4 },
         downRight: {row: 1, start: 0, columns: 4, rotate: Math.PI/16 },
         downLeft: {row: 2, start: 0, columns: 4, rotate: -Math.PI/16 },
