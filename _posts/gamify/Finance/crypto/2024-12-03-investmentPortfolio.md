@@ -237,6 +237,11 @@ permalink: /crypto/portfolio
 
         <button class="btn btn-close" onclick="closeModal()">Close</button>
     </div>
+        <!-- Search Bar -->
+    <div class="container">
+        <input type="text" id="crypto-search" placeholder="Search Crypto..." oninput="searchCrypto()">
+        <div id="search-results"></div>
+    </div>
 </div>
 
 <script type="module">
@@ -265,6 +270,35 @@ permalink: /crypto/portfolio
         }
     }
 
+        // Make sure this function is in the global scope
+    async function searchCrypto() {
+        const query = document.getElementById('crypto-search').value.trim();
+        const resultsContainer = document.getElementById('search-results');
+        if (query.length < 2) {
+            resultsContainer.innerHTML = "";
+            return;
+        }
+        try {
+            const response = await fetch(`${javaURI}/api/crypto/search?cryptoId=${encodeURIComponent(query)}`, fetchOptions);
+            if (!response.ok) {
+                resultsContainer.innerHTML = "<p>No results found</p>";
+                return;
+            }
+            const crypto = await response.json();
+            resultsContainer.innerHTML = `
+                <div class="crypto-item" onclick="openModal(${JSON.stringify(crypto)})">
+                    <strong>${crypto.name} (${crypto.symbol})</strong><br>
+                    Price: $${crypto.price.toFixed(2)}
+                </div>
+            `;
+        } catch (error) {
+            console.error("Error searching crypto:", error);
+        }
+    }
+    window.searchCrypto = searchCrypto;
+
+// Make sure your HTML uses the function correctly, like this:
+// <input type="text" id="crypto-search" oninput="searchCrypto()" placeholder="Search cryptocurrencies...">
     function updateBalance(balance) {
         const formattedBalance = parseFloat(balance).toFixed(2);
         document.getElementById('user-balance').innerText = formattedBalance;
