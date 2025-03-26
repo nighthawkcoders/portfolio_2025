@@ -132,9 +132,9 @@ class GameLevelStarWars {
     }
     const switchButton = document.createElement("button");
     switchButton.textContent = "Switch Background";
-    switchButton.style.position = "absolute"; // Change from absolute to fixed
-    switchButton.style.bottom = "10px"; // Move from top to bottom
-    switchButton.style.right = "10px"; // Move from right to right
+    switchButton.style.position = "absolute"; 
+    switchButton.style.bottom = "10px"; 
+    switchButton.style.right = "10px"; 
     switchButton.style.zIndex = "1000";
     switchButton.addEventListener("click", () => {
       this.switchBackground();
