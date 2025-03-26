@@ -49,23 +49,32 @@ class GameControl {
         fadeOverlay.style.backgroundColor = 'black';
         fadeOverlay.style.opacity = '0';
         fadeOverlay.style.transition = 'opacity 1s ease-in-out';
+        fadeOverlay.style.display = 'flex';
+        fadeOverlay.style.justifyContent = 'center';
+        fadeOverlay.style.alignItems = 'center';
+        fadeOverlay.style.fontSize = '2em';
+        fadeOverlay.style.color = 'white';
+
+        const loadingText = document.createElement('p');
+        loadingText.textContent = 'Loading...';
+        fadeOverlay.appendChild(loadingText);
         document.body.appendChild(fadeOverlay);
-    
+
         // Fade to black
         requestAnimationFrame(() => {
             fadeOverlay.style.opacity = '1';
         });
-    
+
         setTimeout(() => {
             // Switch levels when screen is black
             const GameLevelClass = this.levelClasses[this.currentLevelIndex];
             this.currentLevel = new GameLevel(this);
             this.currentLevel.create(GameLevelClass);
-    
+
             // Fade back in
             fadeOverlay.style.opacity = '0';
             setTimeout(() => document.body.removeChild(fadeOverlay), 1000);
-            
+
             // Start game loop after transition
             this.gameLoop();
         }, 1000); // Wait for fade-out duration

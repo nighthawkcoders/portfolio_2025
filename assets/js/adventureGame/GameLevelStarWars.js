@@ -124,7 +124,6 @@ class GameLevelStarWars {
     });
   }
 
-<<<<<<< Tabnine <<<<<<<
   createSwitchBackgroundButton() {
     const gameContainer = document.getElementById("gameContainer");
     if (!gameContainer) {
@@ -133,16 +132,15 @@ class GameLevelStarWars {
     }
     const switchButton = document.createElement("button");
     switchButton.textContent = "Switch Background";
-    switchButton.style.position = "absolute"; // Change from absolute to fixed//+
-    switchButton.style.bottom = "10px"; // Move from top to bottom//+
-    switchButton.style.right = "10px"; // Move from right to right//+
+    switchButton.style.position = "absolute"; // Change from absolute to fixed
+    switchButton.style.bottom = "10px"; // Move from top to bottom
+    switchButton.style.right = "10px"; // Move from right to right
     switchButton.style.zIndex = "1000";
     switchButton.addEventListener("click", () => {
       this.switchBackground();
     });
     gameContainer.appendChild(switchButton);
   }
->>>>>>> Tabnine >>>>>>>// {"conversationId":"c61557f6-92e3-4104-a1fa-00b2b93a09a5","source":"instruct"}
 
   switchBackground() {
     this.currentBackgroundIndex = (this.currentBackgroundIndex + 1) % this.backgrounds.length;
