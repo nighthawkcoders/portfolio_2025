@@ -19,15 +19,15 @@ class GameLevelStarWars {
       pixels: { height: 570, width: 1025 }
     };
 
-    this.backgrounds = [
-      new Background(image__data_atat, gameEnv),
-      new Background({ src: path + "/images/gamify/deathstar.png" }, gameEnv)
-    ];
+    // Initialize backgrounds lazily
+    this.backgrounds = null;
     this.currentBackgroundIndex = 0;
+
     this.bindSwitchBackgroundKey();
     this.createSwitchBackgroundButton();
 
     // Add initial background to game objects
+    this.initializeBackgrounds(image__data_atat, path);
     this.gameEnv.gameObjects.push(this.backgrounds[this.currentBackgroundIndex]);
 
     // Player data for snowspeeder
@@ -147,6 +147,13 @@ class GameLevelStarWars {
     this.gameEnv.gameObjects = this.gameEnv.gameObjects.filter(obj => !(obj instanceof Background));
     this.gameEnv.gameObjects.unshift(this.backgrounds[this.currentBackgroundIndex]);
     this.gameEnv.update();
+  }
+
+  initializeBackgrounds(image__data_atat, path) {
+    this.backgrounds = [
+      new Background(image__data_atat, this.gameEnv),
+      new Background({ src: path + "/images/gamify/deathstar.png" }, this.gameEnv)
+    ];
   }
 }
 
