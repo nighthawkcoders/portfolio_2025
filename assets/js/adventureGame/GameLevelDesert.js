@@ -25,7 +25,7 @@ class GameLevelDesert {
 
 
     // Player data for Chillguy
-    const sprite_src_chillguy = path + "/images/gamify/chillguyv2.png"; // be sure to include the path
+    const sprite_src_chillguy = path + "/images/gamify/steve.png"; // be sure to include the path
     const CHILLGUY_SCALE_FACTOR = 5;
     const sprite_data_chillguy = {
         id: 'Chill Guy',
@@ -35,20 +35,20 @@ class GameLevelDesert {
         STEP_FACTOR: 1000,
         ANIMATION_RATE: 16, //lower numbers for these factors = faster rate bc mort divides 1 by these numbers, then that becomes rate. e.g - 1/16 = 0.0625 which is larger/faster than 1/50 which is 0.02.
         INIT_POSITION: { x: 0, y: height - (height/CHILLGUY_SCALE_FACTOR) }, 
-        pixels: {height: 1024, width: 512},
+        pixels: {height: 256, width: 128},
         orientation: {rows: 8, columns: 4 },
-        down: {row: 0, start: 0, columns: 4 },
+        down: {row: 1, start: 0, columns: 4 },
         downRight: {row: 1, start: 0, columns: 4, rotate: Math.PI/16 },
-        downLeft: {row: 2, start: 0, columns: 4, rotate: -Math.PI/16 },
-        left: {row: 2, start: 0, columns: 4 },
-        right: {row: 1, start: 0, columns: 4 },
+        downLeft: {row: 1, start: 0, columns: 4, rotate: -Math.PI/16 },
+        left: {row: 5, start: 0, columns: 4 },
+        right: {row: 7, start: 0, columns: 4 },
         up: {row: 3, start: 0, columns: 4 },
-        upLeft: {row: 2, start: 0, columns: 4, rotate: Math.PI/16 },
-        upRight: {row: 1, start: 0, columns: 4, rotate: -Math.PI/16 },
-        idleUp: {row: 7, start: 0, columns: 4 },
-        idleDown: {row: 4, start: 0, columns: 4 },
-        idleLeft: {row: 6, start: 0, columns: 4 },
-        idleRight: {row: 5, start: 0, columns: 4 },
+        upLeft: {row: 3, start: 0, columns: 4, rotate: Math.PI/16 },
+        upRight: {row: 3, start: 0, columns: 4, rotate: -Math.PI/16 },
+        idleUp: {row: 3, start: 0, columns: 4 },
+        idleDown: {row: 0, start: 0, columns: 4 },
+        idleLeft: {row: 4, start: 0, columns: 4 },
+        idleRight: {row: 6, start: 0, columns: 4 },
         hitbox: { widthPercentage: 0.25, heightPercentage: 0.1 },
         keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
     };
