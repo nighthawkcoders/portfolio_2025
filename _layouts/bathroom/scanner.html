@@ -384,6 +384,7 @@ document.getElementById('add-queue-form').addEventListener('submit', (event) => 
 
     if (teacherEmail) {
         addTeacherQueue(teacherEmail, "");
+        fetchQueueData(teacherEmail);
     } else {
         alert('Please fill out both fields.');
     }
@@ -459,20 +460,22 @@ async function fetchLocations() {
 
 window.onload = fetchLocations;
 
-let mortensenQueue = null;
-async function fetchQueueData() {
+let teacherQueue = null;
+async function fetchQueueData(teacherEmail) {
     try {
         const QueueURI = javaURI + "/api/queue/all";
         const response = await fetch(QueueURI, fetchOptions2);
 
         if (response.status !== 200) return console.error("Failed to fetch queue data.");
         
+        console.log(teacherEmail)
+
         const data = await response.json();
-        mortensenQueue = data.find(queue => queue.teacherEmail === teacherEmail);
+        teacherQueue = data.find(queue => queue.teacherEmail === teacherEmail);
 
-        if (!mortensenQueue) return console.error("No queue found for the teacher.");
+        if (!teacherQueue) return console.error("No queue found for the teacher.");
 
-        const queueArray = mortensenQueue.peopleQueue.split(",");
+        const queueArray = teacherQueue.peopleQueue.split(",");
         document.getElementById("current-away").textContent = queueArray[0] || "Nobody";
         document.getElementById("next-up").textContent = queueArray[1] || "None";
 
@@ -491,7 +494,7 @@ async function fetchQueueData() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", fetchQueueData);
+document.addEventListener("DOMContentLoaded", fetchQueueData(teacherEmail));
 
 function check_glow() {
     const statusBar = document.getElementById("status-bar");
