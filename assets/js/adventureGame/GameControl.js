@@ -50,6 +50,7 @@ class GameControl {
         fadeOverlay.style.opacity = '0';
         fadeOverlay.style.transition = 'opacity 1s ease-in-out';
         fadeOverlay.style.display = 'flex';
+        fadeOverlay.style.flexDirection = 'column';
         fadeOverlay.style.justifyContent = 'center';
         fadeOverlay.style.alignItems = 'center';
         fadeOverlay.style.fontSize = '2em';
@@ -58,12 +59,33 @@ class GameControl {
         const loadingText = document.createElement('p');
         loadingText.textContent = 'Loading...';
         fadeOverlay.appendChild(loadingText);
+
+        const loadingBar = document.createElement('p');
+        loadingBar.style.marginTop = '10px';
+        loadingBar.style.fontFamily = 'monospace'; // Use monospace for consistent bar appearance
+        loadingBar.textContent = ''; // Start with an empty bar
+        fadeOverlay.appendChild(loadingBar);
+
         document.body.appendChild(fadeOverlay);
 
         // Fade to black
         requestAnimationFrame(() => {
             fadeOverlay.style.opacity = '1';
         });
+
+        // Update the loading bar over 1000 milliseconds
+        const totalDuration = 1000; // 1 second
+        const interval = 100; // Update every 100ms
+        const totalSteps = totalDuration / interval;
+        let currentStep = 0;
+
+        const loadingInterval = setInterval(() => {
+            currentStep++;
+            loadingBar.textContent += '|'; // Add a bar segment
+            if (currentStep >= totalSteps) {
+                clearInterval(loadingInterval); // Stop updating the bar
+            }
+        }, interval);
 
         setTimeout(() => {
             // Switch levels when screen is black
@@ -77,7 +99,7 @@ class GameControl {
 
             // Start game loop after transition
             this.gameLoop();
-        }, 1000); // Wait for fade-out duration
+        }, totalDuration); // Wait for fade-out duration
     }
 
     /**
