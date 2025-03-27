@@ -378,6 +378,10 @@ document.addEventListener("DOMContentLoaded", function() {
 document.getElementById('add-queue-form').addEventListener('submit', (event) => {
     event.preventDefault(); // Prevent form from refreshing the page
 
+    let teacherEmail = document.getElementById('teacher-email').value.trim();
+
+    console.log(teacherEmail)
+
     if (teacherEmail) {
         addTeacherQueue(teacherEmail, "");
     } else {
