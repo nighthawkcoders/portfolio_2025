@@ -84,7 +84,7 @@ class Character extends GameObject {
             // Initialize animation properties
             this.frameIndex = 0; // index reference to current frame
             this.frameCounter = 0; // count each frame rate refresh
-            this.direction = 'right'; // Initial direction
+            this.direction = data.orientation.direction; // Initial direction
             this.spriteData = data;
         } else {
             throw new Error('Sprite data is required');
@@ -211,6 +211,19 @@ class Character extends GameObject {
         // Update or change position according to velocity events
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
+        // Update position based on direction
+        if (this.direction == "right" || this.direction == "idleRight"){
+            this.position.x += this.absVelocity;
+        }
+        if (this.direction == "left" || this.direction == "idleLeft"){
+            this.position.x -= this.absVelocity;
+        }
+        if (this.direction == "up" || this.direction == "idleUp"){
+            this.position.y -= this.absVelocity;
+        }
+        if (this.direction == "down" || this.direction == "idleDown"){
+            this.position.y += this.absVelocity;
+        }
 
         // Ensure the object stays within the canvas boundaries
         // Bottom of the canvas

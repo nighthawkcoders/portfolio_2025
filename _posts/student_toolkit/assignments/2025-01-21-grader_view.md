@@ -66,7 +66,6 @@ comments: false
     
     #submissionsTable th {
         background-color:rgb(49, 41, 41);
-        color: black;
     }
 
     .btn {
@@ -198,37 +197,52 @@ comments: false
     // View submissions for an assignment, use window object to make it globally accessible
     window.viewSubmissions = function(assignmentId, assignmentName) {
         fetch(`${javaURI}/api/assignments/${assignmentId}/submissions`, fetchOptions)
-        .then(response => response.json())
+        .then(async response => {
+            // const test = await response.text();
+            // console.log(test);
+            return response.json();
+        })
         .then(submissions => {
-            const submissionsList = document.getElementById('submissionsList');
-            submissionsList.innerHTML = ''; // Clear previous content
             document.getElementById('assignmentNameHeader').textContent = `Submissions for: ${assignmentName}`;
+            
+            const submissionsList = document.getElementById('submissionsList');
+            submissionsList.innerHTML = ''; 
 
             if (submissions.length === 0) {
-            submissionsList.innerHTML = '<tr><td colspan="5">No submissions found</td></tr>';
+                submissionsList.innerHTML = '<tr><td colspan="5">No submissions found</td></tr>';
             } else {
-            submissions.forEach(submission => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                <td>${submission.studentName}</td>
-                <td>${submission.content}</td>
-                <td>${submission.date}</td>
-                <td>${submission.grade || 'Not graded'}</td>
-                <td>
-                    <button class="btn" onclick="gradeAssignment(${submission.student.id}, ${submission.assignmentid})">Grade</button>
-                </td>
-                `;
-                submissionsList.appendChild(row);
-            });
+                submissions.forEach(submission => {
+                    console.log('Processing submission:', submission);
+                    const row = document.createElement('tr');
+                    if (submission.students.length === 0) {
+                        submission.students = [{ name: 'Unknown Student'}]
+                    }
+                    let studentNames = "";
+                    submission.students.forEach(student => {
+                        studentNames += student.name + ", ";
+                    });
+                    // for (student in submission.students) {
+                    //     studentNames += student.name + ", ";
+                    // }
+                    studentNames = studentNames.slice(0, -2);
+                    row.innerHTML = `
+                        <td>${studentNames}</td>
+                        <td>${submission.content || 'No content'}</td>
+                        <td>${submission.comment || 'No comments'}</td>
+                        <td>${submission.grade || 'Not graded'}</td>
+                        <td>
+                            <button class="btn btn-grade" onclick="gradeAssignment(${submission.assignment.id}, ${JSON.stringify(submission.students.map(s => s.id))})">Grade</button>
+                        </td>
+                    `;
+                    submissionsList.appendChild(row);
+                });
             }
 
-            // Show modal
-            const modal = document.getElementById('submissionsModal');
-            modal.style.display = 'block';
+            document.getElementById('submissionsModal').style.display = 'block';
         })
         .catch(error => {
             console.error('Error fetching submissions:', error);
-            alert('Failed to fetch submissions');
+            alert('Failed to fetch submissions: ' + error.message);
         });
     }
 
@@ -239,7 +253,7 @@ comments: false
     }
 
     // Placeholder for grading a submission
-    window.gradeAssignment = function(studentId, assignmentId) {
+    window.gradeAssignment = function(assignmentId, studentIds) {
         var gradeSuggestion = null;
         do {
             gradeSuggestion = prompt("What grade do you want to give?");
@@ -253,12 +267,15 @@ comments: false
         if (explanation === null) {
             return;
         }
-        console.log(studentId);
+        console.log(studentIds);
         console.log(assignmentId);
         console.log(gradeSuggestion);
         console.log(explanation);
 
-        fetch(`${javaURI}/api/synergy/grades/requests`, {
+        // const studentIds = JSON.parse(studentIds);
+        console.log(studentIds);
+
+        fetch(`${javaURI}/api/synergy/grades/requests/bulk`, {
             method: 'POST',
             mode: 'cors',
             cache: 'default',
@@ -268,7 +285,7 @@ comments: false
                 'X-Origin': 'client'
             },
             body: JSON.stringify({
-                'studentId': studentId,
+                'studentIds': studentIds,
                 'assignmentId': assignmentId,
                 'gradeSuggestion': gradeSuggestion,
                 'explanation': explanation
