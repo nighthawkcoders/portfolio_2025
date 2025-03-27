@@ -172,6 +172,14 @@
 
 </div>
 
+<div style="position: absolute; top: 10px; right: 10px; text-align: right;">
+    <form id="add-queue-form">
+        <label for="teacher-email">Teacher Email:</label>
+        <input type="email" id="teacher-email" placeholder="Enter teacher email" required>
+        <br>
+        <button type="submit" class="button">Add Queue</button>
+    </form>
+</div>
 
 <script type="module">
 import { javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
@@ -183,7 +191,7 @@ const fetchOptions2 = {
     ...fetchOptions,
     credentials: 'omit',
 }
-let teacherEmail = "jmort1021@gmail.com";
+let teacherEmail = document.getElementById('teacher-email').value.trim();
 const tinkleURL = javaURI + '/api/tinkle/add';
 // Load users from localStorage
 function loadUsers() {
@@ -366,7 +374,48 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-const teacherName = "jmort1021@gmail.com";
+// Handle form submission
+document.getElementById('add-queue-form').addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent form from refreshing the page
+
+    if (teacherEmail) {
+        addTeacherQueue(teacherEmail, "");
+    } else {
+        alert('Please fill out both fields.');
+    }
+});
+
+// Example fetch request to add a teacher queue
+const addTeacherQueue = async (teacherEmail, peopleQueue) => {
+    console.log(teacherEmail)
+    try {
+        const response = await fetch(javaURI + '/api/queue/addQueue', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                teacherEmail: teacherEmail,
+                peopleQueue: peopleQueue,
+            }),
+        });
+
+        if (response.ok) {
+            const result = await response.text();
+            console.log('Success:', result);
+            alert('Queue added successfully!');
+        } else {
+            const error = await response.text();
+            console.error('Error:', error);
+            alert('Failed to add queue: ' + error);
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        alert('An error occurred while adding the queue.');
+    }
+};
+
+// const teacherEmail = "jmort1021@gmail.com";
 
 async function fetchLocations() {
     try {
@@ -415,7 +464,7 @@ async function fetchQueueData() {
         if (response.status !== 200) return console.error("Failed to fetch queue data.");
         
         const data = await response.json();
-        mortensenQueue = data.find(queue => queue.teacherEmail === teacherName);
+        mortensenQueue = data.find(queue => queue.teacherEmail === teacherEmail);
 
         if (!mortensenQueue) return console.error("No queue found for the teacher.");
 
@@ -471,7 +520,7 @@ window.addEventListener('click', function(event) {
 const deleteOptions = { ...fetchOptions2, method: 'DELETE' };
 
 function removeFromQueue() {
-    fetch(javaURI + "/api/queue/removefront/" + teacherName, deleteOptions)
+    fetch(javaURI + "/api/queue/removefront/" + teacherEmail, deleteOptions)
         .then(response => {
             if (response.ok) {
                 console.log('user removed');
@@ -545,6 +594,8 @@ function checkTimeAndRun() {
     const currentTime = now.toTimeString().slice(0, 5); // Get current time in "HH:MM" format
     const today = now.toLocaleDateString("en-US", { weekday: "long" });
 
+    console.log(today)
+
     if (normDays.includes(today)) {
         console.log(`Today's schedule (${today} - Regular Day):`);
 
@@ -555,7 +606,7 @@ function checkTimeAndRun() {
     }
 }
 // Check every minute
-setInterval(checkTimeAndRun, 60000);
+setInterval(checkTimeAndRun, 30000);
 
 </script>
 
