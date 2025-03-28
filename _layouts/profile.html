@@ -507,7 +507,7 @@ active_tab: profile
         data-tilt data-tilt-reverse="true" data-tilt-perspective="10000" data-tilt-glare data-tilt-max-glare="0.5">
         <div class="class-details">
             <h3>Student Id</h3>
-            <p>Click to change your student id.</p>
+            <p id="sid"></p>
         </div>
         <div class="class-icon">
             <ion-icon name="school-outline" size="large"></ion-icon>
@@ -751,7 +751,7 @@ active_tab: profile
             }
         }
 
-        document.getElementById("name").textContent = name; //reload the content
+        document.getElementById("sid").textContent = sid; //reload the content
     }
 
 
@@ -776,9 +776,10 @@ active_tab: profile
                 console.error('Error updating uid:', error.message);
             }
         }
-
         document.getElementById("uid").textContent = uid; //reload the content
+
     }
+
 
     window.changeEmail = async function (event) {
         event.preventDefault(); // Prevent the form from refreshing the page
