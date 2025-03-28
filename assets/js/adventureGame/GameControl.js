@@ -34,50 +34,63 @@ class GameControl {
     }
 
     /**
-     * Transitions to the next level with an enhanced loading bar
+     * Transitions to the next level with an enhanced neon loading bar
      */ 
     transitionToLevel() {
+        // Create neon-styled fade overlay
         const fadeOverlay = document.createElement('div');
-        fadeOverlay.style.position = 'fixed';
-        fadeOverlay.style.top = '0';
-        fadeOverlay.style.left = '0';
-        fadeOverlay.style.width = '100%';
-        fadeOverlay.style.height = '100%';
-        fadeOverlay.style.backgroundColor = '#121313';
-        fadeOverlay.style.opacity = '0';
-        fadeOverlay.style.transition = 'opacity 1s ease-in-out';
-        fadeOverlay.style.display = 'flex';
-        fadeOverlay.style.justifyContent = 'center';
-        fadeOverlay.style.alignItems = 'center';
-        fadeOverlay.style.flexDirection = 'column';
-        fadeOverlay.style.gap = '20px';
+        Object.assign(fadeOverlay.style, {
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#0a0a1a', // Deep dark blue-black
+            opacity: '0',
+            transition: 'opacity 1s ease-in-out',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            gap: '20px',
+            fontFamily: "'Orbitron', sans-serif", // Neon-futuristic font
+        });
 
-        // Create loading bar container
+        // Create loading bar container with neon border
         const loadingBarContainer = document.createElement('div');
-        loadingBarContainer.style.width = '60%';
-        loadingBarContainer.style.height = '30px'; // Reduced height
-        loadingBarContainer.style.backgroundColor = '#333';
-        loadingBarContainer.style.borderRadius = '15px';
-        loadingBarContainer.style.overflow = 'hidden';
-        loadingBarContainer.style.position = 'relative';
-        loadingBarContainer.style.border = '2px solid white'; // White border
+        Object.assign(loadingBarContainer.style, {
+            width: '60%',
+            height: '30px',
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            borderRadius: '15px',
+            overflow: 'hidden',
+            position: 'relative',
+            border: '2px solid #00ffff', // Cyan neon border
+            boxShadow: '0 0 10px #00ffff, inset 0 0 10px #00ffff', // Neon glow effect
+        });
 
-        // Create loading bar
+        // Create loading bar with neon gradient
         const loadingBar = document.createElement('div');
-        loadingBar.style.width = '0%';
-        loadingBar.style.height = '100%';
-        loadingBar.style.backgroundColor = '#00FF00'; // Green color
-        loadingBar.style.transition = 'width 3s linear'; // Changed to linear for one smooth cycle
+        Object.assign(loadingBar.style, {
+            width: '0%',
+            height: '100%',
+            background: 'linear-gradient(to right, #00ffff, #ff00ff)', // Cyan to magenta gradient
+            transition: 'width 3s linear',
+        });
 
-        // Create loading text with percentage
+        // Create loading text with neon styling
         const loadingText = document.createElement('div');
-        loadingText.style.position = 'absolute';
-        loadingText.style.top = '50%';
-        loadingText.style.left = '50%';
-        loadingText.style.transform = 'translate(-50%, -50%)';
-        loadingText.style.color = 'white';
-        loadingText.style.fontSize = '16px';
-        loadingText.style.zIndex = '10';
+        Object.assign(loadingText.style, {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: '#00ffff', // Cyan neon color
+            fontSize: '18px',
+            fontWeight: 'bold',
+            textShadow: '0 0 10px #00ffff', // Neon text glow
+            zIndex: '10',
+        });
 
         // Update percentage during loading
         const updatePercentage = () => {
@@ -87,9 +100,11 @@ class GameControl {
                 loadingText.textContent = `Loading... ${percent}%`;
                 if (percent >= 100) {
                     clearInterval(interval);
-                    loadingText.textContent = 'Loading Complete';
+                    loadingText.textContent = 'Entering Cyberspace';
+                    loadingText.style.color = '#ff00ff'; // Change to magenta for final state
+                    loadingText.style.textShadow = '0 0 10px #ff00ff';
                 }
-            }, 30); // Update every 30ms to cover 3 seconds
+            }, 30);
         };
 
         // Append elements
@@ -98,11 +113,16 @@ class GameControl {
         fadeOverlay.appendChild(loadingBarContainer);
         document.body.appendChild(fadeOverlay);
 
+        // Inject neon font
+        const fontLink = document.createElement('link');
+        fontLink.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap';
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
+
         // Fade to black and start loading bar
         requestAnimationFrame(() => {
             fadeOverlay.style.opacity = '1';
             
-            // Use linear transition for one smooth cycle
             setTimeout(() => {
                 loadingBar.style.width = '100%';
                 updatePercentage();
@@ -115,13 +135,13 @@ class GameControl {
             this.currentLevel = new GameLevel(this);
             this.currentLevel.create(GameLevelClass);
 
-            // Fade back in
+            // Fade back in with neon effect
             fadeOverlay.style.opacity = '0';
             setTimeout(() => document.body.removeChild(fadeOverlay), 1000);
 
             // Start game loop after transition
             this.gameLoop();
-        }, 3000); // Wait for fade-out duration
+        }, 3000);
     }
 
     /**
@@ -158,18 +178,39 @@ class GameControl {
     }
 
     /**
-     * Handles the level end by
-     * 1. Destroying the current level
-     * 2. Calling the gameOver callback if it exists
-     * 3. Transitioning to the next level
+     * Handles the level end with neon-styled alerts
      */
     handleLevelEnd() {
-        // Alert the user that the level has ended
+        // Neon-styled alerts
+        const alertStyle = `
+            background-color: #0a0a1a;
+            color: #00ffff;
+            border: 2px solid #ff00ff;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px #00ffff;
+            padding: 20px;
+            text-align: center;
+        `;
+
         if (this.currentLevelIndex < this.levelClasses.length - 1) {
-            alert("Level ended.");
+            const alertDiv = document.createElement('div');
+            alertDiv.style.cssText = alertStyle;
+            alertDiv.innerHTML = `
+                <h2>LEVEL COMPLETE</h2>
+                <p>Prepare for the next phase...</p>
+            `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => document.body.removeChild(alertDiv), 2000);
         } else {
-            alert("All levels completed.");
+            const alertDiv = document.createElement('div');
+            alertDiv.style.cssText = alertStyle;
+            alertDiv.innerHTML = `
+                <h2>SYSTEM VICTORY</h2>
+                <p>All levels conquered. Simulation complete.</p>
+            `;
+            document.body.appendChild(alertDiv);
         }
+
         this.currentLevel.destroy();
         // Call the gameOver callback if it exists
         if (this.gameOver) {
