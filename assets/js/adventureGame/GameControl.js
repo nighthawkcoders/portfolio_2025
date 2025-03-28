@@ -32,7 +32,6 @@ class GameControl {
      * SKIBIDI LOADING TRANSITION - ULTIMATE GAMER MODE 🎮✨
      */ 
     transitionToLevel() {
-        // Cringe-proof fade overlay (real ones know)
         const fadeOverlay = document.createElement('div');
         Object.assign(fadeOverlay.style, {
             position: 'fixed',
@@ -40,113 +39,50 @@ class GameControl {
             left: '0',
             width: '100%',
             height: '100%',
-            backgroundColor: '#0a0a1a', // Ultra sigma dark mode
+            backgroundColor: '#0a0a1a',
             opacity: '0',
             transition: 'opacity 1s ease-in-out',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'column',
-            gap: '20px',
-            fontFamily: "'Orbitron', sans-serif", // Futuristic gamer font fr
-        });
-
-        // Loading bar container (no cap zone)
-        const loadingBarContainer = document.createElement('div');
-        Object.assign(loadingBarContainer.style, {
-            width: '60%',
-            height: '30px',
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            borderRadius: '15px',
-            overflow: 'hidden',
-            position: 'relative',
-            border: '2px solid #ff00ff', // Sigma border energy
-            boxShadow: '0 0 10px #ff00ff, inset 0 0 10px #ff00ff', 
-        });
-
-        // Rainbow neon loading bar (MAXIMUM DRIP)
-        const loadingBar = document.createElement('div');
-        Object.assign(loadingBar.style, {
-            width: '0%',
-            height: '100%',
-            background: 'linear-gradient(to right, #00ffff, #00ff00)', 
-            backgroundSize: '400% 100%',
-            animation: 'rainbowGamer 5s ease infinite',
-            transition: 'width 3s linear',
-        });
-
-        // Gamer animation (NO WEAKNESS)
-        const rainbowStyle = document.createElement('style');
-        rainbowStyle.textContent = `
-            @keyframes rainbowGamer {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
-            }
-        `;
-        document.head.appendChild(rainbowStyle);
-
-        // Loading text (MAXIMUM SWAG)
-        const loadingText = document.createElement('div');
-        Object.assign(loadingText.style, {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            color: '#ff00ff', 
+            fontFamily: "'Orbitron', sans-serif",
+            color: 'white',
             fontSize: '18px',
-            fontWeight: 'bold',
-            textShadow: '0 0 10px #ff00ff',
-            zIndex: '10',
         });
 
-        // ULTIMATE LOADING PHRASES (PURE ZOOMER ENERGY)
-        const updatePercentage = () => {
-            let percent = 0;
-            const loadingPhrases = [
-                'SKIBIDI LOADER ACTIVATED 🤯',
-                'RIZZING UP THE LOADING 💅',
-                'SIGMA MODE: DEPLOYING 🚀',
-                'ABSOLUTELY DEMOLISHING LOADING BAR 💥',
-                'NO CAP, LOADING GOES BRRRR 🔥',
-                'SHEEEESH LOADING INCOMING 😱',
-                'GYATT TIER LOADING 💢',
-                'ZAMN, WE LOADING FR 🤌'
-            ];
-            const interval = setInterval(() => {
-                percent++;
-                if (percent < 100) {
-                    loadingText.textContent = `${loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)]} ${percent}%`;
-                } else {
-                    clearInterval(interval);
-                    loadingText.textContent = 'ULTIMATE GAMER LEVEL UNLOCKED 🏆✨';
-                    loadingText.style.color = '#00ffff';
-                    loadingText.style.textShadow = '0 0 10px #00ffff';
-                }
-            }, 30);
-        };
+        // Loading text
+        const loadingText = document.createElement('div');
+        loadingText.textContent = 'Loading...';
+        fadeOverlay.appendChild(loadingText);
 
-        // Append elements
-        loadingBarContainer.appendChild(loadingBar);
-        loadingBarContainer.appendChild(loadingText);
-        fadeOverlay.appendChild(loadingBarContainer);
+        // Loading bar
+        const loadingBar = document.createElement('div');
+        loadingBar.style.marginTop = '10px';
+        loadingBar.style.fontFamily = 'monospace'; // Monospace for consistent bar appearance
+        loadingBar.textContent = ''; // Start with an empty bar
+        fadeOverlay.appendChild(loadingBar);
+
         document.body.appendChild(fadeOverlay);
 
-        // Gamer font injection (NO MERCY)
-        const fontLink = document.createElement('link');
-        fontLink.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap';
-        fontLink.rel = 'stylesheet';
-        document.head.appendChild(fontLink);
-
-        // FADE AND LOAD (SIGMA PROTOCOL)
+        // Fade in the overlay
         requestAnimationFrame(() => {
             fadeOverlay.style.opacity = '1';
-            
-            setTimeout(() => {
-                loadingBar.style.width = '100%';
-                updatePercentage();
-            }, 50);
         });
+
+        // Update the loading bar over 1000 milliseconds
+        const totalDuration = 1000; // 1 second
+        const interval = 100; // Update every 100ms
+        const totalSteps = totalDuration / interval;
+        let currentStep = 0;
+
+        const loadingInterval = setInterval(() => {
+            currentStep++;
+            loadingBar.textContent += '|'; // Add a bar segment
+            if (currentStep >= totalSteps) {
+                clearInterval(loadingInterval); // Stop updating the bar
+            }
+        }, interval);
 
         setTimeout(() => {
             // Switch levels when screen is black
@@ -154,13 +90,13 @@ class GameControl {
             this.currentLevel = new GameLevel(this);
             this.currentLevel.create(GameLevelClass);
 
-            // Fade back in with neon effect
+            // Fade out the overlay
             fadeOverlay.style.opacity = '0';
             setTimeout(() => document.body.removeChild(fadeOverlay), 1000);
 
             // Start game loop after transition
             this.gameLoop();
-        }, 3000);
+        }, totalDuration); // Wait for the loading duration
     }
 
     /**
