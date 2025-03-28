@@ -69,7 +69,7 @@ class GameControl {
         Object.assign(loadingBar.style, {
             width: '0%',
             height: '100%',
-            background: 'linear-gradient(to right, #ff00ff, #00ffff, #00ff00, #ffff00, #ff0000)', 
+            background: 'linear-gradient(to right, #00ffff, #00ff00)', 
             backgroundSize: '400% 100%',
             animation: 'rainbowGamer 5s ease infinite',
             transition: 'width 3s linear',
