@@ -1,32 +1,27 @@
-// GameControl.js
+// GameControl.js 🚀🤪
 import GameLevel from "./GameLevel.js";
 
 class GameControl {
     /**
-     * GameControl class to manage the game levels and transitions
-     * @param {*} path - The path to the game assets
-     * @param {*} levelClasses - The classes of for each game level
+     * Skibidi GameControl - Ultimate Level Destroyer 💥
      */
     constructor(game, levelClasses) {
-        // GameControl properties
-        this.game = game; // Reference required for game-in-game logic
+        this.game = game; // Sigma game reference 💪
         this.path = game.path;
-        this.gameContainer = game.gameContainer; // Document element that contains the game
-        this.gameCanvas = game.gameCanvas; // Document element that contains the game canvas
+        this.gameContainer = game.gameContainer; // Where the magic goes brrrr
+        this.gameCanvas = game.gameCanvas; // Canvas of pure CHAOS
         this.levelClasses = levelClasses;
         this.currentLevel = null;
         this.currentLevelIndex = 0;
         this.gameLoopCounter = 0;
         this.isPaused = false;
         this.exitKeyListener = this.handleExitKey.bind(this);
-        this.gameOver = null; // Callback for when the game is over 
-        this.savedCanvasState = []; // Save the current levels game elements 
+        this.gameOver = null; // Callback when we ABSOLUTELY DEMOLISH the game
+        this.savedCanvasState = []; // No cap, saving game states
     }
 
     /**
-     * Starts the game by 
-     * 1. Adding an exit key listener
-     * 2. Transitioning to the first level
+     * Let's GET THIS BREAD 🍞
      */
     start() {
         this.addExitKeyListener();
@@ -34,10 +29,10 @@ class GameControl {
     }
 
     /**
-     * Transitions to the next level with an enhanced neon loading bar
+     * SKIBIDI LOADING TRANSITION - ULTIMATE GAMER MODE 🎮✨
      */ 
     transitionToLevel() {
-        // Create neon-styled fade overlay
+        // Cringe-proof fade overlay (real ones know)
         const fadeOverlay = document.createElement('div');
         Object.assign(fadeOverlay.style, {
             position: 'fixed',
@@ -45,7 +40,7 @@ class GameControl {
             left: '0',
             width: '100%',
             height: '100%',
-            backgroundColor: '#0a0a1a', // Deep dark blue-black
+            backgroundColor: '#0a0a1a', // Ultra sigma dark mode
             opacity: '0',
             transition: 'opacity 1s ease-in-out',
             display: 'flex',
@@ -53,10 +48,10 @@ class GameControl {
             alignItems: 'center',
             flexDirection: 'column',
             gap: '20px',
-            fontFamily: "'Orbitron', sans-serif", // Neon-futuristic font
+            fontFamily: "'Orbitron', sans-serif", // Futuristic gamer font fr
         });
 
-        // Create loading bar container with neon border
+        // Loading bar container (no cap zone)
         const loadingBarContainer = document.createElement('div');
         Object.assign(loadingBarContainer.style, {
             width: '60%',
@@ -65,44 +60,68 @@ class GameControl {
             borderRadius: '15px',
             overflow: 'hidden',
             position: 'relative',
-            border: '2px solid #00ffff', // Cyan neon border
-            boxShadow: '0 0 10px #00ffff, inset 0 0 10px #00ffff', // Neon glow effect
+            border: '2px solid #ff00ff', // Sigma border energy
+            boxShadow: '0 0 10px #ff00ff, inset 0 0 10px #ff00ff', 
         });
 
-        // Create loading bar with neon gradient
+        // Rainbow neon loading bar (MAXIMUM DRIP)
         const loadingBar = document.createElement('div');
         Object.assign(loadingBar.style, {
             width: '0%',
             height: '100%',
-            background: 'linear-gradient(to right, #00ffff, #ff00ff)', // Cyan to magenta gradient
+            background: 'linear-gradient(to right, #ff00ff, #00ffff, #00ff00, #ffff00, #ff0000)', 
+            backgroundSize: '400% 100%',
+            animation: 'rainbowGamer 5s ease infinite',
             transition: 'width 3s linear',
         });
 
-        // Create loading text with neon styling
+        // Gamer animation (NO WEAKNESS)
+        const rainbowStyle = document.createElement('style');
+        rainbowStyle.textContent = `
+            @keyframes rainbowGamer {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+        `;
+        document.head.appendChild(rainbowStyle);
+
+        // Loading text (MAXIMUM SWAG)
         const loadingText = document.createElement('div');
         Object.assign(loadingText.style, {
             position: 'absolute',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            color: '#00ffff', // Cyan neon color
+            color: '#ff00ff', 
             fontSize: '18px',
             fontWeight: 'bold',
-            textShadow: '0 0 10px #00ffff', // Neon text glow
+            textShadow: '0 0 10px #ff00ff',
             zIndex: '10',
         });
 
-        // Update percentage during loading
+        // ULTIMATE LOADING PHRASES (PURE ZOOMER ENERGY)
         const updatePercentage = () => {
             let percent = 0;
+            const loadingPhrases = [
+                'SKIBIDI LOADER ACTIVATED 🤯',
+                'RIZZING UP THE LOADING 💅',
+                'SIGMA MODE: DEPLOYING 🚀',
+                'ABSOLUTELY DEMOLISHING LOADING BAR 💥',
+                'NO CAP, LOADING GOES BRRRR 🔥',
+                'SHEEEESH LOADING INCOMING 😱',
+                'GYATT TIER LOADING 💢',
+                'ZAMN, WE LOADING FR 🤌'
+            ];
             const interval = setInterval(() => {
                 percent++;
-                loadingText.textContent = `Loading... ${percent}%`;
-                if (percent >= 100) {
+                if (percent < 100) {
+                    loadingText.textContent = `${loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)]} ${percent}%`;
+                } else {
                     clearInterval(interval);
-                    loadingText.textContent = 'Entering Cyberspace';
-                    loadingText.style.color = '#ff00ff'; // Change to magenta for final state
-                    loadingText.style.textShadow = '0 0 10px #ff00ff';
+                    loadingText.textContent = 'ULTIMATE GAMER LEVEL UNLOCKED 🏆✨';
+                    loadingText.style.color = '#00ffff';
+                    loadingText.style.textShadow = '0 0 10px #00ffff';
                 }
             }, 30);
         };
@@ -113,13 +132,13 @@ class GameControl {
         fadeOverlay.appendChild(loadingBarContainer);
         document.body.appendChild(fadeOverlay);
 
-        // Inject neon font
+        // Gamer font injection (NO MERCY)
         const fontLink = document.createElement('link');
         fontLink.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap';
         fontLink.rel = 'stylesheet';
         document.head.appendChild(fontLink);
 
-        // Fade to black and start loading bar
+        // FADE AND LOAD (SIGMA PROTOCOL)
         requestAnimationFrame(() => {
             fadeOverlay.style.opacity = '1';
             
@@ -205,8 +224,8 @@ class GameControl {
             const alertDiv = document.createElement('div');
             alertDiv.style.cssText = alertStyle;
             alertDiv.innerHTML = `
-                <h2>SYSTEM VICTORY</h2>
-                <p>All levels conquered. Simulation complete.</p>
+                <h2>LEVEL WON. VICTORY</h2>
+                <p>Level conquered. Game complete.</p>
             `;
             document.body.appendChild(alertDiv);
         }
@@ -305,4 +324,4 @@ class GameControl {
     }
 }
 
-export default GameControl;
+export default GameControl; // ULTIMATE EXPORT OF PURE GAMER ENERGY 💥🎮

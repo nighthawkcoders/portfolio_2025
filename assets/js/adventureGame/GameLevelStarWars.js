@@ -21,7 +21,7 @@ class GameLevelStarWars {
 
     this.backgrounds = [
       new Background(image__data_atat, gameEnv),
-      new Background({ src: path + "/images/gamify/deathstar.png" }, gameEnv)
+      new Background({ src: path + "/images/gamify/stars.png" }, gameEnv)
     ];
     this.currentBackgroundIndex = 0;
     this.bindSwitchBackgroundKey();
