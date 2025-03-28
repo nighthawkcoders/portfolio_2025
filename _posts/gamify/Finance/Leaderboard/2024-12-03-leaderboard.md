@@ -113,6 +113,7 @@ title: Leaderboard
         color: #ffffff;
     }
   </style>
+</head>
 <body>
 <!-- Navigation Bar -->
 <nav class="navbar">
