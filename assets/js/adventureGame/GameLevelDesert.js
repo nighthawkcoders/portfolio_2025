@@ -100,10 +100,10 @@ class GameLevelDesert {
         id: 'End Portal',
         greeting: sprite_greet_endportal,
         src: sprite_src_endportal,
-        SCALE_FACTOR: 10,  // Adjust this based on your scaling needs
+        SCALE_FACTOR: 6,  // Adjust this based on your scaling needs
         ANIMATION_RATE: 100,
         pixels: {width: 2029, height: 2025},
-        INIT_POSITION: { x: (width * 1 / 2), y: (height * 1 / 10)}, // Adjusted position
+        INIT_POSITION: { x: (width * 2 / 5), y: (height * 1 / 10)}, // Adjusted position
         orientation: {rows: 1, columns: 1 },
         down: {row: 0, start: 0, columns: 1 },  // This is the stationary npc, down is default 
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
