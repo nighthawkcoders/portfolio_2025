@@ -34,10 +34,7 @@ class GameControl {
     }
 
     /**
-     * Transitions to the next level in the level by
-     * 1. Creating a new GameLevel instance
-     * 2. Creating the level using the GameLevelClass
-     * 3. Starting the game loop
+     * Transitions to the next level with an enhanced loading bar
      */ 
     transitionToLevel() {
         const fadeOverlay = document.createElement('div');
@@ -46,46 +43,71 @@ class GameControl {
         fadeOverlay.style.left = '0';
         fadeOverlay.style.width = '100%';
         fadeOverlay.style.height = '100%';
-        fadeOverlay.style.backgroundColor = 'black';
+        fadeOverlay.style.backgroundColor = '#121313';
         fadeOverlay.style.opacity = '0';
         fadeOverlay.style.transition = 'opacity 1s ease-in-out';
         fadeOverlay.style.display = 'flex';
-        fadeOverlay.style.flexDirection = 'column';
         fadeOverlay.style.justifyContent = 'center';
         fadeOverlay.style.alignItems = 'center';
-        fadeOverlay.style.fontSize = '2em';
-        fadeOverlay.style.color = 'white';
+        fadeOverlay.style.flexDirection = 'column';
+        fadeOverlay.style.gap = '20px';
 
-        const loadingText = document.createElement('p');
-        loadingText.textContent = 'Loading...';
-        fadeOverlay.appendChild(loadingText);
+        // Create loading bar container
+        const loadingBarContainer = document.createElement('div');
+        loadingBarContainer.style.width = '60%';
+        loadingBarContainer.style.height = '30px'; // Reduced height
+        loadingBarContainer.style.backgroundColor = '#333';
+        loadingBarContainer.style.borderRadius = '15px';
+        loadingBarContainer.style.overflow = 'hidden';
+        loadingBarContainer.style.position = 'relative';
+        loadingBarContainer.style.border = '2px solid white'; // White border
 
-        const loadingBar = document.createElement('p');
-        loadingBar.style.marginTop = '10px';
-        loadingBar.style.fontFamily = 'monospace'; // Use monospace for consistent bar appearance
-        loadingBar.textContent = ''; // Start with an empty bar
-        fadeOverlay.appendChild(loadingBar);
+        // Create loading bar
+        const loadingBar = document.createElement('div');
+        loadingBar.style.width = '0%';
+        loadingBar.style.height = '100%';
+        loadingBar.style.backgroundColor = '#00FF00'; // Green color
+        loadingBar.style.transition = 'width 3s linear'; // Changed to linear for one smooth cycle
 
+        // Create loading text with percentage
+        const loadingText = document.createElement('div');
+        loadingText.style.position = 'absolute';
+        loadingText.style.top = '50%';
+        loadingText.style.left = '50%';
+        loadingText.style.transform = 'translate(-50%, -50%)';
+        loadingText.style.color = 'white';
+        loadingText.style.fontSize = '16px';
+        loadingText.style.zIndex = '10';
+
+        // Update percentage during loading
+        const updatePercentage = () => {
+            let percent = 0;
+            const interval = setInterval(() => {
+                percent++;
+                loadingText.textContent = `Loading... ${percent}%`;
+                if (percent >= 100) {
+                    clearInterval(interval);
+                    loadingText.textContent = 'Loading Complete';
+                }
+            }, 30); // Update every 30ms to cover 3 seconds
+        };
+
+        // Append elements
+        loadingBarContainer.appendChild(loadingBar);
+        loadingBarContainer.appendChild(loadingText);
+        fadeOverlay.appendChild(loadingBarContainer);
         document.body.appendChild(fadeOverlay);
 
-        // Fade to black
+        // Fade to black and start loading bar
         requestAnimationFrame(() => {
             fadeOverlay.style.opacity = '1';
+            
+            // Use linear transition for one smooth cycle
+            setTimeout(() => {
+                loadingBar.style.width = '100%';
+                updatePercentage();
+            }, 50);
         });
-
-        // Update the loading bar over 1000 milliseconds
-        const totalDuration = 1000; // 1 second
-        const interval = 100; // Update every 100ms
-        const totalSteps = totalDuration / interval;
-        let currentStep = 0;
-
-        const loadingInterval = setInterval(() => {
-            currentStep++;
-            loadingBar.textContent += '|'; // Add a bar segment
-            if (currentStep >= totalSteps) {
-                clearInterval(loadingInterval); // Stop updating the bar
-            }
-        }, interval);
 
         setTimeout(() => {
             // Switch levels when screen is black
@@ -99,7 +121,7 @@ class GameControl {
 
             // Start game loop after transition
             this.gameLoop();
-        }, totalDuration); // Wait for fade-out duration
+        }, 3000); // Wait for fade-out duration
     }
 
     /**
