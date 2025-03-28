@@ -1,6 +1,6 @@
 ---
-layout: post
-title: Casino Games
+layout: base
+title: Casino Homepage
 permalink: /gamify/casinohomepage
 ---
 
@@ -79,6 +79,7 @@ permalink: /gamify/casinohomepage
     }
 </style>
 
+<h1> Casino Homepage </h1>
 <div class="container">
     <div class="game-boxes">
         <div class="game-box" onclick="location='./blackjack'">
