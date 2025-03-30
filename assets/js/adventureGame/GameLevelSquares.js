@@ -55,6 +55,15 @@ class GameLevelSquares {
       { class: PlayerTwo, data: player_two_data }
     ];
   }
+
+  destroy() {
+    // Remove all objects created by this level
+    this.classes.forEach(obj => {
+        if (obj.instance && obj.instance.destroy) {
+            obj.instance.destroy(); // Call destroy method if it exists
+        }
+    });
+  }
 }
 
 export default GameLevelSquares;
