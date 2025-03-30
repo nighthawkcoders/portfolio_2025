@@ -1,4 +1,4 @@
-// GameControl.js 🚀🤪
+// GameControl.js 
 import GameLevel from "./GameLevel.js";
 
 class GameControl {
@@ -32,6 +32,11 @@ class GameControl {
      * SKIBIDI LOADING TRANSITION - ULTIMATE GAMER MODE 🎮✨
      */ 
     transitionToLevel() {
+        // Cleanup previous level
+        if (this.currentLevel) {
+            this.currentLevel.destroy(); // Ensure all objects from the previous level are removed
+        }
+
         const fadeOverlay = document.createElement('div');
         Object.assign(fadeOverlay.style, {
             position: 'fixed',
