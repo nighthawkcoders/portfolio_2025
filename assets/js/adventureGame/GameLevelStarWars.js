@@ -124,6 +124,7 @@ class GameLevelStarWars {
     });
   }
 
+  
   createSwitchBackgroundButton() {
     const gameContainer = document.getElementById("gameContainer");
     if (!gameContainer) {
