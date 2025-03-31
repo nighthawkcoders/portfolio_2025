@@ -2,7 +2,6 @@ import GamEnvBackground from './GameEnvBackground.js';
 import Player from './Player.js';
 import Npc from './Npc.js';
 import Quiz from './Quiz.js';
-import BackgroundParallax from './BackgroundParallax.js';
 
 class GameLevelEnd {
     constructor(gameEnv) {
@@ -79,12 +78,80 @@ class GameLevelEnd {
             }
         };
 
+        // Embedded BackgroundParallax (Instead of Importing)
+        class BackgroundParallax {
+            constructor(data, gameEnv) {
+                this.position = data.position || { x: 0, y: 0 };
+                this.velocity = data.velocity || 1;
+                this.image = new Image();
+                this.image.src = data.src;
+                this.canvas = gameEnv.canvas;
+                this.ctx = this.canvas.getContext("2d");
+                this.isInitialized = false;
+
+                this.image.onload = () => {
+                    this.width = this.image.width;
+                    this.height = this.image.height;
+                    this.isInitialized = true;
+                    this.draw();
+                };
+            }
+
+            update() {
+                if (!this.isInitialized) return;
+
+                // Move background for parallax effect
+                this.position.x -= this.velocity;
+                this.position.y += this.velocity / 2;
+
+                // Wrap horizontally
+                if (this.position.x < -this.width) {
+                    this.position.x += this.width;
+                }
+
+                // Wrap vertically
+                if (this.position.y > this.height) {
+                    this.position.y -= this.height;
+                }
+
+                this.draw();
+            }
+
+            draw() {
+                if (!this.isInitialized) return;
+
+                const canvasWidth = this.canvas.width;
+                const canvasHeight = this.canvas.height;
+
+                let xWrapped = this.position.x % this.width;
+                let yWrapped = this.position.y % this.height;
+
+                if (xWrapped > 0) xWrapped -= this.width;
+                if (yWrapped > 0) yWrapped -= this.height;
+
+                const numHorizontalDraws = Math.ceil(canvasWidth / this.width) + 1;
+                const numVerticalDraws = Math.ceil(canvasHeight / this.height) + 1;
+
+                this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+                for (let i = 0; i < numHorizontalDraws; i++) {
+                    for (let j = 0; j < numVerticalDraws; j++) {
+                        this.ctx.drawImage(
+                            this.image,
+                            0, 0, this.width, this.height,
+                            xWrapped + i * this.width, yWrapped + j * this.height, this.width, this.height
+                        );
+                    }
+                }
+            }
+        }
+
         // List of GameObjects in this level
         this.classes = [
-            { class: GamEnvBackground, data: image_data_end }, // Base background (desert)
-            { class: BackgroundParallax, data: { src: path + "/images/gamify/stars2.png", position: { x: 0, y: 0 }, velocity: 2, zIndex: 2 } }, // Moving stars
-            { class: Player, data: sprite_data_chillguy }, // Player (on top)
-            { class: Npc, data: sprite_data_tux } // NPCs (on top)
+            { class: GamEnvBackground, data: image_data_end },
+            { class: BackgroundParallax, data: { src: path + "/images/gamify/stars2.png", position: { x: 0, y: 0 }, velocity: 2, zIndex: 2 } },
+            { class: Player, data: sprite_data_chillguy },
+            { class: Npc, data: sprite_data_tux }
         ];
     }
 }
