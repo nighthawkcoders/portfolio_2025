@@ -1,5 +1,6 @@
 // To build GameLevels, each contains GameObjects from below imports
 import GamEnvBackground from './GameEnvBackground.js';
+import BackgroundParallax from './BackgroundParallax.js';
 import Player from './Player.js';
 import Npc from './Npc.js';
 import Quiz from './Quiz.js';
