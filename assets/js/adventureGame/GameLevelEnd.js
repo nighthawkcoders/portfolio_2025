@@ -81,9 +81,9 @@ class GameLevelEnd {
         // Ensure BackgroundParallax is drawn **AFTER** the main background
         this.classes = [
             { class: GamEnvBackground, data: image_data_end }, // Draw main background first
+            { class: BackgroundParallax, data: { src: path + "/images/gamify/stars2.png", position: { x: 0, y: 0 }, velocity: 2, zIndex: 2 } }, // Stars last (added missing comma here)
             { class: Player, data: sprite_data_chillguy }, // Player next
             { class: Npc, data: sprite_data_tux }, // NPCs next
-            { class: BackgroundParallax, data: { src: path + "/images/gamify/stars2.png", position: { x: 0, y: 0 }, velocity: 2, zIndex: 2 } } // Stars last
         ];
     }
 }
