@@ -1,4 +1,5 @@
 import GamEnvBackground from './GameEnvBackground.js';
+import BackgroundParallax from './BackgroundParallax.js';
 import Player from './Player.js';
 import Npc from './Npc.js';
 import Quiz from './Quiz.js';
@@ -18,14 +19,13 @@ class GameLevelEnd {
             pixels: { height: 1140, width: 2460 }
         };
 
-        // Player Data (Chillguy)
+        // Player Data
         const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
-        const CHILLGUY_SCALE_FACTOR = 5;
         const sprite_data_chillguy = {
             id: 'Chill Guy',
             greeting: "Hi, I am Chill Guy, the desert wanderer. I am looking for wisdom and adventure!",
             src: sprite_src_chillguy,
-            SCALE_FACTOR: CHILLGUY_SCALE_FACTOR,
+            SCALE_FACTOR: 5,
             STEP_FACTOR: 1000,
             ANIMATION_RATE: 50,
             INIT_POSITION: { x: width / 16, y: height / 2 },
@@ -39,7 +39,7 @@ class GameLevelEnd {
             keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
         };
 
-        // NPC Data (Tux)
+        // NPC Data
         const sprite_src_tux = path + "/images/gamify/tux.png";
         const sprite_greet_tux = "Hi, I am Tux, the Linux mascot. I am very happy to spend some Linux shell time with you!";
         const sprite_data_tux = {
@@ -78,80 +78,12 @@ class GameLevelEnd {
             }
         };
 
-        // Embedded BackgroundParallax (Instead of Importing)
-        class BackgroundParallax {
-            constructor(data, gameEnv) {
-                this.position = data.position || { x: 0, y: 0 };
-                this.velocity = data.velocity || 1;
-                this.image = new Image();
-                this.image.src = data.src;
-                this.canvas = gameEnv.canvas;
-                this.ctx = this.canvas.getContext("2d");
-                this.isInitialized = false;
-
-                this.image.onload = () => {
-                    this.width = this.image.width;
-                    this.height = this.image.height;
-                    this.isInitialized = true;
-                    this.draw();
-                };
-            }
-
-            update() {
-                if (!this.isInitialized) return;
-
-                // Move background for parallax effect
-                this.position.x -= this.velocity;
-                this.position.y += this.velocity / 2;
-
-                // Wrap horizontally
-                if (this.position.x < -this.width) {
-                    this.position.x += this.width;
-                }
-
-                // Wrap vertically
-                if (this.position.y > this.height) {
-                    this.position.y -= this.height;
-                }
-
-                this.draw();
-            }
-
-            draw() {
-                if (!this.isInitialized) return;
-
-                const canvasWidth = this.canvas.width;
-                const canvasHeight = this.canvas.height;
-
-                let xWrapped = this.position.x % this.width;
-                let yWrapped = this.position.y % this.height;
-
-                if (xWrapped > 0) xWrapped -= this.width;
-                if (yWrapped > 0) yWrapped -= this.height;
-
-                const numHorizontalDraws = Math.ceil(canvasWidth / this.width) + 1;
-                const numVerticalDraws = Math.ceil(canvasHeight / this.height) + 1;
-
-                this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-                for (let i = 0; i < numHorizontalDraws; i++) {
-                    for (let j = 0; j < numVerticalDraws; j++) {
-                        this.ctx.drawImage(
-                            this.image,
-                            0, 0, this.width, this.height,
-                            xWrapped + i * this.width, yWrapped + j * this.height, this.width, this.height
-                        );
-                    }
-                }
-            }
-        }
-
-        // List of GameObjects in this level
+        // Ensure BackgroundParallax is drawn **AFTER** the main background
         this.classes = [
-            { class: GamEnvBackground, data: image_data_end },
-            { class: BackgroundParallax, data: { src: path + "/images/gamify/stars2.png", position: { x: 0, y: 0 }, velocity: 2, zIndex: 2 } },
-            { class: Player, data: sprite_data_chillguy },
-            { class: Npc, data: sprite_data_tux }
+            { class: GamEnvBackground, data: image_data_end }, // Draw main background first
+            { class: Player, data: sprite_data_chillguy }, // Player next
+            { class: Npc, data: sprite_data_tux }, // NPCs next
+            { class: BackgroundParallax, data: { src: path + "/images/gamify/stars2.png", position: { x: 0, y: 0 }, velocity: 2, zIndex: 2 } } // Stars last
         ];
     }
 }
