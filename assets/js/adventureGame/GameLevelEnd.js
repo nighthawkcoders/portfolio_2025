@@ -93,7 +93,6 @@ class GameLevelEnd {
     // List of objects defnitions for this level
     this.classes = [
       { class: GamEnvBackground, data: image_data_end },
-      { class: BackgroundParallax, data: {src:  path + "/images/platformer/backgrounds/snowfall.png", zIndex: 2 } },
       { class: Player, data: sprite_data_chillguy },
       { class: Npc, data: sprite_data_tux }
     ];
