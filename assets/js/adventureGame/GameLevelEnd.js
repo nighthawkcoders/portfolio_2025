@@ -149,7 +149,7 @@ class GameLevelEnd {
         // List of GameObjects in this level
         this.classes = [
             { class: GamEnvBackground, data: image_data_end },
-            { class: BackgroundParallax, data: { src: path + "/images/gamify/stars.png", position: { x: 0, y: 0 }, velocity: 2, zIndex: 2 } },
+            { class: BackgroundParallax, data: { src: path + "/images/gamify/stars2.png", position: { x: 0, y: 0 }, velocity: 2, zIndex: 2 } },
             { class: Player, data: sprite_data_chillguy },
             { class: Npc, data: sprite_data_tux }
         ];
