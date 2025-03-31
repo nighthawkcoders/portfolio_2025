@@ -24,7 +24,7 @@ class GameLevelEnd {
 
 
     // Player data for Chillguy
-    const sprite_src_chillguy = path + "/images/gamify/blank.png"; // be sure to include the path
+    const sprite_src_chillguy = path + "/images/gamify/chillguy.png"; // be sure to include the path
     const CHILLGUY_SCALE_FACTOR = 5;
     const sprite_data_chillguy = {
         id: 'Chill Guy',
@@ -50,7 +50,7 @@ class GameLevelEnd {
 
 
     // NPC data for Tux 
-    const sprite_src_tux = path + "/images/gamify/blank.png"; // be sure to include the path
+    const sprite_src_tux = path + "/images/gamify/tux.png"; // be sure to include the path
     const sprite_greet_tux = "Hi I am Tux, the Linux mascot.  I am very happy to spend some linux shell time with you!";
     const sprite_data_tux = {
         id: 'Tux',
