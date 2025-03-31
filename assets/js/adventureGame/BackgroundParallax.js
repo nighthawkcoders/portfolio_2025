@@ -1,9 +1,10 @@
 import Background from './Background.js';
 
-/** Parallax Background GameObject
- * - Layered: draw this background images on top of another
- * - Tiling: draw multiple of the image to fill the gameCanvas extents
- * - Scrolling: adds velocity or position updates to the update(), to scroll the background
+/**
+ * Parallax Background GameObject
+ * - Layered: Draws background images on top of each other
+ * - Tiling: Fills the canvas by repeating the image
+ * - Scrolling: Moves the background to create a parallax effect
  */
 export class BackgroundParallax extends Background {
     /**
@@ -12,10 +13,22 @@ export class BackgroundParallax extends Background {
      * @param {Object} gameEnv - The game environment object for convenient access to game properties 
      */
     constructor(data = null, gameEnv = null) {
-        super(data,gameEnv);
+        super(data, gameEnv);
 
         this.position = data.position || { x: 0, y: 0 };
         this.velocity = data.velocity || 1;
+
+        this.image = new Image();
+        this.image.src = data.src;
+
+        this.image.onload = () => {
+            this.width = this.image.width;
+            this.height = this.image.height;
+            this.isInitialized = true;
+            this.draw(); // Ensure initial draw after loading
+        };
+
+        this.ctx = gameEnv.canvas.getContext("2d"); // Ensure the context is set
     }
 
     /**
@@ -23,19 +36,22 @@ export class BackgroundParallax extends Background {
      * @override Background update() method 
      */
     update() {
-        // Update the position for parallax scrolling
-        this.position.x -= this.velocity; // Move left
-        this.position.y += this.velocity; // Move down (for snowfall effect)
+        if (!this.isInitialized) return; // Prevent update until image is loaded
 
-        // Wrap the position to prevent overflow
+        // Move left for parallax effect
+        this.position.x -= this.velocity; 
+        this.position.y += this.velocity / 2; // Optional vertical scrolling
+
+        // Wrap horizontally
         if (this.position.x < -this.width) {
-            this.position.x = 0;
-        }
-        if (this.position.y > this.height) {
-            this.position.y = 0;
+            this.position.x += this.width;
         }
 
-        // Draw the background image
+        // Wrap vertically (if enabled)
+        if (this.position.y > this.height) {
+            this.position.y -= this.height;
+        }
+
         this.draw();
     }
 
@@ -44,42 +60,36 @@ export class BackgroundParallax extends Background {
      * @override Background draw() method 
      */
     draw() {
-        if (!this.isInitialized) {
-            return; // Skip drawing if not initialized
-        }
+        if (!this.isInitialized) return; // Prevent drawing until image is loaded
 
         const canvasWidth = this.canvas.width;
         const canvasHeight = this.canvas.height;
     
-        // Calculate the wrapped position, Scrolling
+        // Wrapped position for scrolling
         let xWrapped = this.position.x % this.width;
         let yWrapped = this.position.y % this.height;
     
-        if (xWrapped > 0) {
-            xWrapped -= this.width;
-        }
-        if (yWrapped > 0) {
-            yWrapped -= this.height;
-        }
+        if (xWrapped > 0) xWrapped -= this.width;
+        if (yWrapped > 0) yWrapped -= this.height;
    
-        // Calculate the number of draws needed to fill the canvas, Tiling
+        // Calculate the number of draws needed to fill the canvas
         const numHorizontalDraws = Math.ceil(canvasWidth / this.width) + 1;
         const numVerticalDraws = Math.ceil(canvasHeight / this.height) + 1;
 
-        // Clear the canvas
+        // Clear the canvas before drawing
         this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-        // Draw the background image multiple times to fill the canvas, Tiling
+        // Draw the background image multiple times to fill the canvas
         for (let i = 0; i < numHorizontalDraws; i++) {
             for (let j = 0; j < numVerticalDraws; j++) {
                 this.ctx.drawImage(
-                    this.image, // Source image
+                    this.image,
                     0, 0, this.width, this.height, // Source rectangle
-                    xWrapped + i * this.width, yWrapped + j * this.height, this.width, this.height); // Destination rectangle              );
+                    xWrapped + i * this.width, yWrapped + j * this.height, this.width, this.height // Destination
+                );
             }
         }
     }
-    
 }
 
 export default BackgroundParallax;
