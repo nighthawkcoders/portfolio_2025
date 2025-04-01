@@ -14,35 +14,32 @@ export class BackgroundParallax extends Background {
     constructor(data = null, gameEnv = null) {
         super(data, gameEnv);
 
+        // Initialize required properties
         this.position = data.position || { x: 0, y: 0 };
         this.velocity = data.velocity || 1;
+        this.zIndex = data.zIndex || 10; 
         
-        // Ensure the zIndex is properly set - this is crucial
-        this.zIndex = data.zIndex || 10; // Default to a high value to ensure visibility
+        // Create an image element and load the image
+        this.image = new Image();
+        this.image.src = data.src;
         
-        console.log(`BackgroundParallax initialized with zIndex: ${this.zIndex}`);
+        // Set up initialization flag
+        this.isInitialized = false;
         
-        // Force this object to be visible
-        this.isVisible = true;
-    }
-
-    /**
-     * Initialize is called by GameObject create() method
-     * @override Background initialize() method if needed
-     */
-    initialize() {
-        super.initialize();
-        console.log("BackgroundParallax initialized successfully");
-        
-        // Make sure the image is loaded
-        if (this.image && !this.image.complete) {
-            this.image.onload = () => {
-                console.log("BackgroundParallax image loaded");
-                this.isInitialized = true;
-            };
-        } else {
+        // Set up onload handler to track when image is loaded
+        this.image.onload = () => {
+            console.log("BackgroundParallax image loaded successfully");
+            this.width = this.image.width;
+            this.height = this.image.height;
             this.isInitialized = true;
-        }
+        };
+        
+        // Set up error handler
+        this.image.onerror = (err) => {
+            console.error("Error loading BackgroundParallax image:", err);
+        };
+        
+        console.log("BackgroundParallax constructor completed, waiting for image to load");
     }
 
     /**
@@ -50,9 +47,8 @@ export class BackgroundParallax extends Background {
      * @override Background update() method 
      */
     update() {
-        if (!this.isInitialized) {
-            console.log("BackgroundParallax not yet initialized, waiting...");
-            return;
+        if (!this.isInitialized || !this.image.complete) {
+            return; // Skip update if not initialized
         }
         
         // Update the position for parallax scrolling
@@ -76,24 +72,31 @@ export class BackgroundParallax extends Background {
      * @override Background draw() method 
      */
     draw() {
-        if (!this.isInitialized || !this.image || !this.image.complete) {
-            console.log("BackgroundParallax not ready for drawing");
-            return; // Skip drawing if not initialized or image not loaded
+        if (!this.isInitialized || !this.image.complete) {
+            return; // Skip drawing if not initialized
         }
 
-        console.log("Drawing BackgroundParallax"); // Debug log
+        // Get the canvas context if not already available
+        if (!this.ctx && this.canvas) {
+            this.ctx = this.canvas.getContext("2d");
+        }
         
+        if (!this.ctx) {
+            console.error("No canvas context available for BackgroundParallax");
+            return;
+        }
+
         const canvasWidth = this.canvas.width;
         const canvasHeight = this.canvas.height;
     
-        // Calculate the wrapped position, Scrolling
+        // Calculate the wrapped position for scrolling
         let xWrapped = this.position.x % this.width;
         let yWrapped = this.position.y % this.height;
     
         if (xWrapped > 0) xWrapped -= this.width;
         if (yWrapped > 0) yWrapped -= this.height;
    
-        // Calculate the number of draws needed to fill the canvas, Tiling
+        // Calculate the number of draws needed to fill the canvas
         const numHorizontalDraws = Math.ceil(canvasWidth / this.width) + 1;
         const numVerticalDraws = Math.ceil(canvasHeight / this.height) + 1;
 
@@ -103,13 +106,13 @@ export class BackgroundParallax extends Background {
         // Set global transparency for snowfall effect
         this.ctx.globalAlpha = 0.7;
 
-        // Draw the background image multiple times to fill the canvas, Tiling
+        // Draw the background image multiple times to fill the canvas
         for (let i = 0; i < numHorizontalDraws; i++) {
             for (let j = 0; j < numVerticalDraws; j++) {
                 this.ctx.drawImage(
-                    this.image, // Source image
-                    0, 0, this.width, this.height, // Source rectangle
-                    xWrapped + i * this.width, yWrapped + j * this.height, this.width, this.height // Destination rectangle
+                    this.image,
+                    0, 0, this.width, this.height,
+                    xWrapped + i * this.width, yWrapped + j * this.height, this.width, this.height
                 );
             }
         }
