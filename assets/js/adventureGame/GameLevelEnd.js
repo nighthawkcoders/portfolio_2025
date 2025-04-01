@@ -9,6 +9,9 @@ class GameLevelEnd {
   constructor(gameEnv) {
     console.log("Initializing GameLevelEnd...");
     
+    // Store the gameEnv reference for potential later use
+    this.gameEnv = gameEnv;
+    
     // Values dependent on this.gameEnv.create()
     let width = gameEnv.innerWidth;
     let height = gameEnv.innerHeight;
@@ -24,14 +27,16 @@ class GameLevelEnd {
         zIndex: 0  // Base layer
     };
 
-    // Parallax Background data
+    // Parallax Background data - ensuring this gets created and drawn
     const parallax_data = {
         src: path + "/images/platformer/backgrounds/snowfall.png",
-        zIndex: 3,  // Higher zIndex so it displays over the player
+        zIndex: 100,  // Very high zIndex to ensure it's on top
         velocity: 0.5,  // Adjusted velocity for better effect
-        position: { x: 0, y: 0 }
+        position: { x: 0, y: 0 },
+        isVisible: true, // Explicitly set visibility
+        name: 'snowfall-parallax' // Give it a name for debugging
     };
-    console.log("Parallax Data Loaded:", parallax_data);
+    console.log("Parallax Data Prepared:", parallax_data);
 
     // Player Data (Chill Guy)
     const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
@@ -56,7 +61,7 @@ class GameLevelEnd {
         upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/8 },
         hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
         keypress: { up: 87, left: 65, down: 83, right: 68 }, // W, A, S, D
-        zIndex: 1  // Middle layer
+        zIndex: 50  // Higher than background but lower than parallax
     };
 
     // NPC Data (Tux - Linux Mascot)
@@ -73,7 +78,7 @@ class GameLevelEnd {
         orientation: {rows: 8, columns: 11 },
         down: {row: 5, start: 0, columns: 3 },
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
-        zIndex: 2,  // Middle layer, above player
+        zIndex: 60,  // Higher than player but lower than parallax
         quiz: { 
           title: "Linux Command Quiz",
           questions: [
@@ -99,13 +104,16 @@ class GameLevelEnd {
         }
     };
 
-    // Add objects to the scene in proper rendering order (based on zIndex)
+    // CRITICAL: Order matters - the order in this array determines rendering order
+    // The parallax must be LAST in the array to ensure it's rendered on top
     this.classes = [
-      { class: GamEnvBackground, data: image_data_end },
-      { class: BackgroundParallax, data: parallax_data },
-      { class: Player, data: sprite_data_chillguy },
-      { class: Npc, data: sprite_data_tux },
+      { class: GamEnvBackground, data: image_data_end },   // First (bottom layer)
+      { class: Player, data: sprite_data_chillguy },       // Second
+      { class: Npc, data: sprite_data_tux },               // Third
+      { class: BackgroundParallax, data: parallax_data }   // Last (top layer)
     ];
+    
+    console.log("GameLevelEnd initialized with", this.classes.length, "objects");
   }
 }
 
