@@ -55,8 +55,8 @@ class GameLevelEnd {
         ANIMATION_RATE: 50,
         pixels: {height: 256, width: 256},
         INIT_POSITION: { x: (width / 2), y: (height / 2) },
-        orientation: {rows: 8, columns: 11 },
-        down: {row: 5, start: 0, columns: 3 },
+        orientation: {rows: 2, columns: 2 },
+        down: {row: 1, start: 0, columns: 1 },
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
         quiz: { 
           title: "Linux Command Quiz",
