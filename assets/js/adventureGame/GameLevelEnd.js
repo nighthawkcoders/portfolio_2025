@@ -23,20 +23,12 @@ class GameLevelEnd {
         pixels: {height: 1140, width: 2460}
     };
 
-    // Parallax Background data - with complete configuration
+    // Parallax Background data
     const parallax_data = {
-        name: 'snowfall',
         src: path + "/images/platformer/backgrounds/snowfall.png",
-        zIndex: 100,  // Very high zIndex to ensure it's on top
-        velocity: 0.5,
-        position: { x: 0, y: 0 },
-        // Make sure we provide all the properties the Background base class might need
-        pixels: {
-            height: 600,  // Default size if image size can't be determined immediately
-            width: 800
-        }
+        zIndex: 1 // Lower zIndex so it stays behind everything
     };
-    console.log("Parallax Data:", parallax_data);
+    console.log("Parallax Data Loaded:", parallax_data);
 
     // Player Data (Chill Guy)
     const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
@@ -103,12 +95,11 @@ class GameLevelEnd {
     };
 
     // Add objects to the scene in proper rendering order
-    // The key is to add the BackgroundParallax instance LAST
     this.classes = [
+      { class: BackgroundParallax, data: parallax_data },
       { class: GamEnvBackground, data: image_data_end },
       { class: Player, data: sprite_data_chillguy },
-      { class: Npc, data: sprite_data_tux },
-      { class: BackgroundParallax, data: parallax_data }
+      { class: Npc, data: sprite_data_tux }
     ];
   }
 }
