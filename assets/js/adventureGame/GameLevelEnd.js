@@ -45,15 +45,15 @@ class GameLevelEnd {
         keypress: { up: 87, left: 65, down: 83, right: 68 }
     };
 
-    const sprite_src_tux = path + "/images/gamify/tux.png";
-    const sprite_greet_tux = "Hi, I am Tux, the Linux mascot. I am very happy to spend some Linux shell time with you!";
-    const sprite_data_tux = {
-        id: 'Tux',
-        greeting: sprite_greet_tux,
-        src: sprite_src_tux,
+    const sprite_src_endereye = path + "/images/gamify/endereye.png";
+    const sprite_greet_endereye = "Hi, I am Tux, the Linux mascot. I am very happy to spend some Linux shell time with you!";
+    const sprite_data_endereye = {
+        id: 'Endereye',
+        greeting: sprite_greet_endereye,
+        src: sprite_src_endereye,
         SCALE_FACTOR: 8,
         ANIMATION_RATE: 50,
-        pixels: {height: 256, width: 352},
+        pixels: {height: 128, width: 128},
         INIT_POSITION: { x: (width / 2), y: (height / 2) },
         orientation: {rows: 8, columns: 11 },
         down: {row: 5, start: 0, columns: 3 },
@@ -74,20 +74,19 @@ class GameLevelEnd {
           ] 
         },
         reaction: function() {
-          alert(sprite_greet_tux);
+          alert(sprite_greet_endereye);
         },
         interact: function() {
           let quiz = new Quiz();
           quiz.initialize();
-          quiz.openPanel(sprite_data_tux);
+          quiz.openPanel(sprite_data_endereye);
         }
     };
 
     this.classes = [
       { class: GamEnvBackground, data: image_data_end },
-      { class: BackgroundParallax, data: {src:  path + "/images/platformer/backgrounds/snowfall.png", zIndex: 2 } },
       { class: Player, data: sprite_data_chillguy },
-      { class: Npc, data: sprite_data_tux }
+      { class: Npc, data: sprite_data_endereye }
     ];
   }
 }
