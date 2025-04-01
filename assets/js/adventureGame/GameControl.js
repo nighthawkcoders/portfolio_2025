@@ -138,14 +138,104 @@ class GameControl {
     }
 
     /**
+     * Shows a full-screen game completion message
+     */
+    showCompletionScreen() {
+        // Create full screen completion overlay
+        const completionOverlay = document.createElement('div');
+        Object.assign(completionOverlay.style, {
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#000000',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            fontFamily: "'Orbitron', sans-serif",
+            color: '#00ffff',
+            fontSize: '32px',
+            zIndex: '9999'
+        });
+
+        // Completion message
+        const completionMessage = document.createElement('div');
+        completionMessage.innerHTML = `
+            <h1 style="text-shadow: 0 0 15px #00ffff; margin-bottom: 20px; text-align: center;">ALL GAME LEVELS COMPLETED</h1>
+            <div style="font-size: 20px; text-shadow: 0 0 8px #ff00ff; text-align: center;">CONGRATULATIONS, ULTIMATE GAMER!</div>
+        `;
+        completionOverlay.appendChild(completionMessage);
+
+        // Create a replay button
+        const replayButton = document.createElement('button');
+        Object.assign(replayButton.style, {
+            marginTop: '40px',
+            padding: '15px 30px',
+            backgroundColor: 'transparent',
+            color: '#ff00ff',
+            border: '2px solid #ff00ff',
+            borderRadius: '5px',
+            fontFamily: "'Orbitron', sans-serif",
+            fontSize: '18px',
+            cursor: 'pointer',
+            textShadow: '0 0 8px #ff00ff',
+            boxShadow: '0 0 15px rgba(255, 0, 255, 0.5)',
+            transition: 'all 0.3s ease'
+        });
+        replayButton.textContent = 'PLAY AGAIN';
+        
+        replayButton.addEventListener('mouseover', () => {
+            replayButton.style.backgroundColor = 'rgba(255, 0, 255, 0.2)';
+            replayButton.style.boxShadow = '0 0 20px rgba(255, 0, 255, 0.8)';
+        });
+        
+        replayButton.addEventListener('mouseout', () => {
+            replayButton.style.backgroundColor = 'transparent';
+            replayButton.style.boxShadow = '0 0 15px rgba(255, 0, 255, 0.5)';
+        });
+        
+        replayButton.addEventListener('click', () => {
+            document.body.removeChild(completionOverlay);
+            this.currentLevelIndex = 0;
+            this.transitionToLevel();
+        });
+        
+        completionOverlay.appendChild(replayButton);
+
+        // Add to the DOM
+        document.body.appendChild(completionOverlay);
+    }
+
+    /**
      * Handles the level end with neon-styled alerts
      */
     handleLevelEnd() {
-        this.currentLevel.destroy();
+        // Make sure to destroy the current level
+        if (this.currentLevel) {
+            this.currentLevel.destroy();
+        }
 
-        if (this.currentLevelIndex < this.levelClasses.length - 1) {
-            // Neon-styled alert for completing a level but not the final one
+        // Check if this was the last level
+        const isLastLevel = this.currentLevelIndex >= this.levelClasses.length - 1;
+
+        if (isLastLevel) {
+            // This is the final level - show the completion screen
+            console.log("Final level completed, showing completion screen");
+            this.showCompletionScreen();
+            
+            // Call the gameOver callback if it exists
+            if (this.gameOver) {
+                this.gameOver();
+            }
+        } else {
+            // Not the final level - show temporary alert and go to next level
             const alertStyle = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
                 background-color: #0a0a1a;
                 color: #00ffff;
                 border: 2px solid #ff00ff;
@@ -153,6 +243,7 @@ class GameControl {
                 text-shadow: 0 0 10px #00ffff;
                 padding: 20px;
                 text-align: center;
+                z-index: 9999;
             `;
 
             const alertDiv = document.createElement('div');
@@ -162,84 +253,13 @@ class GameControl {
                 <p>Prepare for the next phase...</p>
             `;
             document.body.appendChild(alertDiv);
-            setTimeout(() => document.body.removeChild(alertDiv), 2000);
-
-            // Move to next level
-            this.currentLevelIndex++;
-            this.transitionToLevel();
-        } else {
-            // Create full screen completion overlay for the final level
-            const completionOverlay = document.createElement('div');
-            Object.assign(completionOverlay.style, {
-                position: 'fixed',
-                top: '0',
-                left: '0',
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#000000',
-                opacity: '0',
-                transition: 'opacity 1.5s ease-in-out',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'column',
-                fontFamily: "'Orbitron', sans-serif",
-                color: '#00ffff',
-                fontSize: '32px',
-                zIndex: '9999'
-            });
-
-            // Completion message
-            const completionMessage = document.createElement('div');
-            completionMessage.innerHTML = `
-                <h1 style="text-shadow: 0 0 15px #00ffff; margin-bottom: 20px;">ALL GAME LEVELS COMPLETED</h1>
-                <div style="font-size: 20px; text-shadow: 0 0 8px #ff00ff;">CONGRATULATIONS, ULTIMATE GAMER!</div>
-            `;
-            completionOverlay.appendChild(completionMessage);
-
-            // Create a replay button
-            const replayButton = document.createElement('button');
-            Object.assign(replayButton.style, {
-                marginTop: '40px',
-                padding: '15px 30px',
-                backgroundColor: 'transparent',
-                color: '#ff00ff',
-                border: '2px solid #ff00ff',
-                borderRadius: '5px',
-                fontFamily: "'Orbitron', sans-serif",
-                fontSize: '18px',
-                cursor: 'pointer',
-                textShadow: '0 0 8px #ff00ff',
-                boxShadow: '0 0 15px rgba(255, 0, 255, 0.5)',
-                transition: 'all 0.3s ease'
-            });
-            replayButton.textContent = 'PLAY AGAIN';
-            replayButton.addEventListener('mouseover', () => {
-                replayButton.style.backgroundColor = 'rgba(255, 0, 255, 0.2)';
-                replayButton.style.boxShadow = '0 0 20px rgba(255, 0, 255, 0.8)';
-            });
-            replayButton.addEventListener('mouseout', () => {
-                replayButton.style.backgroundColor = 'transparent';
-                replayButton.style.boxShadow = '0 0 15px rgba(255, 0, 255, 0.5)';
-            });
-            replayButton.addEventListener('click', () => {
-                document.body.removeChild(completionOverlay);
-                this.currentLevelIndex = 0;
+            
+            // Move to next level after alert
+            setTimeout(() => {
+                document.body.removeChild(alertDiv);
+                this.currentLevelIndex++;
                 this.transitionToLevel();
-            });
-            completionOverlay.appendChild(replayButton);
-
-            document.body.appendChild(completionOverlay);
-
-            // Fade in the completion overlay
-            requestAnimationFrame(() => {
-                completionOverlay.style.opacity = '1';
-            });
-
-            // Call the gameOver callback if it exists
-            if (this.gameOver) {
-                this.gameOver();
-            }
+            }, 2000);
         }
     }
 
