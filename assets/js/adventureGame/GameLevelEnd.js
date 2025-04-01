@@ -1,4 +1,5 @@
 import GamEnvBackground from './GameEnvBackground.js';
+import BackgroundParallax from './BackgroundParallax.js';
 import Player from './Player.js';
 import Npc from './Npc.js';
 import Quiz from './Quiz.js';
@@ -21,6 +22,13 @@ class GameLevelEnd {
         src: image_src_end,
         pixels: {height: 1140, width: 2460}
     };
+
+    // Parallax Background data
+    const parallax_data = {
+        src: path + "/images/platformer/backgrounds/snowfall.png",
+        zIndex: 1 // Lower zIndex so it stays behind everything
+    };
+    console.log("Parallax Data Loaded:", parallax_data);
 
     // Player Data (Chill Guy)
     const sprite_src_chillguy = path + "/images/gamify/chillguy.png";

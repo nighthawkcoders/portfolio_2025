@@ -30,13 +30,13 @@ class Game {
         
 
         // start the game
-        const gameLevelClasses = [GameLevelEnd, GameLevelDesert, GameLevelSquares]
+        const gameLevelClasses = [GameLevelDesert, GameLevelEnd, GameLevelSquares]
         new GameControl(this, gameLevelClasses).start();
 
         // Show instructions before starting the game
         this.showInstructions(() => {
             // start the game after instructions are closed
-            const gameLevelClasses = [GameLevelEnd, GameLevelDesert, GameLevelSquares]
+            const gameLevelClasses = [GameLevelDesert, GameLevelSquares]
             new GameControl(this, gameLevelClasses).start();
         });
     }
