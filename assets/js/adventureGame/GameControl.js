@@ -18,6 +18,7 @@ class GameControl {
         this.exitKeyListener = this.handleExitKey.bind(this);
         this.gameOver = null; // Callback when we ABSOLUTELY DEMOLISH the game
         this.savedCanvasState = []; // No cap, saving game states
+        this.gameCompleted = false; // Flag to track if game is fully completed
     }
 
     /**
@@ -52,21 +53,53 @@ class GameControl {
             alignItems: 'center',
             flexDirection: 'column',
             fontFamily: "'Orbitron', sans-serif",
-            color: 'white',
+            color: '#00ffff',
             fontSize: '18px',
+            zIndex: '9999'
         });
 
         // Loading text
         const loadingText = document.createElement('div');
         loadingText.textContent = 'Loading...';
+        loadingText.style.textShadow = '0 0 10px #00ffff';
         fadeOverlay.appendChild(loadingText);
 
-        // Loading bar
-        const loadingBar = document.createElement('div');
-        loadingBar.style.marginTop = '10px';
-        loadingBar.style.fontFamily = 'monospace'; // Monospace for consistent bar appearance
-        loadingBar.textContent = ''; // Start with an empty bar
-        fadeOverlay.appendChild(loadingBar);
+        // Loading bar container
+        const loadingBarContainer = document.createElement('div');
+        loadingBarContainer.style.cssText = `
+            width: 80%;
+            max-width: 300px;
+            background-color: #1a1a2a;
+            height: 20px;
+            margin-top: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #00ffff;
+        `;
+        
+        // Loading bar fill
+        const loadingBarFill = document.createElement('div');
+        loadingBarFill.style.cssText = `
+            width: 0%;
+            background-color: #00ffff;
+            height: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #00ffff;
+            transition: width 0.1s linear;
+        `;
+        
+        // Loading percentage text
+        const loadingPercentage = document.createElement('div');
+        loadingPercentage.style.cssText = `
+            margin-top: 10px;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        `;
+        loadingPercentage.textContent = '0%';
+        
+        loadingBarContainer.appendChild(loadingBarFill);
+        fadeOverlay.appendChild(loadingBarContainer);
+        fadeOverlay.appendChild(loadingPercentage);
 
         document.body.appendChild(fadeOverlay);
 
@@ -77,13 +110,16 @@ class GameControl {
 
         // Update the loading bar over 1000 milliseconds
         const totalDuration = 1000; // 1 second
-        const interval = 100; // Update every 100ms
+        const interval = 50; // Update every 50ms (smoother animation)
         const totalSteps = totalDuration / interval;
         let currentStep = 0;
 
         const loadingInterval = setInterval(() => {
             currentStep++;
-            loadingBar.textContent += '|'; // Add a bar segment
+            const progress = (currentStep / totalSteps) * 100;
+            loadingBarFill.style.width = `${progress}%`;
+            loadingPercentage.textContent = `${Math.round(progress)}%`;
+            
             if (currentStep >= totalSteps) {
                 clearInterval(loadingInterval); // Stop updating the bar
             }
@@ -91,16 +127,22 @@ class GameControl {
 
         setTimeout(() => {
             // Switch levels when screen is black
-            const GameLevelClass = this.levelClasses[this.currentLevelIndex];
-            this.currentLevel = new GameLevel(this);
-            this.currentLevel.create(GameLevelClass);
+            if (this.currentLevelIndex < this.levelClasses.length) {
+                const GameLevelClass = this.levelClasses[this.currentLevelIndex];
+                this.currentLevel = new GameLevel(this);
+                this.currentLevel.create(GameLevelClass);
 
-            // Fade out the overlay
-            fadeOverlay.style.opacity = '0';
-            setTimeout(() => document.body.removeChild(fadeOverlay), 1000);
+                // Fade out the overlay
+                fadeOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    if (fadeOverlay.parentNode) {
+                        document.body.removeChild(fadeOverlay);
+                    }
+                }, 1000);
 
-            // Start game loop after transition
-            this.gameLoop();
+                // Start game loop after transition
+                this.gameLoop();
+            }
         }, totalDuration); // Wait for the loading duration
     }
 
@@ -108,6 +150,11 @@ class GameControl {
      * The main game loop 
      */
     gameLoop() {
+        // If the game is already completed, don't continue
+        if (this.gameCompleted) {
+            return;
+        }
+        
         // If the level is not set to continue, handle the level end condition 
         if (!this.currentLevel.continue) {
             this.handleLevelEnd();
@@ -143,6 +190,10 @@ class GameControl {
     handleLevelEnd() {
         // Neon-styled alerts
         const alertStyle = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: #0a0a1a;
             color: #00ffff;
             border: 2px solid #ff00ff;
@@ -150,6 +201,9 @@ class GameControl {
             text-shadow: 0 0 10px #00ffff;
             padding: 20px;
             text-align: center;
+            z-index: 9999;
+            min-width: 300px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
         `;
 
         if (this.currentLevelIndex < this.levelClasses.length - 1) {
@@ -191,8 +245,25 @@ class GameControl {
             
             alertDiv.appendChild(progressBarContainer);
             document.body.appendChild(alertDiv);
-            setTimeout(() => document.body.removeChild(alertDiv), 2000);
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    document.body.removeChild(alertDiv);
+                }
+            }, 2000);
+            
+            this.currentLevel.destroy();
+            
+            // Call the gameOver callback if it exists
+            if (this.gameOver) {
+                this.gameOver();
+            } else {
+                this.currentLevelIndex++;
+                this.transitionToLevel();
+            }
         } else {
+            // Set the game as completed to prevent further game loop execution
+            this.gameCompleted = true;
+            
             const alertDiv = document.createElement('div');
             alertDiv.style.cssText = alertStyle;
             
@@ -228,19 +299,18 @@ class GameControl {
             alertDiv.appendChild(progressBarContainer);
             document.body.appendChild(alertDiv);
             
-            // Don't remove this alert so the player can see the refresh message
-        }
-
-        this.currentLevel.destroy();
-        // Call the gameOver callback if it exists
-        if (this.gameOver) {
-            this.gameOver();
-        } else {
-            this.currentLevelIndex++;
-            if (this.currentLevelIndex < this.levelClasses.length) {
-                this.transitionToLevel();
+            // Make sure to destroy the current level to prevent any ongoing processes
+            if (this.currentLevel) {
+                this.currentLevel.destroy();
             }
-            // If we're at the end of all levels, we don't transition to a new level
+            
+            // Call the gameOver callback if it exists
+            if (this.gameOver) {
+                this.gameOver();
+            }
+            
+            // Don't try to transition to a new level or increment currentLevelIndex
+            this.removeExitKeyListener(); // Remove event listeners to clean up
         }
     }
 
