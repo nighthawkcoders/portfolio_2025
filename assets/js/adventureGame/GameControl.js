@@ -92,8 +92,8 @@ class GameControl {
         setTimeout(() => {
             // Switch levels when screen is black
             const GameLevelClass = this.levelClasses[this.currentLevelIndex];
-            this.currentLevel = new GameLevel(this);
-            this.currentLevel.create(GameLevelClass);
+            this.currentLevel = new GameLevelClass(this.game); // Instantiate the correct level class
+            this.currentLevel.create(); // Call the create method if necessary
 
             // Fade out the overlay
             fadeOverlay.style.opacity = '0';
