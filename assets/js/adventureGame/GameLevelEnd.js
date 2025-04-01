@@ -21,13 +21,6 @@ class GameLevelEnd {
         pixels: {height: 1140, width: 2460}
     };
 
-    const parallax_src = path + "/images/gamify/bitcoin.png";
-    const parallax_data = {
-        src: parallax_src,
-        zIndex: 1,
-        velocity: 0.5
-    };
-
     const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
     const CHILLGUY_SCALE_FACTOR = 5;
     const sprite_data_chillguy = {
@@ -92,7 +85,6 @@ class GameLevelEnd {
 
     this.classes = [
       { class: GamEnvBackground, data: image_data_end },
-      { class: BackgroundParallax, data: parallax_data },
       { class: Player, data: sprite_data_chillguy },
       { class: Npc, data: sprite_data_tux }
     ];
