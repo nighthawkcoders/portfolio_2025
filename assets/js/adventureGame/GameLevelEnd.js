@@ -20,13 +20,16 @@ class GameLevelEnd {
         name: 'end',
         greeting: "The End opens before you, a vast black void in the distance. The stone beneath your feet is yellowish and hard, and the air tingles.",
         src: image_src_end,
-        pixels: {height: 1140, width: 2460}
+        pixels: {height: 1140, width: 2460},
+        zIndex: 0  // Base layer
     };
 
     // Parallax Background data
     const parallax_data = {
         src: path + "/images/platformer/backgrounds/snowfall.png",
-        zIndex: 1 // Lower zIndex so it stays behind everything
+        zIndex: 3,  // Higher zIndex so it displays over the player
+        velocity: 0.5,  // Adjusted velocity for better effect
+        position: { x: 0, y: 0 }
     };
     console.log("Parallax Data Loaded:", parallax_data);
 
@@ -52,7 +55,8 @@ class GameLevelEnd {
         upLeft: {row: 2, start: 0, columns: 3, rotate: Math.PI/8 },
         upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/8 },
         hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
-        keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
+        keypress: { up: 87, left: 65, down: 83, right: 68 }, // W, A, S, D
+        zIndex: 1  // Middle layer
     };
 
     // NPC Data (Tux - Linux Mascot)
@@ -69,6 +73,7 @@ class GameLevelEnd {
         orientation: {rows: 8, columns: 11 },
         down: {row: 5, start: 0, columns: 3 },
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
+        zIndex: 2,  // Middle layer, above player
         quiz: { 
           title: "Linux Command Quiz",
           questions: [
@@ -94,12 +99,12 @@ class GameLevelEnd {
         }
     };
 
-    // Add objects to the scene in proper rendering order
+    // Add objects to the scene in proper rendering order (based on zIndex)
     this.classes = [
-      { class: BackgroundParallax, data: parallax_data },
       { class: GamEnvBackground, data: image_data_end },
+      { class: BackgroundParallax, data: parallax_data },
       { class: Player, data: sprite_data_chillguy },
-      { class: Npc, data: sprite_data_tux }
+      { class: Npc, data: sprite_data_tux },
     ];
   }
 }

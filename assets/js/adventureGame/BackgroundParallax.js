@@ -12,10 +12,11 @@ export class BackgroundParallax extends Background {
      * @param {Object} gameEnv - The game environment object for convenient access to game properties 
      */
     constructor(data = null, gameEnv = null) {
-        super(data,gameEnv);
+        super(data, gameEnv);
 
         this.position = data.position || { x: 0, y: 0 };
         this.velocity = data.velocity || 1;
+        this.zIndex = data.zIndex || 1;
     }
 
     /**
@@ -66,8 +67,11 @@ export class BackgroundParallax extends Background {
         const numHorizontalDraws = Math.ceil(canvasWidth / this.width) + 1;
         const numVerticalDraws = Math.ceil(canvasHeight / this.height) + 1;
 
-        // Clear the canvas
-        this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        // Save the current canvas state
+        this.ctx.save();
+        
+        // Set global transparency for snowfall effect
+        this.ctx.globalAlpha = 0.7;
 
         // Draw the background image multiple times to fill the canvas, Tiling
         for (let i = 0; i < numHorizontalDraws; i++) {
@@ -75,11 +79,14 @@ export class BackgroundParallax extends Background {
                 this.ctx.drawImage(
                     this.image, // Source image
                     0, 0, this.width, this.height, // Source rectangle
-                    xWrapped + i * this.width, yWrapped + j * this.height, this.width, this.height); // Destination rectangle              );
+                    xWrapped + i * this.width, yWrapped + j * this.height, this.width, this.height // Destination rectangle
+                );
             }
         }
+        
+        // Restore the canvas state
+        this.ctx.restore();
     }
-    
 }
 
 export default BackgroundParallax;
