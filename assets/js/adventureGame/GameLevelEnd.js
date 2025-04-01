@@ -9,12 +9,10 @@ class GameLevelEnd {
   constructor(gameEnv) {
     console.log("Initializing GameLevelEnd...");
     
-    // Values dependent on this.gameEnv.create()
     let width = gameEnv.innerWidth;
     let height = gameEnv.innerHeight;
     let path = gameEnv.path;
 
-    // Background data
     const image_src_end = path + "/images/gamify/endbackground.png";
     const image_data_end = {
         name: 'end',
@@ -23,7 +21,13 @@ class GameLevelEnd {
         pixels: {height: 1140, width: 2460}
     };
 
-    // Player Data (Chill Guy)
+    const parallax_src = path + "/images/gamify/bitcoin.png";
+    const parallax_data = {
+        src: parallax_src,
+        zIndex: 1,
+        velocity: 0.5
+    };
+
     const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
     const CHILLGUY_SCALE_FACTOR = 5;
     const sprite_data_chillguy = {
@@ -45,10 +49,9 @@ class GameLevelEnd {
         upLeft: {row: 2, start: 0, columns: 3, rotate: Math.PI/8 },
         upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/8 },
         hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
-        keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
+        keypress: { up: 87, left: 65, down: 83, right: 68 }
     };
 
-    // NPC Data (Tux - Linux Mascot)
     const sprite_src_tux = path + "/images/gamify/tux.png";
     const sprite_greet_tux = "Hi, I am Tux, the Linux mascot. I am very happy to spend some Linux shell time with you!";
     const sprite_data_tux = {
@@ -87,9 +90,9 @@ class GameLevelEnd {
         }
     };
 
-    // Add objects to the scene in proper rendering order
     this.classes = [
       { class: GamEnvBackground, data: image_data_end },
+      { class: BackgroundParallax, data: parallax_data },
       { class: Player, data: sprite_data_chillguy },
       { class: Npc, data: sprite_data_tux }
     ];
