@@ -45,7 +45,7 @@ class GameLevelEnd {
         keypress: { up: 87, left: 65, down: 83, right: 68 }
     };
 
-    const sprite_src_endereye = path + "/images/gamify/endereye.png";
+    const sprite_src_endereye = path + "/images/gamify/eyeender.png";
     const sprite_greet_endereye = "Hi, I am Tux, the Linux mascot. I am very happy to spend some Linux shell time with you!";
     const sprite_data_endereye = {
         id: 'Endereye',
