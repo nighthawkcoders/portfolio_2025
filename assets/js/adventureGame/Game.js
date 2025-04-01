@@ -36,7 +36,7 @@ class Game {
         // Show instructions before starting the game
         this.showInstructions(() => {
             // start the game after instructions are closed
-            const gameLevelClasses = [GameLevelDesert, GameLevelSquares]
+            const gameLevelClasses = [GameLevelEnd, GameLevelDesert, GameLevelSquares]
             new GameControl(this, gameLevelClasses).start();
         });
     }
