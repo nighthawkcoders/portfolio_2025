@@ -1,4 +1,3 @@
-// GameControl.js 
 import GameLevel from "./GameLevel.js";
 
 class GameControl {
@@ -32,9 +31,8 @@ class GameControl {
      * SKIBIDI LOADING TRANSITION - ULTIMATE GAMER MODE 🎮✨
      */ 
     transitionToLevel() {
-        // Cleanup previous level
         if (this.currentLevel) {
-            this.currentLevel.destroy(); // Ensure all objects from the previous level are removed
+            this.currentLevel.destroy();
         }
 
         const fadeOverlay = document.createElement('div');
@@ -56,96 +54,80 @@ class GameControl {
             fontSize: '18px',
         });
 
-        // Loading text
         const loadingText = document.createElement('div');
         loadingText.textContent = 'Loading...';
         fadeOverlay.appendChild(loadingText);
 
-        // Loading bar
-        const loadingBar = document.createElement('div');
-        loadingBar.style.marginTop = '10px';
-        loadingBar.style.fontFamily = 'monospace'; // Monospace for consistent bar appearance
-        loadingBar.textContent = ''; // Start with an empty bar
-        fadeOverlay.appendChild(loadingBar);
+        const progressBarContainer = document.createElement('div');
+        Object.assign(progressBarContainer.style, {
+            width: '80%',
+            height: '20px',
+            border: '2px solid white',
+            marginTop: '10px',
+            position: 'relative',
+        });
+
+        const progressBar = document.createElement('div');
+        Object.assign(progressBar.style, {
+            width: '0%',
+            height: '100%',
+            backgroundColor: 'cyan',
+            transition: 'width 1s ease-in-out',
+        });
+        
+        const progressText = document.createElement('div');
+        Object.assign(progressText.style, {
+            position: 'absolute',
+            width: '100%',
+            textAlign: 'center',
+            color: 'white',
+            fontWeight: 'bold',
+        });
+        progressText.textContent = '0%';
+
+        progressBarContainer.appendChild(progressBar);
+        progressBarContainer.appendChild(progressText);
+        fadeOverlay.appendChild(progressBarContainer);
 
         document.body.appendChild(fadeOverlay);
 
-        // Fade in the overlay
         requestAnimationFrame(() => {
             fadeOverlay.style.opacity = '1';
         });
 
-        // Update the loading bar over 1000 milliseconds
-        const totalDuration = 1000; // 1 second
-        const interval = 100; // Update every 100ms
-        const totalSteps = totalDuration / interval;
-        let currentStep = 0;
+        const totalDuration = 1000;
+        const interval = 100;
+        let currentProgress = 0;
 
         const loadingInterval = setInterval(() => {
-            currentStep++;
-            loadingBar.textContent += '|'; // Add a bar segment
-            if (currentStep >= totalSteps) {
-                clearInterval(loadingInterval); // Stop updating the bar
+            currentProgress += 10;
+            progressBar.style.width = `${currentProgress}%`;
+            progressText.textContent = `${currentProgress}%`;
+            if (currentProgress >= 100) {
+                clearInterval(loadingInterval);
             }
         }, interval);
 
         setTimeout(() => {
-            // Switch levels when screen is black
             const GameLevelClass = this.levelClasses[this.currentLevelIndex];
             this.currentLevel = new GameLevel(this);
             this.currentLevel.create(GameLevelClass);
 
-            // Fade out the overlay
             fadeOverlay.style.opacity = '0';
             setTimeout(() => document.body.removeChild(fadeOverlay), 1000);
 
-            // Start game loop after transition
             this.gameLoop();
-        }, totalDuration); // Wait for the loading duration
-    }
-
-    /**
-     * The main game loop 
-     */
-    gameLoop() {
-        // If the level is not set to continue, handle the level end condition 
-        if (!this.currentLevel.continue) {
-            this.handleLevelEnd();
-            return;
-        }
-        // If the game level is paused, stop the game loop
-        if (this.isPaused) {
-            return;
-        }
-        // Level updates
-        this.currentLevel.update();
-        this.handleInLevelLogic();
-        // Recurse at frame rate speed
-        requestAnimationFrame(this.gameLoop.bind(this));
-    }
-
-    /**
-     * This method is a placeholder for future logic that needs to be executed during the game loop.
-     * For example, a starting page or time-based events
-     */
-    handleInLevelLogic() {
-        // This condition is established for future starting page logic
-        if (this.currentLevelIndex === 0 && this.gameLoopCounter === 0) {
-            console.log("Start Level.");
-        }
-        // This counter is established for future time-based logic, like frames per second
-        this.gameLoopCounter++;
+        }, totalDuration);
     }
 
     /**
      * Handles the level end with neon-styled alerts
      */
     handleLevelEnd() {
-        // Neon-styled alerts
         const alertStyle = `
             background-color: #0a0a1a;
             color: #00ffff;
-            border: 2px solid #ff00ff;
+            border: 2px solid white;
             font-family: 'Orbitron', sans-serif;
             text-shadow: 0 0 10px #00ffff;
             padding: 20px;
@@ -165,104 +147,21 @@ class GameControl {
             const alertDiv = document.createElement('div');
             alertDiv.style.cssText = alertStyle;
             alertDiv.innerHTML = `
-                <h2>LEVEL WON. VICTORY</h2>
-                <p>Level conquered. Game complete.</p>
+                <h2>SORRY, ALL GAME LEVELS DESIGNED ARE FINISHED.</h2>
             `;
             document.body.appendChild(alertDiv);
         }
 
         this.currentLevel.destroy();
-        // Call the gameOver callback if it exists
         if (this.gameOver) {
             this.gameOver();
         } else {
             this.currentLevelIndex++;
-            this.transitionToLevel();
-        }
-    }
-
-    /**
-     * Exit key handler to end the current level
-     * @param {*} event - The keydown event object
-     */
-    handleExitKey(event) {
-        if (event.key === 'Escape') {
-            this.currentLevel.continue = false;
-        }
-    }
-
-    // Helper method to add exit key listener
-    addExitKeyListener() {
-        document.addEventListener('keydown', this.exitKeyListener);
-    }
-
-    // Helper method to remove exit key listener
-    removeExitKeyListener() {
-        document.removeEventListener('keydown', this.exitKeyListener);
-    }
-
-    // Helper method to save the current canvas id and image data in the game container
-    saveCanvasState() {
-        const gameContainer = document.getElementById('gameContainer');
-        const canvasElements = gameContainer.querySelectorAll('canvas');
-        this.savedCanvasState = Array.from(canvasElements).map(canvas => {
-            return {
-                id: canvas.id,
-                imageData: canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)
-            };
-        });
-    }
-
-    // Helper method to hide the current canvas state in the game container
-    hideCanvasState() {
-        const gameContainer = document.getElementById('gameContainer');
-        const canvasElements = gameContainer.querySelectorAll('canvas');
-        canvasElements.forEach(canvas => {
-            if (canvas.id !== 'gameCanvas') {
-                canvas.style.display = 'none';
+            if (this.currentLevelIndex < this.levelClasses.length) {
+                this.transitionToLevel();
             }
-        });
-    }
-
-    // Helper method to restore the hidden canvas item to be visible
-    showCanvasState() {
-        const gameContainer = document.getElementById('gameContainer');
-        this.savedCanvasState.forEach(hidden_canvas => {
-            const canvas = document.getElementById(hidden_canvas.id);
-            if (canvas) {
-                canvas.style.display = 'block';
-                canvas.getContext('2d').putImageData(hidden_canvas.imageData, 0, 0);
-            }
-        });
-    }
-
-    /**
-     * Game level in Game Level helper method to pause the underlying game level
-     * 1. Set the current game level to paused
-     * 2. Remove the exit key listener
-     * 3. Save the current canvas game containers state
-     * 4. Hide the current canvas game containers
-     */
-    pause() {
-        this.isPaused = true;
-        this.removeExitKeyListener();
-        this.saveCanvasState();
-        this.hideCanvasState();
-     }
-
-     /**
-      * Game level in Game Level helper method to resume the underlying game level
-      * 1. Set the current game level to not be paused
-      * 2. Add the exit key listener
-      * 3. Show the current canvas game containers
-      * 4. Start the game loop
-      */
-    resume() {
-        this.isPaused = false;
-        this.addExitKeyListener();
-        this.showCanvasState();
-        this.gameLoop();
+        }
     }
 }
 
-export default GameControl; // ULTIMATE EXPORT OF PURE GAMER ENERGY 💥🎮
+export default GameControl;
