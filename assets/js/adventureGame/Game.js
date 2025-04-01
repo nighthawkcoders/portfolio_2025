@@ -2,7 +2,6 @@ import GameControl from './GameControl.js';
 import GameLevelDesert from "./GameLevelDesert.js";
 import GameLevelEnd from "./GameLevelEnd.js";
 import GameLevelSquares from './GameLevelSquares.js';
-import GameLevelTesting from './testing.js';
 
 
 class Game {
@@ -31,13 +30,13 @@ class Game {
         
 
         // start the game
-        const gameLevelClasses = [GameLevelDesert, GameLevelEnd, GameLevelSquares, GameLevelTesting]
+        const gameLevelClasses = [GameLevelDesert, GameLevelEnd, GameLevelSquares]
         new GameControl(this, gameLevelClasses).start();
 
         // Show instructions before starting the game
         this.showInstructions(() => {
             // start the game after instructions are closed
-            const gameLevelClasses = [GameLevelTesting, GameLevelEnd, GameLevelDesert, GameLevelSquares]
+            const gameLevelClasses = [GameLevelEnd, GameLevelDesert, GameLevelSquares]
             new GameControl(this, gameLevelClasses).start();
         });
     }
