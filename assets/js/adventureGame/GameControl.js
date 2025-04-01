@@ -29,7 +29,7 @@ class GameControl {
 
     /**
      * SKIBIDI LOADING TRANSITION - ULTIMATE GAMER MODE 🎮✨
-     */
+     */ 
     transitionToLevel() {
         // Cleanup previous level
         if (this.currentLevel) {
@@ -60,21 +60,42 @@ class GameControl {
         loadingText.textContent = 'Loading...';
         fadeOverlay.appendChild(loadingText);
 
-        // Loading bar container
+        // Loading bar container with white border
         const loadingBarContainer = document.createElement('div');
-        loadingBarContainer.style.width = '300px';
-        loadingBarContainer.style.border = '2px solid white';
-        loadingBarContainer.style.padding = '5px';
-        loadingBarContainer.style.marginTop = '10px';
+        Object.assign(loadingBarContainer.style, {
+            width: '300px',
+            height: '30px',
+            border: '2px solid white',
+            marginTop: '15px',
+            position: 'relative',
+            borderRadius: '4px',
+            overflow: 'hidden'
+        });
 
-        const loadingBar = document.createElement('div');
-        loadingBar.style.height = '20px';
-        loadingBar.style.backgroundColor = 'cyan';
-        loadingBar.style.width = '0%';
-        loadingBar.style.color = 'white';
-        loadingBar.style.textAlign = 'center';
-        loadingBar.style.fontWeight = 'bold';
-        loadingBarContainer.appendChild(loadingBar);
+        // Loading bar fill (cyan)
+        const loadingBarFill = document.createElement('div');
+        Object.assign(loadingBarFill.style, {
+            height: '100%',
+            width: '0%',
+            backgroundColor: '#00ffff', // Cyan color
+            transition: 'width 0.1s linear'
+        });
+        
+        // Percentage text (white)
+        const percentText = document.createElement('div');
+        Object.assign(percentText.style, {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'white',
+            fontWeight: 'bold',
+            textShadow: '1px 1px 2px #000'
+        });
+        percentText.textContent = '0%';
+
+        loadingBarContainer.appendChild(loadingBarFill);
+        loadingBarContainer.appendChild(percentText);
         fadeOverlay.appendChild(loadingBarContainer);
 
         document.body.appendChild(fadeOverlay);
@@ -84,16 +105,22 @@ class GameControl {
             fadeOverlay.style.opacity = '1';
         });
 
+        // Update the loading bar over 1000 milliseconds
+        const totalDuration = 1000; // 1 second
+        const interval = 50; // Update every 50ms for smoother animation
+        const totalSteps = totalDuration / interval;
         let currentStep = 0;
-        const totalSteps = 10;
+
         const loadingInterval = setInterval(() => {
             currentStep++;
-            loadingBar.style.width = `${currentStep * 10}%`;
-            loadingBar.textContent = `${currentStep * 10}%`;
+            const percentComplete = Math.round((currentStep / totalSteps) * 100);
+            loadingBarFill.style.width = `${percentComplete}%`;
+            percentText.textContent = `${percentComplete}%`;
+            
             if (currentStep >= totalSteps) {
-                clearInterval(loadingInterval);
+                clearInterval(loadingInterval); // Stop updating the bar
             }
-        }, 100);
+        }, interval);
 
         setTimeout(() => {
             // Switch levels when screen is black
@@ -107,14 +134,14 @@ class GameControl {
 
             // Start game loop after transition
             this.gameLoop();
-        }, 1000); // Wait for the loading duration
+        }, totalDuration); // Wait for the loading duration
     }
 
     /**
-     * The main game loop
+     * The main game loop 
      */
     gameLoop() {
-        // If the level is not set to continue, handle the level end condition
+        // If the level is not set to continue, handle the level end condition 
         if (!this.currentLevel.continue) {
             this.handleLevelEnd();
             return;
@@ -131,12 +158,15 @@ class GameControl {
     }
 
     /**
-     * Placeholder for future logic executed during the game loop.
+     * This method is a placeholder for future logic that needs to be executed during the game loop.
+     * For example, a starting page or time-based events
      */
     handleInLevelLogic() {
+        // This condition is established for future starting page logic
         if (this.currentLevelIndex === 0 && this.gameLoopCounter === 0) {
             console.log("Start Level.");
         }
+        // This counter is established for future time-based logic, like frames per second
         this.gameLoopCounter++;
     }
 
@@ -144,10 +174,11 @@ class GameControl {
      * Handles the level end with neon-styled alerts
      */
     handleLevelEnd() {
+        // Neon-styled alerts
         const alertStyle = `
             background-color: #0a0a1a;
             color: #00ffff;
-            border: 2px solid #ffffff;
+            border: 2px solid #ff00ff;
             font-family: 'Orbitron', sans-serif;
             text-shadow: 0 0 10px #00ffff;
             padding: 20px;
@@ -167,11 +198,8 @@ class GameControl {
             const alertDiv = document.createElement('div');
             alertDiv.style.cssText = alertStyle;
             alertDiv.innerHTML = `
-                <h2>SORRY</h2>
-                <p>All game levels designed are finished.</p>
-                <div style="width: 300px; border: 2px solid white; padding: 5px; margin: 10px auto;">
-                    <div style="width: 100%; height: 20px; background-color: cyan; text-align: center; color: white; font-weight: bold;">100%</div>
-                </div>
+                <h2>LEVEL WON. VICTORY</h2>
+                <p>Sorry all game levels designed are finished.</p>
             `;
             document.body.appendChild(alertDiv);
         }
