@@ -9,12 +9,28 @@ class GameLevelEnd {
     constructor(gameEnv) {
         console.log("Initializing GameLevelEnd...");
         
+        // Ensure the previous game level is cleared before adding new objects
+        if (typeof gameEnv.clearScene === "function") {
+            gameEnv.clearScene();
+        } else {
+            console.warn("gameEnv.clearScene() is not defined. Ensure old game objects are removed properly.");
+        }
+
         // Values dependent on this.gameEnv.create()
         let width = gameEnv.innerWidth;
         let height = gameEnv.innerHeight;
         let path = gameEnv.path;
 
-        // Background data
+        // Parallax Background Data
+        const parallax_data = {
+            src: path + "/images/platformer/backgrounds/snowfall.png",
+            zIndex: 1, // Ensures it stays behind everything
+            velocity: 2, // Controls the scrolling speed
+            position: { x: 0, y: 0 }
+        };
+        console.log("Parallax Data Loaded:", parallax_data);
+
+        // Static Background Data
         const image_src_end = path + "/images/gamify/endbackground.png";
         const image_data_end = {
             name: 'end',
@@ -22,15 +38,6 @@ class GameLevelEnd {
             src: image_src_end,
             pixels: { height: 1140, width: 2460 }
         };
-
-        // Parallax Background data
-        const parallax_data = {
-            src: path + "/images/platformer/backgrounds/snowfall.png",
-            zIndex: 1, // Lower zIndex so it stays behind everything
-            velocity: 2, // Added velocity to ensure movement
-            position: { x: 0, y: 0 } // Added position for proper scrolling
-        };
-        console.log("Parallax Data Loaded:", parallax_data);
 
         // Player Data (Chill Guy)
         const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
@@ -71,7 +78,8 @@ class GameLevelEnd {
                 title: "Linux Command Quiz",
                 questions: [
                     "Which command is used to list files in a directory?\n1. ls\n2. dir\n3. list\n4. show",
-                    "Which command is used to change directories?\n1. cd\n2. chdir\n3. changedir\n4. changedirectory"
+                    "Which command is used to change directories?\n1. cd\n2. chdir\n3. changedir\n4. changedirectory",
+                    "Which command is used to create a new directory?\n1. mkdir\n2. newdir\n3. createdir\n4. makedir"
                 ]
             },
             reaction: function () {
