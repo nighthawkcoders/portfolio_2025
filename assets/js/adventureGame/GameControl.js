@@ -155,20 +155,80 @@ class GameControl {
         if (this.currentLevelIndex < this.levelClasses.length - 1) {
             const alertDiv = document.createElement('div');
             alertDiv.style.cssText = alertStyle;
+            
+            // Calculate completion percentage
+            const completionPercent = ((this.currentLevelIndex + 1) / this.levelClasses.length * 100).toFixed(0);
+            
+            // Create progress bar container
+            const progressBarContainer = document.createElement('div');
+            progressBarContainer.style.cssText = `
+                width: 100%;
+                background-color: #1a1a2a;
+                height: 20px;
+                margin-top: 15px;
+                border-radius: 10px;
+                overflow: hidden;
+            `;
+            
+            // Create progress bar fill
+            const progressBarFill = document.createElement('div');
+            progressBarFill.style.cssText = `
+                width: ${completionPercent}%;
+                background-color: #00ffff;
+                height: 100%;
+                border-radius: 8px;
+                box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+                transition: width 0.5s ease-in-out;
+            `;
+            
+            progressBarContainer.appendChild(progressBarFill);
+            
             alertDiv.innerHTML = `
                 <h2>LEVEL COMPLETE</h2>
                 <p>Prepare for the next phase...</p>
+                <p>${completionPercent}% Complete</p>
             `;
+            
+            alertDiv.appendChild(progressBarContainer);
             document.body.appendChild(alertDiv);
             setTimeout(() => document.body.removeChild(alertDiv), 2000);
         } else {
             const alertDiv = document.createElement('div');
             alertDiv.style.cssText = alertStyle;
-            alertDiv.innerHTML = `
-                <h2>LEVEL WON. VICTORY</h2>
-                <p>Level conquered. Game complete.</p>
+            
+            // Create 100% progress bar container
+            const progressBarContainer = document.createElement('div');
+            progressBarContainer.style.cssText = `
+                width: 100%;
+                background-color: #1a1a2a;
+                height: 20px;
+                margin-top: 15px;
+                border-radius: 10px;
+                overflow: hidden;
             `;
+            
+            // Create 100% progress bar fill (cyan)
+            const progressBarFill = document.createElement('div');
+            progressBarFill.style.cssText = `
+                width: 100%;
+                background-color: #00ffff;
+                height: 100%;
+                border-radius: 8px;
+                box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            `;
+            
+            progressBarContainer.appendChild(progressBarFill);
+            
+            alertDiv.innerHTML = `
+                <h2>ALL LEVELS COMPLETED</h2>
+                <p>100% Complete</p>
+                <p style="margin-top: 15px; font-size: 18px; color: #ff00ff; text-shadow: 0 0 10px #ff00ff;">PLEASE REFRESH TO RESTART THE GAME</p>
+            `;
+            
+            alertDiv.appendChild(progressBarContainer);
             document.body.appendChild(alertDiv);
+            
+            // Don't remove this alert so the player can see the refresh message
         }
 
         this.currentLevel.destroy();
@@ -177,7 +237,10 @@ class GameControl {
             this.gameOver();
         } else {
             this.currentLevelIndex++;
-            this.transitionToLevel();
+            if (this.currentLevelIndex < this.levelClasses.length) {
+                this.transitionToLevel();
+            }
+            // If we're at the end of all levels, we don't transition to a new level
         }
     }
 
