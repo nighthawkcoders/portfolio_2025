@@ -1,3 +1,4 @@
+// GameControl.js 
 import GameLevel from "./GameLevel.js";
 
 class GameControl {
@@ -60,43 +61,12 @@ class GameControl {
         loadingText.textContent = 'Loading...';
         fadeOverlay.appendChild(loadingText);
 
-        // Loading bar container with white border
-        const loadingBarContainer = document.createElement('div');
-        Object.assign(loadingBarContainer.style, {
-            width: '300px',
-            height: '30px',
-            border: '2px solid white',
-            marginTop: '15px',
-            position: 'relative',
-            borderRadius: '4px',
-            overflow: 'hidden'
-        });
-
-        // Loading bar fill (cyan)
-        const loadingBarFill = document.createElement('div');
-        Object.assign(loadingBarFill.style, {
-            height: '100%',
-            width: '0%',
-            backgroundColor: '#00ffff', // Cyan color
-            transition: 'width 0.1s linear'
-        });
-        
-        // Percentage text (white)
-        const percentText = document.createElement('div');
-        Object.assign(percentText.style, {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            color: 'white',
-            fontWeight: 'bold',
-            textShadow: '1px 1px 2px #000'
-        });
-        percentText.textContent = '0%';
-
-        loadingBarContainer.appendChild(loadingBarFill);
-        loadingBarContainer.appendChild(percentText);
-        fadeOverlay.appendChild(loadingBarContainer);
+        // Loading bar
+        const loadingBar = document.createElement('div');
+        loadingBar.style.marginTop = '10px';
+        loadingBar.style.fontFamily = 'monospace'; // Monospace for consistent bar appearance
+        loadingBar.textContent = ''; // Start with an empty bar
+        fadeOverlay.appendChild(loadingBar);
 
         document.body.appendChild(fadeOverlay);
 
@@ -107,16 +77,13 @@ class GameControl {
 
         // Update the loading bar over 1000 milliseconds
         const totalDuration = 1000; // 1 second
-        const interval = 50; // Update every 50ms for smoother animation
+        const interval = 100; // Update every 100ms
         const totalSteps = totalDuration / interval;
         let currentStep = 0;
 
         const loadingInterval = setInterval(() => {
             currentStep++;
-            const percentComplete = Math.round((currentStep / totalSteps) * 100);
-            loadingBarFill.style.width = `${percentComplete}%`;
-            percentText.textContent = `${percentComplete}%`;
-            
+            loadingBar.textContent += '|'; // Add a bar segment
             if (currentStep >= totalSteps) {
                 clearInterval(loadingInterval); // Stop updating the bar
             }
@@ -199,7 +166,7 @@ class GameControl {
             alertDiv.style.cssText = alertStyle;
             alertDiv.innerHTML = `
                 <h2>LEVEL WON. VICTORY</h2>
-                <p>Sorry all game levels designed are finished.</p>
+                <p>Level conquered. Game complete.</p>
             `;
             document.body.appendChild(alertDiv);
         }
