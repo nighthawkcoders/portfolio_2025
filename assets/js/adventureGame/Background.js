@@ -1,93 +1,89 @@
-
-import GameEnv from './GameEnv.js';
 import GameObject from './GameObject.js';
 
-/** Background class for primary background */
+/** Background GameObject
+ */
 export class Background extends GameObject {
+    /**
+     * Constructor is called by GameLevel create() method
+     * @param {Object} data - The data object for the background
+     * @param {Object} gameEnv - The game environment object for convenient access to game properties 
+     */
     constructor(data = null, gameEnv = null) {
         super(gameEnv);
-        if (data.src) {
-            this.image = new Image();
-            this.image.src = data.src;
-        } else {
-            this.image = null;
+
+        if (!data.src) {
+            throw new Error('Background requires a src property in data');
         }
+
+        this.data = data;
+        // Set the properties of the background
+        this.image = new Image();
+        this.image.src = data.src;
+        this.isInitialized = false; // Flag to track initialization
+
+        // Finish initializing the background after the image loads 
+        this.image.onload = () => {
+            // Width and height come from the image
+            this.width = this.image.width;
+            this.height = this.image.height;
+
+            // Create the canvas element and context
+            this.canvas = document.createElement("canvas");
+            this.canvas.style.position = "absolute";
+            this.canvas.style.zIndex = this.data.zIndex || "0";
+            this.canvas.id = data.id || "background";
+            this.ctx = this.canvas.getContext("2d");
+            
+            // Align the canvas size to the gameCanvas
+            this.alignCanvas();
+
+            // Append the canvas to the DOM
+            document.getElementById("gameContainer").appendChild(this.canvas);
+            this.isInitialized = true; // Mark as initialized
+        };
     }
 
-    /** For primary background, update is the same as draw */
+    /**
+     * Align canvas to be the same size and position as the gameCanvas 
+     */
+    alignCanvas() {
+        // align the canvas to the gameCanvas, Layered
+        const gameCanvas = document.getElementById("gameCanvas");
+        this.canvas.width = gameCanvas.width;
+        this.canvas.height = gameCanvas.height;
+        this.canvas.style.left = gameCanvas.style.left;
+        this.canvas.style.top = gameCanvas.style.top;
+    }
+
+    /**
+     * Update is called by GameLoop on all GameObjects 
+     */
     update() {
+        // Draw the background image
         this.draw();
     }
 
-    /** This method draws to GameEnv context, primary background */
+    /**
+     * Draws the background image within the canvas 
+     */
     draw() {
-        const ctx = this.gameEnv.ctx;
-        const width = this.gameEnv.innerWidth;
-        const height = this.gameEnv.innerHeight;
-
-        if (this.image) {
-            // Draw the background image scaled to the canvas size
-            ctx.drawImage(this.image, 0, 0, width, height);
-        } else {
-            // Fill the canvas with fillstyle color if no image is provided
-            ctx.fillStyle = '#87CEEB';
-            ctx.fillRect(0, 0, width, height);
+        if (!this.isInitialized) {
+            return; // Skip drawing if not initialized
         }
-    }
 
-    /** For primary background, resize is the same as draw */
+        // Clear the canvas
+        const canvasWidth = this.canvas.width;
+        const canvasHeight = this.canvas.height;
+        this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        this.ctx.drawImage(this.image, 0, 0, canvasWidth, canvasWidth);
+    }
+    
+    /**
+     * Resize method is called by resize listner on all GameObjects
+     */
     resize() {
-        this.draw();
-    }
-
-    /** Destroy Game Object */
-    destroy() {
-        const index = this.gameEnv.gameObjects.indexOf(this);
-        if (index !== -1) {
-            this.gameEnv.gameObjects.splice(index, 1);
-        }
-    }
-}
-
-/** Parallax Meteor Background */
-export class BackgroundMeteor extends Background {
-    constructor(data = null, gameEnv = null) {
-        super(data, gameEnv);
-        this.meteors = [];
-
-        // Generate random meteors
-        for (let i = 0; i < 20; i++) {
-            this.meteors.push({
-                x: Math.random() * gameEnv.innerWidth,
-                y: Math.random() * gameEnv.innerHeight,
-                size: Math.random() * 5 + 2,
-                speed: Math.random() * 2 + 0.5
-            });
-        }
-    }
-
-    update() {
-        super.update();
-
-        // Move meteors downward
-        this.meteors.forEach(meteor => {
-            meteor.y += meteor.speed;
-            if (meteor.y > this.gameEnv.innerHeight) {
-                meteor.y = -meteor.size;
-                meteor.x = Math.random() * this.gameEnv.innerWidth;
-            }
-        });
-    }
-
-    draw() {
-        super.draw();
-        const ctx = this.gameEnv.ctx;
-
-        // Draw meteors
-        ctx.fillStyle = 'black';
-        this.meteors.forEach(meteor => {
-            ctx.fillRect(meteor.x, meteor.y, meteor.size, meteor.size);
-        });
+        this.alignCanvas(); // Align the canvas to the gameCanvas
+        this.draw(); // Redraw the canvas after resizing
     }
 }
 
