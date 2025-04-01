@@ -1,5 +1,4 @@
 import GamEnvBackground from './GameEnvBackground.js';
-import BackgroundParallax from './BackgroundParallax.js';
 import Player from './Player.js';
 import Npc from './Npc.js';
 import Quiz from './Quiz.js';
@@ -45,18 +44,18 @@ class GameLevelEnd {
         keypress: { up: 87, left: 65, down: 83, right: 68 }
     };
 
-    const sprite_src_endereye = path + "/images/gamify/eyeender.png";
-    const sprite_greet_endereye = "Hi, I am Tux, the Linux mascot. I am very happy to spend some Linux shell time with you!";
-    const sprite_data_endereye = {
-        id: 'Endereye',
-        greeting: sprite_greet_endereye,
-        src: sprite_src_endereye,
-        SCALE_FACTOR: 5,
+    const sprite_src_tux = path + "/images/gamify/tux.png";
+    const sprite_greet_tux = "Hi, I am Tux, the Linux mascot. I am very happy to spend some Linux shell time with you!";
+    const sprite_data_tux = {
+        id: 'Tux',
+        greeting: sprite_greet_tux,
+        src: sprite_src_tux,
+        SCALE_FACTOR: 8,
         ANIMATION_RATE: 50,
-        pixels: {height: 256, width: 256},
+        pixels: {height: 256, width: 352},
         INIT_POSITION: { x: (width / 2), y: (height / 2) },
-        orientation: {rows: 2, columns: 2 },
-        down: {row: 1, start: 0, columns: 1 },
+        orientation: {rows: 8, columns: 11 },
+        down: {row: 5, start: 0, columns: 3 },
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
         quiz: { 
           title: "Linux Command Quiz",
@@ -74,19 +73,19 @@ class GameLevelEnd {
           ] 
         },
         reaction: function() {
-          alert(sprite_greet_endereye);
+          alert(sprite_greet_tux);
         },
         interact: function() {
           let quiz = new Quiz();
           quiz.initialize();
-          quiz.openPanel(sprite_data_endereye);
+          quiz.openPanel(sprite_data_tux);
         }
     };
 
     this.classes = [
       { class: GamEnvBackground, data: image_data_end },
       { class: Player, data: sprite_data_chillguy },
-      { class: Npc, data: sprite_data_endereye }
+      { class: Npc, data: sprite_data_tux }
     ];
   }
 }
