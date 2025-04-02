@@ -101,7 +101,7 @@ class GameLevelDesert {
         id: 'End Portal',
         greeting: sprite_greet_endportal,
         src: sprite_src_endportal,
-        SCALE_FACTOR: 6,  // Adjust this based on your scaling needs
+        SCALE_FACTOR: 6,  // smaller = baller
         ANIMATION_RATE: 100,
         pixels: {width: 2029, height: 2025},
         INIT_POSITION: { x: (width * 2 / 5), y: (height * 1 / 10)}, // Adjusted position
