@@ -1,62 +1,73 @@
+// To build GameLevels, each contains GameObjects from below imports
 import GamEnvBackground from './GameEnvBackground.js';
 import Player from './Player.js';
 import Npc from './Npc.js';
 import Quiz from './Quiz.js';
 import GameControl from './GameControl.js';
+import Enemy from './enemy.js';
 
-class GameLevelEnd {
+class GameLevelDesert {
   constructor(gameEnv) {
-    console.log("Initializing GameLevelEnd...");
+    // Store reference to game environment
+    this.gameEnv = gameEnv;
+    this.continue = true;
     
+    // Values dependent on this.gameEnv
     let width = gameEnv.innerWidth;
     let height = gameEnv.innerHeight;
     let path = gameEnv.path;
 
-    const image_src_end = path + "/images/gamify/endbackground.png";
-    const image_data_end = {
-        name: 'end',
-        greeting: "The End opens before you, a vast black void in the distance. The stone beneath your feet is yellowish and hard, and the air tingles.",
-        src: image_src_end,
-        pixels: {height: 1140, width: 2460}
+    // Background data
+    const image_src_desert = path + "/images/gamify/desert.png"; // be sure to include the path
+    const image_data_desert = {
+        name: 'desert',
+        greeting: "Welcome to the desert!  It is hot and dry here, but there are many adventures to be had!",
+        src: image_src_desert,
+        pixels: {height: 580, width: 1038}
     };
 
-    const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
+
+    // Player data for Chillguy
+    const sprite_src_chillguy = path + "/images/gamify/chillguy.png"; // be sure to include the path
     const CHILLGUY_SCALE_FACTOR = 5;
     const sprite_data_chillguy = {
         id: 'Chill Guy',
-        greeting: "Hi, I am Chill Guy, the desert wanderer. I am looking for wisdom and adventure!",
+        greeting: "Hi I am Chill Guy, the desert wanderer. I am looking for wisdom and adventure!",
         src: sprite_src_chillguy,
         SCALE_FACTOR: CHILLGUY_SCALE_FACTOR,
         STEP_FACTOR: 1000,
         ANIMATION_RATE: 50,
-        INIT_POSITION: { x: width/16, y: height/2 },
+        INIT_POSITION: { x: 0, y: height - (height/CHILLGUY_SCALE_FACTOR) }, 
         pixels: {height: 384, width: 512},
         orientation: {rows: 3, columns: 4 },
         down: {row: 0, start: 0, columns: 3 },
-        downRight: {row: 1, start: 0, columns: 3, rotate: Math.PI/8 },
-        downLeft: {row: 2, start: 0, columns: 3, rotate: -Math.PI/8 },
+        downRight: {row: 1, start: 0, columns: 3, rotate: Math.PI/16 },
+        downLeft: {row: 2, start: 0, columns: 3, rotate: -Math.PI/16 },
         left: {row: 2, start: 0, columns: 3 },
         right: {row: 1, start: 0, columns: 3 },
         up: {row: 3, start: 0, columns: 3 },
-        upLeft: {row: 2, start: 0, columns: 3, rotate: Math.PI/8 },
-        upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/8 },
+        upLeft: {row: 2, start: 0, columns: 3, rotate: Math.PI/16 },
+        upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/16 },
         hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
-        keypress: { up: 87, left: 65, down: 83, right: 68 }
+        keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
     };
 
-    const sprite_src_tux = path + "/images/gamify/tux.png";
-    const sprite_greet_tux = "Hi, I am Tux, the Linux mascot. I am very happy to spend some Linux shell time with you!";
+
+    // NPC data for Tux 
+    const sprite_src_tux = path + "/images/gamify/tux.png"; // be sure to include the path
+    const sprite_greet_tux = "Hi I am Tux, the Linux mascot.  I am very happy to spend some linux shell time with you!";
     const sprite_data_tux = {
         id: 'Tux',
         greeting: sprite_greet_tux,
         src: sprite_src_tux,
-        SCALE_FACTOR: 8,
+        SCALE_FACTOR: 8,  // Adjust this based on your scaling needs
         ANIMATION_RATE: 50,
         pixels: {height: 256, width: 352},
-        INIT_POSITION: { x: (width / 2), y: (height / 2) },
+        INIT_POSITION: { x: (width / 2), y: (height / 2)},
         orientation: {rows: 8, columns: 11 },
-        down: {row: 5, start: 0, columns: 3 },
+        down: {row: 5, start: 0, columns: 3 },  // This is the stationary npc, down is default 
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
+        // Linux command quiz
         quiz: { 
           title: "Linux Command Quiz",
           questions: [
@@ -76,18 +87,49 @@ class GameLevelEnd {
           alert(sprite_greet_tux);
         },
         interact: function() {
-          let quiz = new Quiz();
+          let quiz = new Quiz(); // Create a new Quiz instance
           quiz.initialize();
           quiz.openPanel(sprite_data_tux);
-        }
-    };
+          }
+    
+      };
 
+      // Rest of your NPC definitions...
+
+    // List of objects defnitions for this level
     this.classes = [
-      { class: GamEnvBackground, data: image_data_end },
+      { class: GamEnvBackground, data: image_data_desert },
       { class: Player, data: sprite_data_chillguy },
-      { class: Npc, data: sprite_data_tux }
+      { class: Npc, data: sprite_data_tux },
+      // Rest of your class definitions...
     ];
+  }
+
+  // Add this method to ensure compatibility with GameLevel.js
+  initialize() {
+    console.log("GameLevelDesert initialized");
+    // Any specific initialization for this level
+    this.continue = true;
+  }
+  
+  // Add this method for level updates
+  update() {
+    // Any level-specific update logic
+    // This can be empty if no specific logic is needed
+  }
+  
+  // Add this method for proper cleanup
+  destroy() {
+    console.log("GameLevelDesert destroy called");
+    
+    // Clean up any level-specific resources
+    // Game objects themselves are cleaned up by GameLevel.destroy()
+    
+    // If you have any event listeners specific to this level, remove them here
+    
+    // If you've created any DOM elements directly (not through GameObject classes),
+    // clean them up here
   }
 }
 
-export default GameLevelEnd;
+export default GameLevelDesert;

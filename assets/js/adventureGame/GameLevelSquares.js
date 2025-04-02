@@ -3,12 +3,16 @@ import Background from './Background.js';
 import PlayerOne from './PlayerOne.js';
 import PlayerTwo from './PlayerTwo.js';
 
-// Minimal Definition
+// Complete implementation with all required methods
 class GameLevelSquares {
   constructor(gameEnv) {
     console.log('GameLevelSquares initialized');
     
-    // Values dependent on gameEnv.create()
+    // Store reference to game environment
+    this.gameEnv = gameEnv;
+    this.continue = true;
+    
+    // Values dependent on gameEnv
     let width = gameEnv.innerWidth;
     let height = gameEnv.innerHeight;
     
@@ -54,15 +58,45 @@ class GameLevelSquares {
       { class: PlayerOne, data: player_one_data },
       { class: PlayerTwo, data: player_two_data }
     ];
+    
+    // Track instances of created objects for easier cleanup
+    this.instances = [];
   }
 
+  // Implementation of required methods for compatibility
+  initialize() {
+    console.log("GameLevelSquares initialize called");
+    
+    // Any additional initialization needed
+    // This is called by GameLevel.create() after all game objects are created
+    
+    // Store references to the instances for later access
+    if (this.gameEnv && this.gameEnv.gameObjects) {
+      this.instances = [...this.gameEnv.gameObjects];
+    }
+  }
+  
+  update() {
+    // Level-specific update logic
+    // For example, you could implement collision detection between PlayerOne and PlayerTwo
+    // or add win/lose conditions
+    
+    // This method is called by GameLevel.update() in the game loop
+  }
+  
   destroy() {
-    // Remove all objects created by this level
-    this.classes.forEach(obj => {
-        if (obj.instance && obj.instance.destroy) {
-            obj.instance.destroy(); // Call destroy method if it exists
-        }
-    });
+    console.log("GameLevelSquares destroy called");
+    
+    // Clean up any level-specific resources
+    // The game objects themselves are cleaned up by GameLevel.destroy()
+    
+    // If you've created any DOM elements directly (not through GameObject classes),
+    // clean them up here
+    
+    // Remove any event listeners specific to this level
+    
+    // Clear instances array
+    this.instances = [];
   }
 }
 

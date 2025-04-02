@@ -6,7 +6,10 @@ import Projectile from './Projectile.js';
 
 class GameLevelStarWars {
   constructor(gameEnv) {
+    // Store reference to game environment
     this.gameEnv = gameEnv;
+    this.continue = true;
+    
     let width = gameEnv.innerWidth;
     let height = gameEnv.innerHeight;
     let path = gameEnv.path;
@@ -24,12 +27,7 @@ class GameLevelStarWars {
       new Background({ src: path + "/images/gamify/stars.png" }, gameEnv)
     ];
     this.currentBackgroundIndex = 0;
-    this.bindSwitchBackgroundKey();
-    this.createSwitchBackgroundButton();
-
-    // Add initial background to game objects
-    this.gameEnv.gameObjects.push(this.backgrounds[this.currentBackgroundIndex]);
-
+    
     // Player data for snowspeeder
     const sprite_src_snowspeeder = path + "/images/gamify/snowspeeder_sprite2.png";
     const SNOWSPEEDER_SCALE_FACTOR = 6;
@@ -114,33 +112,75 @@ class GameLevelStarWars {
       { class: Projectile, data: sprite_data_laser1 },
       { class: Projectile, data: sprite_data_laser2 }
     ];
+    
+    // Store button reference for cleanup
+    this.switchButton = null;
+    this.keyListener = null;
+  }
+
+  // Implementation of required methods for compatibility
+  initialize() {
+    console.log("GameLevelStarWars initialized");
+    this.continue = true;
+    
+    // Add initial background to game objects
+    this.gameEnv.gameObjects.push(this.backgrounds[this.currentBackgroundIndex]);
+    
+    // Initialize event listeners
+    this.bindSwitchBackgroundKey();
+    this.createSwitchBackgroundButton();
+  }
+  
+  update() {
+    // Level-specific update logic - manage projectiles, check for hits, etc.
+  }
+  
+  destroy() {
+    console.log("GameLevelStarWars destroy called");
+    
+    // Remove the switch background button if it exists
+    if (this.switchButton && this.switchButton.parentNode) {
+      this.switchButton.parentNode.removeChild(this.switchButton);
+    }
+    
+    // Remove event listeners
+    if (this.keyListener) {
+      window.removeEventListener("keydown", this.keyListener);
+    }
+    
+    // Clean up backgrounds
+    for (const background of this.backgrounds) {
+      if (background && background.destroy) {
+        background.destroy();
+      }
+    }
   }
 
   bindSwitchBackgroundKey() {
-    window.addEventListener("keydown", (event) => {
+    this.keyListener = (event) => {
       if (event.code === "KeyK") {
         this.switchBackground();
       }
-    });
+    };
+    window.addEventListener("keydown", this.keyListener);
   }
 
-  
   createSwitchBackgroundButton() {
     const gameContainer = document.getElementById("gameContainer");
     if (!gameContainer) {
       console.error("Game container not found");
       return;
     }
-    const switchButton = document.createElement("button");
-    switchButton.textContent = "Switch Background";
-    switchButton.style.position = "absolute"; 
-    switchButton.style.bottom = "10px"; 
-    switchButton.style.right = "10px"; 
-    switchButton.style.zIndex = "1000";
-    switchButton.addEventListener("click", () => {
+    this.switchButton = document.createElement("button");
+    this.switchButton.textContent = "Switch Background";
+    this.switchButton.style.position = "absolute"; 
+    this.switchButton.style.bottom = "10px"; 
+    this.switchButton.style.right = "10px"; 
+    this.switchButton.style.zIndex = "1000";
+    this.switchButton.addEventListener("click", () => {
       this.switchBackground();
     });
-    gameContainer.appendChild(switchButton);
+    gameContainer.appendChild(this.switchButton);
   }
 
   switchBackground() {
@@ -152,3 +192,4 @@ class GameLevelStarWars {
 }
 
 export default GameLevelStarWars;
+// Note: Ensure that the paths to the images and other assets are correct.
