@@ -1,4 +1,3 @@
-// GameControl.js 
 import GameLevel from "./GameLevel.js";
 
 class GameControl {
@@ -93,7 +92,13 @@ class GameControl {
             // Switch levels when screen is black
             const GameLevelClass = this.levelClasses[this.currentLevelIndex];
             this.currentLevel = new GameLevelClass(this.game); // Instantiate the correct level class
-            this.currentLevel.create(); // Call the create method if necessary
+
+            // Ensure `create` method exists before calling
+            if (this.currentLevel && typeof this.currentLevel.create === 'function') {
+                this.currentLevel.create(); // Call the create method if necessary
+            } else {
+                console.error('create method not found on the current level!');
+            }
 
             // Fade out the overlay
             fadeOverlay.style.opacity = '0';
