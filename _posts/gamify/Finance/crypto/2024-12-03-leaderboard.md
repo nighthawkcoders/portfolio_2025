@@ -194,23 +194,3 @@ title: Leaderboard
 
   document.addEventListener("DOMContentLoaded", fetchLeaderboard);
 </script>
-
-      const topUsersTable = document.querySelector("#top-users-table");
-      topUsersTable.innerHTML = "";
-
-      data.forEach((user, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td class="rank">${index + 1}</td>
-          <td class="balance">$${Number(user.balance).toFixed(2)}</td>
-          <td class="name">${user.name}</td>
-        `;
-        topUsersTable.appendChild(row);
-      });
-    } catch (error) {
-      console.error("Error fetching leaderboard data:", error);
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", fetchLeaderboard);
-</script>

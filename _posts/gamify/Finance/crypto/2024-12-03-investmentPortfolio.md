@@ -243,6 +243,25 @@ permalink: /crypto/portfolio
         <div id="search-results"></div>
     </div>
 </div>
+<!-- Comparison Section in Modal -->
+<div class="modal" id="compare-modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeCompareModal()">&times;</span>
+        <h2>Crypto Comparison</h2>
+        <div class="compare-inputs">
+            <input type="text" id="crypto-compare-1" placeholder="Enter first crypto symbol">
+            <input type="text" id="crypto-compare-2" placeholder="Enter second crypto symbol">
+            <input type="number" id="compare-days" placeholder="Number of days">
+            <button class="btn btn-buy" onclick="compareCryptos()">Compare</button>
+        </div>
+        <div id="compare-result"></div>
+        <button class="btn btn-close" onclick="closeCompareModal()">Close</button>
+    </div>
+</div>
+<!-- Button to trigger comparison modal -->
+<div class="container">
+    <button class="btn btn-buy" onclick="openCompareModal()">Compare Cryptos</button>
+</div>
 
 <script type="module">
     import { javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
@@ -304,6 +323,35 @@ permalink: /crypto/portfolio
         document.getElementById('user-balance').innerText = formattedBalance;
         localStorage.setItem("userBalance", formattedBalance);
     }
+    window.openCompareModal = function () {
+        document.getElementById('compare-modal').style.display = 'flex';
+    };
+    window.closeCompareModal = function () {
+        document.getElementById('compare-modal').style.display = 'none';
+        document.getElementById('compare-result').innerHTML = "";
+    };
+    window.compareCryptos = async function () {
+        const cryptoId1 = document.getElementById('crypto-compare-1').value.trim();
+        const cryptoId2 = document.getElementById('crypto-compare-2').value.trim();
+        const days = document.getElementById('compare-days').value;
+        if (!cryptoId1 || !cryptoId2 || !days) {
+            alert("Please fill all fields.");
+            return;
+        }
+        try {
+            const response = await fetch(`${javaURI}/api/crypto/compare?cryptoId1=${encodeURIComponent(cryptoId1)}&cryptoId2=${encodeURIComponent(cryptoId2)}&days=${days}`, fetchOptions);
+            if (!response.ok) throw new Error("Failed to fetch comparison data.");
+            const data = await response.json();
+            const resultDiv = document.getElementById('compare-result');
+            resultDiv.innerHTML = `
+                <p><strong>${data.cryptoId1}:</strong> ${data.cryptoId1ChangePercent.toFixed(2)}%</p>
+                <p><strong>${data.cryptoId2}:</strong> ${data.cryptoId2ChangePercent.toFixed(2)}%</p>
+            `;
+        } catch (error) {
+            console.error("Error comparing cryptos:", error);
+            alert("Error fetching comparison data.");
+        }
+    };
 
     async function fetchUserBalance() {
         if (!userEmail) {

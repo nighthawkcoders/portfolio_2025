@@ -282,7 +282,31 @@ title: Stocks Home
         width: 100% !important;
         height: 100% !important;
     }
-
+    .crypto-holdings {
+    background-color: #121212;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+    .crypto-holdings table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+    .crypto-holdings th, .crypto-holdings td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #444;
+        word-wrap: break-word;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .crypto-holdings th {
+        background-color: #222;
+        font-weight: bold;
+    }
     </style>
 </head>
 <body>
@@ -320,7 +344,7 @@ title: Stocks Home
             <div id="output" style="color: red; padding-top: 10px;"></div>
         </div>
         <!-- Sidebar -->
-        <!-- Sidebar -->
+<!-- Sidebar -->
 <div class="sidebar">
     <div class="your-stocks">
         <h3>Your Stocks</h3>
@@ -331,17 +355,39 @@ title: Stocks Home
             </tr>
         </table>
     </div>
-<div class="crypto-history">
-    <h3>Your Crypto Transaction History</h3>
-    <table id="cryptoHistoryTable">
-        <tr>
-            <th>Type</th>
-            <th>Crypto Amount</th>
-            <th>Dollar Value</th>
-            <th>Timestamp</th>
-        </tr>
-    </table>
-    <button class="view-full-history-btn" onclick="openHistoryModal()">View Full History</button>
+    
+    <!-- Add the Crypto Holdings section -->
+    <div class="crypto-holdings">
+        <h3>Your Crypto Holdings</h3>
+        <table id="cryptoHoldingsTable">
+            <tr>
+                <th>Crypto</th>
+                <th>Amount</th>
+            </tr>
+        </table>
+    </div>
+    
+    <!-- Move this to a modal only -->
+    <div class="crypto-history">
+        <h3>Recent Transactions</h3>
+        <button class="view-full-history-btn" onclick="openHistoryModal()">View Full History</button>
+    </div>
+</div>
+
+<!-- Modal for Full History -->
+<div id="historyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeHistoryModal()">&times;</span>
+        <h3>Full Crypto Transaction History</h3>
+        <table id="fullCryptoHistoryTable">
+            <tr>
+                <th>Type</th>
+                <th>Crypto Amount</th>
+                <th>Dollar Value</th>
+                <th>Timestamp</th>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <!-- Modal for Full History -->
@@ -613,22 +659,20 @@ async function updateCryptoHistoryTable() {
         const transactionHistory = cryptoHistoryString.split("\n").filter(entry => entry.trim() !== "");
         console.log("Parsed Transaction History:", transactionHistory);
 
-        const table = document.getElementById("cryptoHistoryTable");
         const fullTable = document.getElementById("fullCryptoHistoryTable");
-        if (!table || !fullTable) {
-            console.error("Table elements not found.");
+        if (!fullTable) {
+            console.error("Full history table element not found.");
             return;
         }
 
         // Clear existing table rows (except header)
-        table.innerHTML = `
+        fullTable.innerHTML = `
             <tr>
                 <th>Type</th>
                 <th>Crypto Amount</th>
                 <th>Dollar Value</th>
                 <th>Timestamp</th>
             </tr>`;
-        fullTable.innerHTML = table.innerHTML; // Clone structure for modal
 
         // 🟢 **Balance Tracking Fix**
         let runningBalance = 100000; // ✅ Start at $100,000
@@ -639,8 +683,7 @@ async function updateCryptoHistoryTable() {
             const rowData = parseTransaction(transaction);
             if (rowData) {
                 const row = createTransactionRow(rowData);
-                table.appendChild(row);
-                fullTable.appendChild(row.cloneNode(true));
+                fullTable.appendChild(row);
 
                 // 🟢 **Apply transaction to running balance**
                 const transactionAmount = parseFloat(rowData.value.replace("$", ""));
