@@ -2,7 +2,6 @@ import GamEnvBackground from './GameEnvBackground.js';
 import Player from './Player.js';
 import Npc from './Npc.js';
 import Quiz from './Quiz.js';
-import BackgroundParallax from './BackgroundParallax.js';
 import GameControl from './GameControl.js';
 
 class GameLevelEnd {
@@ -85,7 +84,6 @@ class GameLevelEnd {
 
     this.classes = [
       { class: GamEnvBackground, data: image_data_end },
-            { class: BackgroundParallax, data: {src:  path + "/images/gamify/stars2.png", zIndex: 2 } },
       { class: Player, data: sprite_data_chillguy },
       { class: Npc, data: sprite_data_tux }
     ];
