@@ -33,7 +33,11 @@ class GameControl {
     transitionToLevel() {
         // Cleanup previous level
         if (this.currentLevel) {
-            this.currentLevel.destroy(); // Ensure all objects from the previous level are removed
+            if (this.currentLevel.destroy && typeof this.currentLevel.destroy === 'function') {
+                this.currentLevel.destroy(); // Ensure all objects from the previous level are removed
+            } else {
+                console.warn('No destroy method found for current level.');
+            }
         }
 
         const fadeOverlay = document.createElement('div');
@@ -92,12 +96,12 @@ class GameControl {
             // Switch levels when screen is black
             const GameLevelClass = this.levelClasses[this.currentLevelIndex];
             this.currentLevel = new GameLevelClass(this.game); // Instantiate the correct level class
-
-            // Ensure `create` method exists before calling
-            if (this.currentLevel && typeof this.currentLevel.create === 'function') {
+            
+            // Check if 'create' method exists before calling
+            if (this.currentLevel.create && typeof this.currentLevel.create === 'function') {
                 this.currentLevel.create(); // Call the create method if necessary
             } else {
-                console.error('create method not found on the current level!');
+                console.warn('create method not found or not needed for this level.');
             }
 
             // Fade out the overlay
@@ -147,36 +151,28 @@ class GameControl {
      */
     handleLevelEnd() {
         // Neon-styled alerts
-        const alertStyle = `
-            background-color: #0a0a1a;
-            color: #00ffff;
-            border: 2px solid #ff00ff;
-            font-family: 'Orbitron', sans-serif;
-            text-shadow: 0 0 10px #00ffff;
-            padding: 20px;
-            text-align: center;
-        `;
+        const alertStyle = `background-color: #0a0a1a; color: #00ffff; border: 2px solid #ff00ff; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 10px #00ffff; padding: 20px; text-align: center;`;
 
         if (this.currentLevelIndex < this.levelClasses.length - 1) {
             const alertDiv = document.createElement('div');
             alertDiv.style.cssText = alertStyle;
-            alertDiv.innerHTML = `
-                <h2>LEVEL COMPLETE</h2>
-                <p>Prepare for the next phase...</p>
-            `;
+            alertDiv.innerHTML = `<h2>LEVEL COMPLETE</h2><p>Prepare for the next phase...</p>`;
             document.body.appendChild(alertDiv);
             setTimeout(() => document.body.removeChild(alertDiv), 2000);
         } else {
             const alertDiv = document.createElement('div');
             alertDiv.style.cssText = alertStyle;
-            alertDiv.innerHTML = `
-                <h2>LEVEL WON. VICTORY</h2>
-                <p>Level conquered. Game complete.</p>
-            `;
+            alertDiv.innerHTML = `<h2>LEVEL WON. VICTORY</h2><p>Level conquered. Game complete.</p>`;
             document.body.appendChild(alertDiv);
         }
 
-        this.currentLevel.destroy();
+        // Handle destroy method if exists
+        if (this.currentLevel && this.currentLevel.destroy && typeof this.currentLevel.destroy === 'function') {
+            this.currentLevel.destroy();
+        } else {
+            console.warn('No destroy method found for current level.');
+        }
+
         // Call the gameOver callback if it exists
         if (this.gameOver) {
             this.gameOver();
