@@ -33,9 +33,13 @@ class GameControl {
     transitionToLevel() {
         // Cleanup previous level
         if (this.currentLevel) {
-            this.currentLevel.destroy(); // Ensure all objects from the previous level are removed
+            if (this.currentLevel.destroy && typeof this.currentLevel.destroy === 'function') {
+                this.currentLevel.destroy(); // Ensure all objects from the previous level are removed
+            } else {
+                console.warn('No destroy method found for current level.');
+            }
         }
-
+    
         const fadeOverlay = document.createElement('div');
         Object.assign(fadeOverlay.style, {
             position: 'fixed',
@@ -54,32 +58,32 @@ class GameControl {
             color: 'white',
             fontSize: '18px',
         });
-
+    
         // Loading text
         const loadingText = document.createElement('div');
         loadingText.textContent = 'Loading...';
         fadeOverlay.appendChild(loadingText);
-
+    
         // Loading bar
         const loadingBar = document.createElement('div');
         loadingBar.style.marginTop = '10px';
         loadingBar.style.fontFamily = 'monospace'; // Monospace for consistent bar appearance
         loadingBar.textContent = ''; // Start with an empty bar
         fadeOverlay.appendChild(loadingBar);
-
+    
         document.body.appendChild(fadeOverlay);
-
+    
         // Fade in the overlay
         requestAnimationFrame(() => {
             fadeOverlay.style.opacity = '1';
         });
-
+    
         // Update the loading bar over 1000 milliseconds
         const totalDuration = 1000; // 1 second
         const interval = 100; // Update every 100ms
         const totalSteps = totalDuration / interval;
         let currentStep = 0;
-
+    
         const loadingInterval = setInterval(() => {
             currentStep++;
             loadingBar.textContent += '|'; // Add a bar segment
@@ -87,17 +91,35 @@ class GameControl {
                 clearInterval(loadingInterval); // Stop updating the bar
             }
         }, interval);
-
+    
         setTimeout(() => {
-            // Switch levels when screen is black
+            // Create a new GameLevel instance with proper game reference and level class
             const GameLevelClass = this.levelClasses[this.currentLevelIndex];
-            this.currentLevel = new GameLevelClass(this.game); // Instantiate the correct level class
-            this.currentLevel.create(); // Call the create method if necessary
-
+            
+            try {
+                // Initialize a standard GameLevel from GameLevel.js first
+                const gameLevel = new GameLevel(this);
+                this.currentLevel = gameLevel;
+                
+                // Then create the specific level through the GameLevel class
+                this.currentLevel.create(GameLevelClass);
+                
+                console.log(`Level ${this.currentLevelIndex} (${GameLevelClass.name}) created successfully`);
+            } catch (error) {
+                console.error("Error creating level:", error);
+                // Fallback to direct instantiation if GameLevel approach fails
+                try {
+                    this.currentLevel = new GameLevelClass(this.game);
+                    console.log(`Level ${this.currentLevelIndex} created via direct instantiation`);
+                } catch (fallbackError) {
+                    console.error("Fallback instantiation also failed:", fallbackError);
+                }
+            }
+    
             // Fade out the overlay
             fadeOverlay.style.opacity = '0';
             setTimeout(() => document.body.removeChild(fadeOverlay), 1000);
-
+    
             // Start game loop after transition
             this.gameLoop();
         }, totalDuration); // Wait for the loading duration
