@@ -1,4 +1,5 @@
 import GamEnvBackground from './GameEnvBackground.js';
+import BackgroundParallax from './BackgroundParallax.js';
 import Player from './Player.js';
 import Npc from './Npc.js';
 import Quiz from './Quiz.js';
@@ -10,14 +11,27 @@ class GameLevelEnd {
     
     let width = gameEnv.innerWidth;
     let height = gameEnv.innerHeight;
-    let path = gameEnv.path;
+    let path = gameEnv.path;///////
 
-    const image_src_end = path + "/images/gamify/endbackground.png";
+    // Parallax background configuration
+    const image_src_parallax = path + "/images/gamify/parallaxbg.png";
+    const image_data_parallax = {
+        name: 'parallax_background',
+        src: image_src_parallax,
+        pixels: {height: 1140, width: 2460},
+        position: { x: 0, y: 0 },
+        velocity: 0.2,  // Slower velocity for a more subtle effect
+        layer: 0,  // Explicitly set the layer to 0 (furthest back)
+        zIndex: -1 // Set z-index to ensure it stays behind
+    };
+
+    const image_src_end = path + "/images/gamify/TransparentEnd.png";
     const image_data_end = {
         name: 'end',
         greeting: "The End opens before you, a vast black void in the distance. The stone beneath your feet is yellowish and hard, and the air tingles.",
         src: image_src_end,
-        pixels: {height: 1140, width: 2460}
+        pixels: {height: 1140, width: 2460},
+        layer: 1  // Set layer to 1 to be in front of parallax
     };
 
     const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
@@ -45,13 +59,13 @@ class GameLevelEnd {
     };
 
     const sprite_src_tux = path + "/images/gamify/tux.png";
-    const sprite_greet_tux = "Hi, I am Tux, the Linux mascot. I am very happy to spend some Linux shell time with you!";
+    const sprite_greet_tux = "This is the end";
     const sprite_data_tux = {
         id: 'Tux',
         greeting: sprite_greet_tux,
         src: sprite_src_tux,
         SCALE_FACTOR: 8,
-        ANIMATION_RATE: 50,
+        ANIMATION_RATE: 1000000,
         pixels: {height: 256, width: 352},
         INIT_POSITION: { x: (width / 2), y: (height / 2) },
         orientation: {rows: 8, columns: 11 },
@@ -60,16 +74,7 @@ class GameLevelEnd {
         quiz: { 
           title: "Linux Command Quiz",
           questions: [
-            "Which command is used to list files in a directory?\n1. ls\n2. dir\n3. list\n4. show",
-            "Which command is used to change directories?\n1. cd\n2. chdir\n3. changedir\n4. changedirectory",
-            "Which command is used to create a new directory?\n1. mkdir\n2. newdir\n3. createdir\n4. makedir",
-            "Which command is used to remove a file?\n1. rm\n2. remove\n3. delete\n4. erase",
-            "Which command is used to remove a directory?\n1. rmdir\n2. removedir\n3. deletedir\n4. erasedir",
-            "Which command is used to copy files?\n1. cp\n2. copy\n3. duplicate\n4. xerox",
-            "Which command is used to move files?\n1. mv\n2. move\n3. transfer\n4. relocate",
-            "Which command is used to view a file?\n1. cat\n2. view\n3. show\n4. display",
-            "Which command is used to search for text in a file?\n1. grep\n2. search\n3. find\n4. locate",
-            "Which command is used to view the contents of a file?\n1. less\n2. more\n3. view\n4. cat" 
+            "It's eternity in here! It's eternity in here! It's eternity in here! It's eternity in here! It's eternity in here! It's eternity in here! It's eternity in here! It's eternity in here! \n1. huh\n2. what\n3. ...\n4. ok bye"
           ] 
         },
         reaction: function() {
@@ -83,7 +88,8 @@ class GameLevelEnd {
     };
 
     this.classes = [
-      { class: GamEnvBackground, data: image_data_end },
+      { class: BackgroundParallax, data: image_data_parallax },  // Add parallax background first
+      { class: GamEnvBackground, data: image_data_end },         // Then regular background
       { class: Player, data: sprite_data_chillguy },
       { class: Npc, data: sprite_data_tux }
     ];
