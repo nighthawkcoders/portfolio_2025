@@ -68,7 +68,9 @@ class Enemy extends Character {
         // Move player down by 100 pixels
         for (const gameObj of this.gameEnv.gameObjects) {
             if (gameObj instanceof Player) {
-                gameObj.y += 100;
+                // Ensure we're modifying the actual position
+                gameObj.position.y += 100;
+                console.log("Player moved down to:", gameObj.position.y); // Debug log
                 break;
             }
         }
