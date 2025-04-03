@@ -1,4 +1,5 @@
 import GamEnvBackground from './GameEnvBackground.js';
+import BackgroundParallax from './BackgroundParallax.js';
 import Player from './Player.js';
 import Npc from './Npc.js';
 import Quiz from './Quiz.js';
@@ -10,14 +11,27 @@ class GameLevelEnd {
     
     let width = gameEnv.innerWidth;
     let height = gameEnv.innerHeight;
-    let path = gameEnv.path;
+    let path = gameEnv.path;///////
 
-    const image_src_end = path + "/images/gamify/endbackground.png";
+    // Parallax background configuration
+    const image_src_parallax = path + "/images/gamify/parallaxbg.png";
+    const image_data_parallax = {
+        name: 'parallax_background',
+        src: image_src_parallax,
+        pixels: {height: 1140, width: 2460},
+        position: { x: 0, y: 0 },
+        velocity: 0.2,  // Slower velocity for a more subtle effect
+        layer: 0,  // Explicitly set the layer to 0 (furthest back)
+        zIndex: -1 // Set z-index to ensure it stays behind
+    };
+
+    const image_src_end = path + "/images/gamify/TransparentEnd.png";
     const image_data_end = {
         name: 'end',
         greeting: "The End opens before you, a vast black void in the distance. The stone beneath your feet is yellowish and hard, and the air tingles.",
         src: image_src_end,
-        pixels: {height: 1140, width: 2460}
+        pixels: {height: 1140, width: 2460},
+        layer: 1  // Set layer to 1 to be in front of parallax
     };
 
     const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
@@ -45,7 +59,7 @@ class GameLevelEnd {
     };
 
     const sprite_src_tux = path + "/images/gamify/tux.png";
-    const sprite_greet_tux = "Hi, I am Tux, the Linux mascot. I am very happy to spend some Linux shell time with you!";
+    const sprite_greet_tux = "This is the end";
     const sprite_data_tux = {
         id: 'Tux',
         greeting: sprite_greet_tux,
@@ -83,7 +97,8 @@ class GameLevelEnd {
     };
 
     this.classes = [
-      { class: GamEnvBackground, data: image_data_end },
+      { class: BackgroundParallax, data: image_data_parallax },  // Add parallax background first
+      { class: GamEnvBackground, data: image_data_end },         // Then regular background
       { class: Player, data: sprite_data_chillguy },
       { class: Npc, data: sprite_data_tux }
     ];
