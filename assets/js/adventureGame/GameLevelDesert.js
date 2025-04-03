@@ -99,10 +99,8 @@ class GameLevelDesert {
       hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
     };
 
-    // Add Octocat as an enemy
+    // Add Octocat as an Enemy
     this.classes.push({ class: Enemy, data: sprite_data_octocat });
-
-    // Add other NPCs and enemies here...
 
 
           // NPC Data for End Portal
@@ -342,7 +340,6 @@ class GameLevelDesert {
     this.classes.push({ class: Npc, data: sprite_data_robot });
     this.classes.push({ class: Npc, data: sprite_data_endportal });
     this.classes.push({ class: Npc, data: sprite_data_tux });
-    this.classes.push({ class: Npc, data: sprite_data_octocat });
     // Add other NPCs and enemies here...
 
 
