@@ -8,7 +8,7 @@ import GameLevelStarWars from './GameLevelStarWars.js';
 import GameLevelEnd from './GameLevelEnd.js';
 import GameLevelMeteorBlaster from './GameLevelMeteorBlaster.js';
 import GameLevelMinesweeper from './GameLevelMinesweeper.js';
-import Enemy from './enemy.js'; 
+import Enemy from './Enemy.js'; 
 
 class GameLevelDesert {
   constructor(gameEnv) {
