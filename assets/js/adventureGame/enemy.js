@@ -8,6 +8,9 @@ class Enemy extends Character {
         this.speed = 3; // Default speed
         this.immune = 0; // Immunity tracker
         this.id = data?.id || 'enemy'; // Ensure the enemy has an ID
+        this.lives = 2; // Initialize lives counter
+        this.collisionCooldown = false; // Add collision cooldown flag
+        this.cooldownDuration = 1000; // 1 second cooldown
         console.log("Enemy created:", this.id); // Debug log
     }
 
@@ -25,6 +28,8 @@ class Enemy extends Character {
 
     // Checks if the Enemy collides with the Player.
     collisionChecks() {
+        if (this.collisionCooldown) return false; // Skip collision check if in cooldown
+        
         for (const gameObj of this.gameEnv.gameObjects) {
             if (gameObj instanceof Player) {
                 if (this.isCollision(gameObj)) {
@@ -49,18 +54,40 @@ class Enemy extends Character {
     handleCollisionEvent() {
         console.log("Player collided with the Enemy:", this.id);
         
-        if (this.playerDestroyed) return; // Skip if already handled
+        if (this.playerDestroyed || this.collisionCooldown) return; // Skip if already handled or in cooldown
         
-        this.playerDestroyed = true; // Mark the player as "destroyed"
-        this.flashRedScreen(); // Flash the screen red
-        
+        // Set collision cooldown
+        this.collisionCooldown = true;
         setTimeout(() => {
-            // Make sure we're still active before ending the game
-            if (this.playerDestroyed && this.gameEnv && this.gameEnv.gameControl) {
-                this.gameEnv.gameControl.currentLevel.continue = false; // End the game loop
-                alert("Game Over! You collided with Octocat!");
+            this.collisionCooldown = false;
+        }, this.cooldownDuration);
+        
+        // Decrease lives counter
+        this.lives--;
+        
+        // Move player down by 100 pixels
+        for (const gameObj of this.gameEnv.gameObjects) {
+            if (gameObj instanceof Player) {
+                // Ensure we're modifying the actual position
+                gameObj.position.y += 100;
+                console.log("Player moved down to:", gameObj.position.y); // Debug log
+                break;
             }
-        }, 500); // Delay to allow the red flash to be visible
+        }
+        
+        // Check if lives are depleted
+        if (this.lives <= 0) {
+            this.playerDestroyed = true; // Mark the player as "destroyed"
+            this.flashRedScreen(); // Flash the screen red
+            
+            setTimeout(() => {
+                // Make sure we're still active before ending the game
+                if (this.playerDestroyed && this.gameEnv && this.gameEnv.gameControl) {
+                    this.gameEnv.gameControl.currentLevel.continue = false; // End the game loop
+                    alert("Game Over! You collided with Octocat!");
+                }
+            }, 500); // Delay to allow the red flash to be visible
+        }
     }
 
     // Flashes the screen red
@@ -72,7 +99,7 @@ class Enemy extends Character {
             left: '0',
             width: '100%',
             height: '100%',
-            backgroundColor: 'red',
+            backgroundColor: 'white',
             opacity: '0.8',
             zIndex: '9999',
             pointerEvents: 'none',
