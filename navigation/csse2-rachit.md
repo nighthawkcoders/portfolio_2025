@@ -23,7 +23,7 @@ description: Hello world
 
 <!-- Ender Dragon Clickable Image -->
 <div class="dragon-container">
-  <img id="ender-dragon" src="/images/gamify/ender_dragon.png" alt="Ender Dragon">
+  <img id="ender-dragon" src="/portfolio_2025/CSSE/assets/ender_dragon.png" alt="Ender Dragon">
 </div>
 
 <!-- Game Info Section -->
@@ -49,7 +49,7 @@ description: Hello world
 <style>
   /* Background */
   body {
-    background: url('/images/gamify/ender_background.png') no-repeat center center fixed;
+    background: url('/portfolio_2025/CSSE/assets/ender_background.png') no-repeat center center fixed;
     background-size: cover;
     font-family: 'Arial', sans-serif;
     color: #fff;
@@ -202,7 +202,7 @@ description: Hello world
 
   // Ender Dragon Click Effect
   document.getElementById("ender-dragon").addEventListener("click", function() {
-    this.src = "/images/gamify/ender_egg.png"; // Change image to Ender Egg
+    this.src = "/portfolio_2025/CSSE/assets/ender_egg.png"; // Change image to Ender Egg
     this.style.transform = "scale(0.8) rotate(360deg)";
     setTimeout(() => {
       this.style.transform = "scale(0.8)";
