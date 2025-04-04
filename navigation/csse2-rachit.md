@@ -23,7 +23,7 @@ description: Hello world
 
 <!-- Ender Dragon Clickable Image -->
 <div class="dragon-container">
-  <img id="ender-dragon" src="/CSSE/assets/ender_dragon.png" alt="Ender Dragon">
+  <img id="ender-dragon" src="{{ site.baseurl }}/assets/ender_dragon.png" alt="Ender Dragon">
 </div>
 
 <!-- Game Info Section -->
@@ -49,7 +49,7 @@ description: Hello world
 <style>
   /* Background */
   body {
-    background: url('/CSSE/assets/ender_background.png') no-repeat center center fixed;
+    background: url('{{ site.baseurl }}/assets/ender_background.png') no-repeat center center fixed;
     background-size: cover;
     font-family: 'Arial', sans-serif;
     color: #fff;
