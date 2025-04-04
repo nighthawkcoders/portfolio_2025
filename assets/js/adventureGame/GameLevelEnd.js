@@ -59,7 +59,7 @@ class GameLevelEnd {
     };
 
     const sprite_src_tux = path + "/images/gamify/tux.png";
-    const sprite_greet_tux = "This is the end";
+    const sprite_greet_tux = "THIS IS HOW IT ENDS - Tejo :P";
     const sprite_data_tux = {
         id: 'Tux',
         greeting: sprite_greet_tux,
