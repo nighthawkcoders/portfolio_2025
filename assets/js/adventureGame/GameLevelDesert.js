@@ -44,7 +44,7 @@ class GameLevelDesert {
       greeting: "Hi I am Chill Guy, the desert wanderer. I am looking for wisdom and adventure!",
       src: sprite_src_chillguy,
       SCALE_FACTOR: CHILLGUY_SCALE_FACTOR,
-      STEP_FACTOR: 1000,
+      STEP_FACTOR: 500,
       ANIMATION_RATE: 50,
       INIT_POSITION: { x: 0, y: height - (height / CHILLGUY_SCALE_FACTOR) },
       pixels: { height: 384, width: 512 },
