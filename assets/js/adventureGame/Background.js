@@ -11,10 +11,13 @@ export class Background extends GameObject {
     constructor(data = null, gameEnv = null) {
         super(gameEnv);
 
-        if (!data.src) {
+        if (!data || !data.src) {
+            console.error('Background requires a src property in data', data);
             throw new Error('Background requires a src property in data');
         }
 
+        console.log("Background constructor called with data:", data);
+        
         this.data = data;
         // Set the properties of the background
         this.image = new Image();
@@ -23,6 +26,8 @@ export class Background extends GameObject {
 
         // Finish initializing the background after the image loads 
         this.image.onload = () => {
+            console.log("Background image loaded:", data.src);
+            
             // Width and height come from the image
             this.width = this.image.width;
             this.height = this.image.height;
@@ -40,6 +45,17 @@ export class Background extends GameObject {
             // Append the canvas to the DOM
             document.getElementById("gameContainer").appendChild(this.canvas);
             this.isInitialized = true; // Mark as initialized
+            
+            console.log("Background initialized:", {
+                id: this.canvas.id,
+                width: this.canvas.width,
+                height: this.canvas.height,
+                zIndex: this.canvas.style.zIndex
+            });
+        };
+        
+        this.image.onerror = (error) => {
+            console.error("Error loading background image:", data.src, error);
         };
     }
 
@@ -49,6 +65,11 @@ export class Background extends GameObject {
     alignCanvas() {
         // align the canvas to the gameCanvas, Layered
         const gameCanvas = document.getElementById("gameCanvas");
+        if (!gameCanvas) {
+            console.error("Game canvas not found");
+            return;
+        }
+        
         this.canvas.width = gameCanvas.width;
         this.canvas.height = gameCanvas.height;
         this.canvas.style.left = gameCanvas.style.left;
@@ -75,15 +96,38 @@ export class Background extends GameObject {
         const canvasWidth = this.canvas.width;
         const canvasHeight = this.canvas.height;
         this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-        this.ctx.drawImage(this.image, 0, 0, canvasWidth, canvasWidth);
+        
+        // Draw the image scaled to fit the canvas
+        this.ctx.drawImage(this.image, 0, 0, canvasWidth, canvasHeight);
     }
     
     /**
      * Resize method is called by resize listner on all GameObjects
      */
     resize() {
+        console.log("Background resize called");
         this.alignCanvas(); // Align the canvas to the gameCanvas
         this.draw(); // Redraw the canvas after resizing
+    }
+    
+    /**
+     * Destroy method to clean up resources
+     */
+    destroy() {
+        console.log("Background destroy called");
+        
+        // Check if canvas exists before trying to remove it
+        if (this.canvas && this.canvas.parentNode) {
+            this.canvas.parentNode.removeChild(this.canvas);
+        }
+        
+        // Remove from gameObjects array if not already removed
+        if (this.gameEnv && this.gameEnv.gameObjects) {
+            const index = this.gameEnv.gameObjects.indexOf(this);
+            if (index !== -1) {
+                this.gameEnv.gameObjects.splice(index, 1);
+            }
+        }
     }
 }
 
