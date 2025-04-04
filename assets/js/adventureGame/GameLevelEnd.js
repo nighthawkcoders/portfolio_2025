@@ -22,7 +22,7 @@ class GameLevelEnd {
         position: { x: 0, y: 0 },
         velocity: 0.2,  // Slower velocity for a more subtle effect
         layer: 0,  // Explicitly set the layer to 0 (furthest back)
-        zIndex: 0 // Set z-index to ensure it stays behind
+        zIndex: 0  // Background layer
     };
 
     const image_src_end = path + "/images/gamify/TransparentEnd.png";
@@ -31,7 +31,8 @@ class GameLevelEnd {
         greeting: "The End opens before you, a vast black void in the distance. The stone beneath your feet is yellowish and hard, and the air tingles.",
         src: image_src_end,
         pixels: {height: 1140, width: 2460},
-        layer: 1  // Set layer to 1 to be in front of parallax
+        layer: 1,  // Set layer to 1 to be in front of parallax
+        zIndex: 1  // Front layer
     };
 
     const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
