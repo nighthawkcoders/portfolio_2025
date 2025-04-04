@@ -132,7 +132,7 @@ show_reading_time: false
          pythonDatabase();
     };
 </script>
-
+ 
 <script type="module">
   import { javaURI, pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
 window.signup = function(){

@@ -6,8 +6,71 @@ permalink: /gamify
 menu: nav/home.html
 ---
 
+<script type="module">
+    import { login, pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+  
+    async function verifyAuthentication() {
+      const URL = `${javaURI}/api/person/get`;
+      try {
+        const response = await fetch(URL, fetchOptions);
+        if (!response.ok) {
+          throw new Error(`Spring server response: ${response.status}`);
+        }
+        return true; // Successful authentication
+      } catch (error) {
+        return false; // Authentication failed
+      }
+    }
+  
+    window.onload = async function() {
+      const isAuthenticated = await verifyAuthentication();
+      const loadingElement = document.getElementById('loadingElement');
+      
+      if (isAuthenticated) {
+        loadingElement.style.display = "none";  // Hide the loading screen
+      } else {
+        // Create a blurred background overlay
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Semi-transparent black
+        overlay.style.backdropFilter = 'blur(10px)'; // Blur effect
+        overlay.style.zIndex = '999'; // Ensure it appears above other elements
+        document.body.appendChild(overlay);
+
+        // Create the "Please login" message box
+        const message = document.createElement('div');
+        message.style.position = 'absolute';
+        message.style.top = '50%';
+        message.style.left = '50%';
+        message.style.transform = 'translate(-50%, -50%)';
+        message.style.backgroundColor = 'black'; // Solid black background
+        message.style.padding = '20px';
+        message.style.fontSize = '20px';
+        message.style.color = '#fff'; // White text color
+        message.style.borderRadius = '10px';
+        message.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'; // Optional shadow for better visibility
+        message.style.zIndex = '1000'; // Ensure it appears above the overlay
+        message.innerHTML = 'Please login';
+        
+        // Add the message on top of the overlay
+        document.body.appendChild(message);
+  
+        // Wait for 2 seconds before redirecting
+        setTimeout(() => {
+          window.location.href = "{{site.baseurl}}/login";  // Redirect to login page
+        }, 2000);  // 2000ms = 2 seconds
+      }
+    }
+</script>
+
 <div class="toolkit-buttons">
-  <!-- First Row of Buttons -->
+  <div id="loadingElement" class="loading-container">
+      <div class="spinner"></div>
+  </div>  
     <a href="{{site.baseurl}}/stocks/home" class="toolkit-button" data-description="Experience real-time stock market simulation with virtual trading. Monitor popular stocks like Apple, Google, and Microsoft, manage your portfolio, and climb the leaderboard as you learn investment strategies in a risk-free environment." data-authors="Author: NITD+People">
     <img src="{{site.baseurl}}/images/toolkit-nav-buttons/stocks.png" alt="Simulation Home" />
     <span class="button-name">Stocks Home</span>

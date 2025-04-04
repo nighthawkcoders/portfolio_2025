@@ -145,17 +145,18 @@ title: Stocks Viewer
 <body>
 
   <!-- Navigation Bar -->
-  <nav class="navbar">
+<nav class="navbar">
     <div class="nav-buttons">
-      <a href="{{site.baseurl}}/stocks/home">Home</a>
-            <a href="{{site.baseurl}}/crypto/portfolio">Crypto</a>
-            <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
-            <a href="{{site.baseurl}}/crypto/mining">Mining</a>
-            <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
-            <a href="{{site.baseurl}}/stocks/game">Game</a>
-            <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
+        <a href="{{site.baseurl}}/stocks/home">Home</a>
+        <a href="{{site.baseurl}}/crypto/portfolio">Crypto</a>
+        <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
+        <a href="{{site.baseurl}}/crypto/mining">Mining</a>
+        <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
+        <a href="{{site.baseurl}}/crypto/leaderboard">Leaderboard</a>
+        <a href="{{site.baseurl}}/stocks/game">Game</a>
+        <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
     </div>
-  </nav>
+</nav>
 
   <!-- Stock Dashboard -->
   <div class="container">

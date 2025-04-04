@@ -1,0 +1,51 @@
+---
+layout: base
+---
+<nav class="bank-nav">
+  <div class="nav-container">
+    <a class="nav-link" href="{{ site.baseurl }}/gamify/bankanalytics">Analytics</a>
+    <a class="nav-link" href="{{ site.baseurl }}/leaderboard/overall-leaderboard">Leaderboard</a>
+    <a class="nav-link" href="{{ site.baseurl }}/gamify/loan">Loans</a>
+    <a class="nav-link" href="{{ site.baseurl }}/gamify/casinohomepage">Casino</a>
+    <a class="nav-link" href="{{ site.baseurl }}/stocks/home">Stocks</a>
+    <a class="nav-link" href="{{ site.baseurl }}/media">Media Bias Game</a>
+    <a class="nav-link" href="{{ site.baseurl }}/gamify/adventureGame">Adventure Game</a>
+    <a class="nav-link" href="{{ site.baseurl }}/crypto/mining">Crypto Mining</a>
+  </div>
+</nav>
+
+{{ content }}
+
+<style>
+  .bank-nav {
+    background-color: #1c1c1c;
+    padding: 0.75rem 0; /* Reduced vertical padding */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Reduced gap between items */
+    flex-wrap: wrap; /* Allows items to wrap if needed */
+  }
+  
+  .nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 15px; /* Reduced padding */
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-size: 14px; /* Reduced from 16px */
+    white-space: nowrap; /* Prevents text wrapping */
+  }
+  
+  .nav-link:hover {
+    background-color: #ff9800;
+    color: #000000;
+    transform: scale(1.05); /* Reduced scale effect */
+  }
+  </style>

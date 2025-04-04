@@ -24,3 +24,5 @@ header_pages:
   - navigation/blog.md
   - navigation/search.md
   - navigation/logintoolkit.md
+
+#use_tailwind: true
