@@ -34,7 +34,7 @@ class GameLevelEnd {
         position: { x: 0, y: 0 },
         velocity: 0.2,  // Slower velocity for a more subtle effect
         layer: 0,  // Explicitly set the layer to 0 (furthest back)
-        zIndex: 1  // Use positive z-index (1) for debug
+        zIndex: 1  // Use positive z-index but keep it low
     };
 
     const image_src_end = path + "/images/gamify/TransparentEnd.png";
@@ -50,7 +50,7 @@ class GameLevelEnd {
         src: image_src_end,
         pixels: {height: 1140, width: 2460},
         layer: 1,  // Set layer to 1 to be in front of parallax
-        zIndex: 2  // Higher z-index to appear above parallax
+        zIndex: 5  // Higher z-index to appear above parallax
     };
 
     const sprite_src_chillguy = path + "/images/gamify/chillguy.png";
@@ -75,7 +75,7 @@ class GameLevelEnd {
         upRight: {row: 1, start: 0, columns: 3, rotate: -Math.PI/8 },
         hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
         keypress: { up: 87, left: 65, down: 83, right: 68 },
-        zIndex: 3  // Higher than background
+        zIndex: 10  // Even higher z-index to appear above background
     };
 
     const sprite_src_tux = path + "/images/gamify/tux.png";
@@ -91,7 +91,7 @@ class GameLevelEnd {
         orientation: {rows: 8, columns: 11 },
         down: {row: 5, start: 0, columns: 3 },
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
-        zIndex: 3,  // Same z-index as player
+        zIndex: 10,  // Same z-index as player
         quiz: { 
           title: "Linux Command Quiz",
           questions: [
