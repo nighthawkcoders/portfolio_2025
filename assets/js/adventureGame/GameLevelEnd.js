@@ -22,7 +22,7 @@ class GameLevelEnd {
         position: { x: 0, y: 0 },
         velocity: 0.2,  // Slower velocity for a more subtle effect
         layer: 0,  // Explicitly set the layer to 0 (furthest back)
-        zIndex: -1 // Set z-index to ensure it stays behind
+        zIndex: -1000000000000 // Set z-index to ensure it stays behind
     };
 
     const image_src_end = path + "/images/gamify/TransparentEnd.png";
