@@ -14,6 +14,7 @@ class GameLevel {
 
   create(GameLevelClass) {
     this.continue = true
+    this.restart = false
     this.gameEnv.create()
     this.gameLevel = new GameLevelClass(this.gameEnv)
     this.gameObjectClasses = this.gameLevel.classes
