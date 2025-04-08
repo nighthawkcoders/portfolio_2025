@@ -3,6 +3,7 @@ import Background from './Background.js';
 import Player from './Player.js';
 import Npc from './Npc.js';
 import Projectile from './Projectile.js';
+import FallingBlock from './FallingBlock.js';
 
 class GameLevelStarWars {
   constructor(gameEnv) {
@@ -116,6 +117,8 @@ class GameLevelStarWars {
     // Store button reference for cleanup
     this.switchButton = null;
     this.keyListener = null;
+    this.fallingBlock = new FallingBlock(gameEnv);
+    this.gameEnv.gameObjects.push(this.fallingBlock);
   }
 
   // Implementation of required methods for compatibility
@@ -131,8 +134,15 @@ class GameLevelStarWars {
     this.createSwitchBackgroundButton();
   }
   
-  update() {
+  update(deltaTime) {
     // Level-specific update logic - manage projectiles, check for hits, etc.
+    this.fallingBlock.update(deltaTime);
+  }
+  
+  draw(context) {
+    // Draw the falling block
+    this.fallingBlock.draw(context);
+    // ... existing code for drawing other objects ...
   }
   
   destroy() {
