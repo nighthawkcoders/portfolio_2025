@@ -287,32 +287,32 @@ title: Stocks Home
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar">
-          <div class="nav-buttons">
-            <a href="{{site.baseurl}}/stocks/home">Home</a>
-            <a href="{{site.baseurl}}/crypto/portfolio">Crypto</a>
-            <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
-            <a href="{{site.baseurl}}/crypto/mining">Mining</a>
-            <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
-            <a href="{{site.baseurl}}/stocks/game">Game</a>
-            <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
-
-        </div>
-    </nav>
+<nav class="navbar">
+    <div class="nav-buttons">
+        <a href="{{site.baseurl}}/stocks/home">Home</a>
+        <a href="{{site.baseurl}}/crypto/portfolio">Crypto</a>
+        <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
+        <a href="{{site.baseurl}}/crypto/mining">Mining</a>
+        <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
+        <a href="{{site.baseurl}}/crypto/leaderboard">Leaderboard</a>
+        <a href="{{site.baseurl}}/stocks/game">Game</a>
+        <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
+    </div>
+</nav>
     <!-- Dashboard -->
     <div class="dashboard">
         <div class="dashboard-content">
             <h1 id="userIDName" class="welcome">Hi, Welcome Back</h1>
             <p>Invest your money today!</p>
-            <div class="search-container">
+            <!-- <div class="search-container">
                 <input type="text" id="searchBar" placeholder="Search...">
                 <button class="search-button" onclick="getStockData()">Search</button>
-            </div>
-            <div class="chart-container" id="chartContainer">
+            </div> -->
+            <!-- <div class="chart-container" id="chartContainer">
                 <div class="chart" id="chart1">
                     <canvas id="stockChart" width="475" height="375">[Graph Placeholder]</canvas>
                 </div>
-            </div>
+            </div> -->
             <div class="crypto-chart-container">
                 <h3> Portfolio Balance History</h3>
                 <canvas id="cryptoBalanceChart"></canvas>
@@ -689,56 +689,199 @@ function createTransactionRow({ type, amount, value, timestamp }) {
     return row;
 }
 
-function renderCryptoBalanceChart(labels, balances) {
+/* 🖼️ Modal Functions */
+// Open Modal Function
+window.openHistoryModal = function() {
+    document.getElementById("historyModal").style.display = "block";
+    setTimeout(updateCryptoHistoryTable, 500); // Load history when modal opens
+};
+
+window.closeHistoryModal = function() {
+    document.getElementById("historyModal").style.display = "none";
+};
+
+
+// ✅ Call function when page loads, ensuring tables exist
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(updateCryptoHistoryTable, 1000); // ✅ Wait 1 second to ensure elements are loaded
+});
+let liveBalanceChart;
+let balanceLabels = [];
+let balanceData = [];
+
+function getFormattedTime() {
+    const now = new Date();
+    return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+async function fetchAndUpdateLiveBalanceChart() {
+    const email = localStorage.getItem("userEmail");
+    if (!email) return;
+
+    try {
+        const response = await fetch(javaURI + `/api/crypto/balance?email=${encodeURIComponent(email)}`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch balance");
+        }
+
+        const data = await response.json();
+        const balance = parseFloat(data.balance);
+
+        // Add new data point
+        const currentTime = getFormattedTime();
+        balanceLabels.push(currentTime);
+        balanceData.push(balance);
+
+        // Limit to latest 10 points
+        if (balanceLabels.length > 10) {
+            balanceLabels.shift();
+            balanceData.shift();
+        }
+
+        updateLiveBalanceChart(balanceLabels, balanceData);
+    } catch (error) {
+        console.error("Error updating live balance chart:", error);
+    }
+}
+
+function updateLiveBalanceChart(labels, data) {
     const ctx = document.getElementById("cryptoBalanceChart").getContext("2d");
 
-    // ✅ Ensure previous chart exists before destroying
-    if (window.cryptoBalanceChart instanceof Chart) {
-        window.cryptoBalanceChart.destroy();
+    if (liveBalanceChart) {
+        liveBalanceChart.data.labels = labels;
+        liveBalanceChart.data.datasets[0].data = data;
+        liveBalanceChart.update();
+        return;
     }
 
-    // ✅ Set correct Y-axis range
-    const yMin = 0;  // 🔥 Start at $100,000
-    const yMax = Math.ceil((Math.max(200000, Math.max(...balances) + 5000)) / 30000) * 30000; // Round up to nearest 30,000
-
-    // ✅ Create new chart instance
-    window.cryptoBalanceChart = new Chart(ctx, {
+    // First render
+    liveBalanceChart = new Chart(ctx, {
         type: "line",
         data: {
             labels: labels,
             datasets: [{
-                label: "Crypto Portfolio Balance (USD)",
-                data: balances,
+                label: "Live Portfolio Balance (USD)",
+                data: data,
                 borderColor: "#FF8C00",
                 borderWidth: 2,
                 fill: true,
                 backgroundColor: "rgba(255, 140, 0, 0.2)",
-                pointRadius: 5, // Dots to make changes visible
-                tension: 0.2 // Smooth line
+                pointRadius: 3,
+                tension: 0.2
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Ensures proper fit
+            maintainAspectRatio: false,
+            animation: false,
             scales: {
-                x: { 
-                    title: { display: true, text: "Date" }, 
-                    ticks: { autoSkip: true, maxTicksLimit: 10 } // Avoids overcrowding
+                x: {
+                    title: { display: true, text: "Time" }
                 },
-                y: { 
-                    title: { display: true, text: "Portfolio Balance (USD)" },
-                    min: yMin, // 🔥 Start at $100,000
-                    max: yMax,  // 🔥 Adjust dynamically if needed
-                    ticks: { stepSize: 30000 } // **🔥 Increments of 30,000**
+                y: {
+                    title: { display: true, text: "Balance (USD)" },
+                    beginAtZero: false
                 }
             },
             plugins: {
                 legend: { display: true, position: "top" },
-                tooltip: { enabled: true, mode: "index", intersect: false }
+                tooltip: { enabled: true }
             }
         }
     });
 }
+
+
+async function getCryptoHoldings() {
+    try {
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+            console.warn("User email not found in localStorage.");
+            return [];
+        }
+
+        console.log(`Fetching crypto holdings for email: ${email}`);
+
+        const response = await fetch(javaURI + `/api/crypto/holdings?email=${encodeURIComponent(email)}`);
+        if (!response.ok) {
+            throw new Error(`Error fetching crypto holdings: ${response.statusText}`);
+        }
+
+        const holdingsData = await response.json();
+        console.log("Crypto Holdings Response:", holdingsData);
+
+        let holdingsString = holdingsData.holdings;
+        if (!holdingsString || holdingsString.trim() === "") {
+            console.warn("No crypto holdings found.");
+            return [];
+        }
+
+        const holdingsArray = holdingsString.split(",").map(holding => {
+            const [cryptoId, amount] = holding.split(":");
+            return { cryptoId: cryptoId.trim(), amount: parseFloat(amount).toFixed(6) }; // Format amount to 6 decimals
+        });
+
+        return holdingsArray;
+    } catch (error) {
+        console.error("Error fetching Crypto Holdings:", error);
+        return [];
+    }
+}
+
+async function updateCryptoHoldingsTable() {
+    try {
+        const holdings = await getCryptoHoldings();
+        const table = document.getElementById("cryptoHoldingsTable");
+
+        if (!table) {
+            console.error("🚨 Crypto holdings table not found!");
+            return;
+        }
+
+        // Clear table except headers
+        table.innerHTML = `
+            <tr>
+                <th>Crypto</th>
+                <th>Amount</th>
+            </tr>`;
+
+        if (holdings.length === 0) {
+            table.innerHTML += `<tr><td colspan="2" style="text-align: center;">No crypto holdings</td></tr>`;
+            return;
+        }
+
+        for (const { cryptoId, amount } of holdings) {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${cryptoId.toUpperCase()}</td><td>${amount}</td>`;
+            table.appendChild(row);
+        }
+    } catch (error) {
+        console.error("🚨 Error updating crypto holdings:", error);
+    }
+}
+
+
+// ✅ Call function when page loads
+document.addEventListener("DOMContentLoaded", () => {
+    updateCryptoHoldingsTable();
+});
+
+async function getCryptoPrice(cryptoId) {
+    try {
+        const response = await fetch(javaURI + `/api/crypto/price?cryptoId=${encodeURIComponent(cryptoId)}`);
+        const data = await response.json();
+        console.log(`Price for ${cryptoId}:`, data);
+        return data?.price ?? 0; // Default to 0 if price is not found
+    } catch (error) {
+        console.error(`Error fetching price for ${cryptoId}:`, error);
+        return 0;
+    }
+}
+
+// ✅ Update crypto holdings table on page load
+document.addEventListener("DOMContentLoaded", () => {
+    updateCryptoHoldingsTable();
+});
 
 
 
@@ -843,5 +986,8 @@ document.addEventListener("DOMContentLoaded", () => {
         updateYourStocksTable();
         updateStockPrices();
         getPortfolioPerformance();
+        updateCryptoHoldingsTable();
+        updateCryptoHistoryTable();
+        setInterval(fetchAndUpdateLiveBalanceChart, 5000); // 🔁 every 5 second
     });
 </script>

@@ -121,7 +121,6 @@ title: Stocks Portfolio
 </head>
 <body>
     <!-- Navigation Bar -->
-    <!-- Navigation Bar -->
 <nav class="navbar">
     <div class="nav-buttons">
         <a href="{{site.baseurl}}/stocks/home">Home</a>
@@ -129,9 +128,9 @@ title: Stocks Portfolio
         <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
         <a href="{{site.baseurl}}/crypto/mining">Mining</a>
         <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
+        <a href="{{site.baseurl}}/crypto/leaderboard">Leaderboard</a>
         <a href="{{site.baseurl}}/stocks/game">Game</a>
         <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
-
     </div>
 </nav>
     <!-- Portfolio Content -->

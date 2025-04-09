@@ -1,6 +1,6 @@
 ---
 layout: base
-permalink: /leaderboard/overall-leaderboard
+permalink: /crypto/leaderboard
 title: Leaderboard
 ---
 
@@ -113,15 +113,18 @@ title: Leaderboard
         color: #ffffff;
     }
   </style>
-</head>
 <body>
 <!-- Navigation Bar -->
 <nav class="navbar">
     <div class="nav-buttons">
-        <a href="{{site.baseurl}}/leaderboard/overall-leaderboard">Leaderboard</a>
-        <a href="{{site.baseurl}}/leaderboard/team-selection">Team selector</a>
-        <a href="{{site.baseurl}}/leaderboard/team-viewer">Team viewer</a>
-        <a href="{{site.baseurl}}/leaderboard/team-leaderboard">Team leaderboard</a>
+        <a href="{{site.baseurl}}/stocks/home">Home</a>
+        <a href="{{site.baseurl}}/crypto/portfolio">Crypto</a>
+        <a href="{{site.baseurl}}/stocks/viewer">Stocks</a>
+        <a href="{{site.baseurl}}/crypto/mining">Mining</a>
+        <a href="{{site.baseurl}}/stocks/buysell">Buy/Sell</a>
+        <a href="{{site.baseurl}}/crypto/leaderboard">Leaderboard</a>
+        <a href="{{site.baseurl}}/stocks/game">Game</a>
+        <a href="{{site.baseurl}}/stocks/portfolio">Portfolio</a>
     </div>
 </nav>
 
@@ -152,6 +155,46 @@ title: Leaderboard
       const response = await fetch(`${javaURI}/api/rankings/leaderboard`, fetchOptions);
       if (!response.ok) throw new Error("Failed to fetch leaderboard data");
       const data = await response.json();
+
+      populateTable(data);
+    } catch (error) {
+      console.error("Error fetching leaderboard data:", error);
+      populateTable(getStaticLeaderboard());
+    }
+  }
+
+  function populateTable(data) {
+    const topUsersTable = document.querySelector("#top-users-table");
+    topUsersTable.innerHTML = "";
+    data.forEach((user, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td class="rank">${index + 1}</td>
+        <td class="balance">$${Number(user.balance).toFixed(2)}</td>
+        <td class="name">${user.name}</td>
+      `;
+      topUsersTable.appendChild(row);
+    });
+  }
+
+  function getStaticLeaderboard() {
+    return [
+      { name: "Alice", balance: 5000.75 },
+      { name: "Bob", balance: 4500.50 },
+      { name: "Charlie", balance: 4000.25 },
+      { name: "Dave", balance: 3500.00 },
+      { name: "Eve", balance: 3000.75 },
+      { name: "Frank", balance: 2750.60 },
+      { name: "Grace", balance: 2500.40 },
+      { name: "Hank", balance: 2250.30 },
+      { name: "Ivy", balance: 2000.10 },
+      { name: "Jack", balance: 1750.00 }
+    ];
+  }
+
+  document.addEventListener("DOMContentLoaded", fetchLeaderboard);
+</script>
+
       const topUsersTable = document.querySelector("#top-users-table");
       topUsersTable.innerHTML = "";
 

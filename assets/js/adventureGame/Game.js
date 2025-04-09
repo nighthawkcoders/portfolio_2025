@@ -1,4 +1,5 @@
 import GameControl from './GameControl.js';
+
 import GameLevelDesert from "./GameLevelDesert.js";
 import GameLevelEnd from "./GameLevelEnd.js";
 import GameLevelSquares from './GameLevelSquares.js';
@@ -8,6 +9,7 @@ class Game {
     // initialize user and launch GameControl 
     static main(environment) {
         // setting Web Application path
+        this.environment = environment;
         this.path = environment.path;
 
         // setting Element IDs
@@ -28,65 +30,21 @@ class Game {
 
         this.gname = null;
         
+
         // Show instructions before starting the game
         this.showInstructions(() => {
             // start the game after instructions are closed
             const gameLevelClasses = [GameLevelDesert, GameLevelEnd, GameLevelSquares]
             new GameControl(this, gameLevelClasses).start();
+
         });
     }
 
     static showInstructions(callback) {
         // Create the instructions popup
         const instructionsDiv = document.createElement('div');
-        instructionsDiv.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            z-index: 1000;
-            max-width: 600px;
-            width: 90%;
-            font-family: 'Press Start 2P', cursive;
-            border: 3px solid #f5c207;
-            box-shadow: 0 0 20px rgba(245, 194, 7, 0.5);
-        `;
-
-        // Create the content
-        instructionsDiv.innerHTML = `
-            <h2 style="color: #f5c207; margin-bottom: 15px; text-align: center;">Welcome!</h2>
-            <div style="margin-bottom: 15px;">
-                <h3 style="color: #f5c207;">Controls:</h3>
-                <p>• WASD - Move</p>
-                <p>• E/U - Interact with NPCs</p>
-                <p>• ESC - Exit mini-games</p>
-            </div>
-            <div style="margin-bottom: 15px;">
-                <h3 style="color: #f5c207;">NPCs:</h3>
-                <p>• Robot - Meteor Blaster game</p>
-                <p>• R2D2 - Star Wars game</p>
-                <p>• Tux/Octocat - Quizzes</p>
-                <p>• Stock Guy - Stock Market</p>
-                <p>• Bitcoin - Casino</p>
-            </div>
-            <div style="text-align: center;">
-                <button id="startGameBtn" style="
-                    background: #f5c207;
-                    color: black;
-                    border: none;
-                    padding: 8px 16px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    font-family: 'Press Start 2P', cursive;
-                    font-size: 12px;
-                    transition: all 0.3s ease;
-                ">Start Game</button>
-            </div>
-        `;
+        instructionsDiv.style.cssText = this.environment.instructionsStyle; 
+        instructionsDiv.innerHTML = this.environment.instructionsHTML; 
 
         // Add the popup to the document
         document.body.appendChild(instructionsDiv);

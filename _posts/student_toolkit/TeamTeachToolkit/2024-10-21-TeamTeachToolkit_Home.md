@@ -47,5 +47,6 @@ permalink: /student/TeamTeachToolkit
         <a href="{{site.baseurl}}/student/TeamTeachToolkit/grader"><button>Grader</button></a>
         <a href="{{site.baseurl}}/student/TeamTeachToolkit/generator"><button>Generator</button></a>
         <a href="{{site.baseurl}}/student/TeamTeachToolkit/review"><button>Review</button></a>
+        <a href="{{site.baseurl}}/student/TeamTeachToolkit/signup"><button>Sign Up</button></a>
     </div>
 </body>
