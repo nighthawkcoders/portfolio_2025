@@ -261,9 +261,14 @@ class Game {
         statsContainer.style.padding = '10px';
         statsContainer.style.borderRadius = '5px';
     
+        const cookies = document.cookie.split(';');
+        const gameKeyCookie = cookies.find(cookie => cookie.trim().startsWith('gameKey='));
+        const meteorKeyStatus = gameKeyCookie ? '✅ Meteor Key Earned' : '❌ Meteor Key Not Earned';
+    
         statsContainer.innerHTML = `
             <div>Balance: <span id="balance">0</span></div>
             <div>Question Accuracy: <span id="questionAccuracy">0%</span></div>
+            <div style="color: ${gameKeyCookie ? '#00ff00' : '#ff4444'}">${meteorKeyStatus}</div>
             <div>Time Remaining: <span id="timer">45</span> seconds</div>
         `;
         document.body.appendChild(statsContainer);
@@ -304,41 +309,41 @@ class Game {
         clearInterval(this.timerInterval);
         
         // Stop the game
-        if (this.gameControl) {
+        if (this.gameControl && typeof this.gameControl.stop === 'function') {
             // Stop all game mechanics, animations, and inputs
             this.gameControl.stop();
-            
-            // Show game over screen
-            const gameOverDiv = document.createElement('div');
-            gameOverDiv.id = 'game-over';
-            gameOverDiv.style.position = 'fixed';
-            gameOverDiv.style.top = '0';
-            gameOverDiv.style.left = '0';
-            gameOverDiv.style.width = '100%';
-            gameOverDiv.style.height = '100%';
-            gameOverDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-            gameOverDiv.style.color = 'white';
-            gameOverDiv.style.display = 'flex';
-            gameOverDiv.style.flexDirection = 'column';
-            gameOverDiv.style.justifyContent = 'center';
-            gameOverDiv.style.alignItems = 'center';
-            gameOverDiv.style.zIndex = '1000';
-            
-            gameOverDiv.innerHTML = `
-                <h1 style="font-size: 48px;">Time's Up!</h1>
-                <p style="font-size: 24px;">Your game session has ended.</p>
-                <button id="restart-button" style="padding: 10px 20px; font-size: 18px; margin-top: 20px; cursor: pointer;">
-                    Restart Game
-                </button>
-            `;
-            
-            document.body.appendChild(gameOverDiv);
-            
-            // Add event listener to restart button
-            document.getElementById('restart-button').addEventListener('click', () => {
-                location.reload(); // Reload the page to restart the game
-            });
         }
+        
+        // Show game over screen
+        const gameOverDiv = document.createElement('div');
+        gameOverDiv.id = 'game-over';
+        gameOverDiv.style.position = 'fixed';
+        gameOverDiv.style.top = '0';
+        gameOverDiv.style.left = '0';
+        gameOverDiv.style.width = '100%';
+        gameOverDiv.style.height = '100%';
+        gameOverDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        gameOverDiv.style.color = 'white';
+        gameOverDiv.style.display = 'flex';
+        gameOverDiv.style.flexDirection = 'column';
+        gameOverDiv.style.justifyContent = 'center';
+        gameOverDiv.style.alignItems = 'center';
+        gameOverDiv.style.zIndex = '1000';
+        
+        gameOverDiv.innerHTML = `
+            <h1 style="font-size: 48px;">Time's Up!</h1>
+            <p style="font-size: 24px;">Your game session has ended.</p>
+            <button id="restart-button" style="padding: 10px 20px; font-size: 18px; margin-top: 20px; cursor: pointer;">
+                Restart Game
+            </button>
+        `;
+        
+        document.body.appendChild(gameOverDiv);
+        
+        // Add event listener to restart button
+        document.getElementById('restart-button').addEventListener('click', () => {
+            location.reload(); // Reload the page to restart the game
+        });
     }
 
     // Add method to give items to player
@@ -400,4 +405,4 @@ class Game {
         this.giveItem('roi_calculator', 1);     // 1 ROI Calculator
     }
 }
-export default Game;upd
+export default Game;
