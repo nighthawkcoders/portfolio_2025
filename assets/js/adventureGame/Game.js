@@ -34,11 +34,12 @@ class Game {
         this.id;
         this.initUser();
         this.initStatsUI();
+        this.createStopwatch();
 
         this.gname = null;
         
         // Initialize game timer
-        this.gameTimer = 45;
+        this.gameTimer = 0;
         this.timerInterval = null;
 
         // start the game immediately
@@ -46,8 +47,8 @@ class Game {
         this.gameControl = new GameControl(this, gameLevelClasses);
         this.gameControl.start();
         
-        // Start the countdown timer
-        this.startGameTimer();
+        // Start the stopwatch
+        this.startStopwatch();
     }
 
     static initUser() {
@@ -269,17 +270,85 @@ class Game {
             <div>Balance: <span id="balance">0</span></div>
             <div>Question Accuracy: <span id="questionAccuracy">0%</span></div>
             <div style="color: ${gameKeyCookie ? '#00ff00' : '#ff4444'}">${meteorKeyStatus}</div>
-            <div>Time Remaining: <span id="timer">45</span> seconds</div>
         `;
         document.body.appendChild(statsContainer);
     }
     
+    // Create a styled stopwatch
+    static createStopwatch() {
+        const stopwatchContainer = document.createElement('div');
+        stopwatchContainer.id = 'stopwatch-container';
+        stopwatchContainer.style.position = 'fixed';
+        stopwatchContainer.style.top = '10px';
+        stopwatchContainer.style.left = '50%';
+        stopwatchContainer.style.transform = 'translateX(-50%)';
+        stopwatchContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        stopwatchContainer.style.borderRadius = '20px';
+        stopwatchContainer.style.padding = '10px 20px';
+        stopwatchContainer.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.7)';
+        stopwatchContainer.style.zIndex = '1000';
+        stopwatchContainer.style.display = 'flex';
+        stopwatchContainer.style.flexDirection = 'column';
+        stopwatchContainer.style.alignItems = 'center';
+        stopwatchContainer.style.justifyContent = 'center';
+        stopwatchContainer.style.border = '2px solid cyan';
+        
+        // Create the display for the timer
+        const timerDisplay = document.createElement('div');
+        timerDisplay.id = 'timer-display';
+        timerDisplay.style.fontFamily = "'Digital-7', monospace";
+        timerDisplay.style.fontSize = '32px';
+        timerDisplay.style.fontWeight = 'bold';
+        timerDisplay.style.color = '#00ffff';
+        timerDisplay.style.textShadow = '0 0 10px rgba(0, 255, 255, 0.7)';
+        timerDisplay.textContent = '00:00';
+        
+        // Create the progress bar
+        const progressBarContainer = document.createElement('div');
+        progressBarContainer.style.width = '100%';
+        progressBarContainer.style.height = '10px';
+        progressBarContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+        progressBarContainer.style.borderRadius = '5px';
+        progressBarContainer.style.margin = '5px 0';
+        progressBarContainer.style.overflow = 'hidden';
+        
+        const progressBar = document.createElement('div');
+        progressBar.id = 'timer-progress';
+        progressBar.style.height = '100%';
+        progressBar.style.width = '0%';
+        progressBar.style.backgroundColor = '#00ffff';
+        progressBar.style.borderRadius = '5px';
+        progressBar.style.transition = 'width 0.5s ease';
+        
+        // Label for the stopwatch
+        const timerLabel = document.createElement('div');
+        timerLabel.textContent = 'TIME ATTACK';
+        timerLabel.style.fontSize = '12px';
+        timerLabel.style.fontWeight = 'bold';
+        timerLabel.style.color = 'white';
+        timerLabel.style.marginBottom = '5px';
+        
+        // Add custom font for digital look
+        const fontLink = document.createElement('link');
+        fontLink.href = 'https://fonts.cdnfonts.com/css/digital-7-mono';
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
+        
+        // Assemble the stopwatch
+        progressBarContainer.appendChild(progressBar);
+        stopwatchContainer.appendChild(timerLabel);
+        stopwatchContainer.appendChild(timerDisplay);
+        stopwatchContainer.appendChild(progressBarContainer);
+        document.body.appendChild(stopwatchContainer);
+    }
+    
     // Game timer functionality
-    static startGameTimer() {
-        // Create or update the timer element
-        const timerElement = document.getElementById('timer');
-        if (!timerElement) {
-            console.error("Timer element not found in the DOM");
+    static startStopwatch() {
+        // Get the elements
+        const timerDisplay = document.getElementById('timer-display');
+        const progressBar = document.getElementById('timer-progress');
+        if (!timerDisplay || !progressBar) {
+            console.error("Timer elements not found in the DOM");
             return;
         }
         
@@ -288,20 +357,65 @@ class Game {
             clearInterval(this.timerInterval);
         }
         
-        // Set timer to 45 seconds
-        this.gameTimer = 45;
-        timerElement.textContent = this.gameTimer;
+        // Set timer to 0
+        this.gameTimer = 0;
+        this.updateTimerDisplay(timerDisplay, this.gameTimer);
+        progressBar.style.width = '0%';
         
-        // Start countdown
+        // Start the stopwatch (updating every 100ms for smoother progress bar)
         this.timerInterval = setInterval(() => {
-            this.gameTimer -= 1;
-            timerElement.textContent = this.gameTimer;
+            this.gameTimer += 0.1;
             
-            // When timer reaches 0, stop the game
-            if (this.gameTimer <= 0) {
+            // Update timer display every 100ms
+            this.updateTimerDisplay(timerDisplay, this.gameTimer);
+            
+            // Update progress bar (0-45 seconds = 0-100%)
+            const progressPercentage = (this.gameTimer / 45) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            
+            // Change color as time progresses
+            if (this.gameTimer > 30) {
+                progressBar.style.backgroundColor = '#ff3333'; // Red for last 15 seconds
+                progressBar.style.boxShadow = '0 0 10px rgba(255, 51, 51, 0.7)';
+                timerDisplay.style.color = '#ff3333';
+                timerDisplay.style.textShadow = '0 0 10px rgba(255, 51, 51, 0.7)';
+            } else if (this.gameTimer > 15) {
+                progressBar.style.backgroundColor = '#ffff33'; // Yellow for middle 15 seconds
+                progressBar.style.boxShadow = '0 0 10px rgba(255, 255, 51, 0.7)';
+                timerDisplay.style.color = '#ffff33';
+                timerDisplay.style.textShadow = '0 0 10px rgba(255, 255, 51, 0.7)';
+            }
+            
+            // Add pulsing effect in the last 5 seconds
+            if (this.gameTimer > 40) {
+                const stopwatchContainer = document.getElementById('stopwatch-container');
+                stopwatchContainer.style.animation = 'pulse 0.5s infinite alternate';
+                if (!document.getElementById('pulse-animation')) {
+                    const style = document.createElement('style');
+                    style.id = 'pulse-animation';
+                    style.innerHTML = `
+                        @keyframes pulse {
+                            from { transform: translateX(-50%) scale(1); }
+                            to { transform: translateX(-50%) scale(1.05); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+            
+            // When timer reaches 45 seconds, stop the game
+            if (this.gameTimer >= 45) {
                 this.stopGame();
             }
-        }, 1000);
+        }, 100); // Update every 100ms for smoother animation
+    }
+    
+    static updateTimerDisplay(display, time) {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        const tenths = Math.floor((time * 10) % 10);
+        
+        display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${tenths}`;
     }
     
     static stopGame() {
@@ -314,7 +428,43 @@ class Game {
             this.gameControl.stop();
         }
         
-        // Show game over screen
+        // Create explosion effect
+        this.createExplosionEffect();
+        
+        // Show game over screen after a brief delay for the explosion effect
+        setTimeout(() => {
+            this.showGameOverScreen();
+        }, 1000);
+    }
+    
+    static createExplosionEffect() {
+        // Create a full-screen explosion effect
+        const explosion = document.createElement('div');
+        explosion.style.position = 'fixed';
+        explosion.style.top = '0';
+        explosion.style.left = '0';
+        explosion.style.width = '100%';
+        explosion.style.height = '100%';
+        explosion.style.backgroundColor = 'white';
+        explosion.style.opacity = '0';
+        explosion.style.zIndex = '9999';
+        explosion.style.transition = 'opacity 0.1s ease-in';
+        document.body.appendChild(explosion);
+        
+        // Flash the screen
+        setTimeout(() => {
+            explosion.style.opacity = '1';
+            setTimeout(() => {
+                explosion.style.opacity = '0';
+                setTimeout(() => {
+                    explosion.remove();
+                }, 500);
+            }, 100);
+        }, 0);
+    }
+    
+    static showGameOverScreen() {
+        // Create game over container with cool styling
         const gameOverDiv = document.createElement('div');
         gameOverDiv.id = 'game-over';
         gameOverDiv.style.position = 'fixed';
@@ -322,22 +472,79 @@ class Game {
         gameOverDiv.style.left = '0';
         gameOverDiv.style.width = '100%';
         gameOverDiv.style.height = '100%';
-        gameOverDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-        gameOverDiv.style.color = 'white';
+        gameOverDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
         gameOverDiv.style.display = 'flex';
         gameOverDiv.style.flexDirection = 'column';
         gameOverDiv.style.justifyContent = 'center';
         gameOverDiv.style.alignItems = 'center';
         gameOverDiv.style.zIndex = '1000';
+        gameOverDiv.style.backdropFilter = 'blur(10px)';
         
-        gameOverDiv.innerHTML = `
-            <h1 style="font-size: 48px;">Time's Up!</h1>
-            <p style="font-size: 24px;">Your game session has ended.</p>
-            <button id="restart-button" style="padding: 10px 20px; font-size: 18px; margin-top: 20px; cursor: pointer;">
-                Restart Game
+        // Add a pulsing border effect
+        const innerDiv = document.createElement('div');
+        innerDiv.style.padding = '40px';
+        innerDiv.style.borderRadius = '20px';
+        innerDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        innerDiv.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.7)';
+        innerDiv.style.border = '3px solid red';
+        innerDiv.style.textAlign = 'center';
+        innerDiv.style.animation = 'pulse-border 2s infinite alternate';
+        
+        // Create animation style
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes pulse-border {
+                from { box-shadow: 0 0 30px rgba(255, 0, 0, 0.7); }
+                to { box-shadow: 0 0 50px rgba(255, 0, 0, 0.9); }
+            }
+            
+            @keyframes slide-in {
+                from { transform: translateY(-50px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+            
+            @keyframes glow {
+                from { text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); }
+                to { text-shadow: 0 0 30px rgba(255, 0, 0, 0.9); }
+            }
+            
+            .restart-btn {
+                background: linear-gradient(to bottom, #ff3333, #cc0000);
+                color: white;
+                border: none;
+                padding: 15px 30px;
+                font-size: 18px;
+                border-radius: 30px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-top: 30px;
+                font-weight: bold;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .restart-btn:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+                background: linear-gradient(to bottom, #ff5555, #ff0000);
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Game over content
+        innerDiv.innerHTML = `
+            <h1 style="font-size: 60px; margin: 0; color: red; font-weight: bold; animation: glow 1.5s infinite alternate, slide-in 0.5s ease-out;">TIME'S UP!</h1>
+            <p style="font-size: 24px; color: white; margin: 20px 0; animation: slide-in 0.5s ease-out 0.2s both;">Your 45-second challenge has ended</p>
+            <div style="margin: 20px 0; font-size: 18px; color: #cccccc; animation: slide-in 0.5s ease-out 0.4s both;">
+                Final score: <span style="color: yellow; font-weight: bold;">${document.getElementById('balance')?.innerHTML || '0'}</span>
+            </div>
+            <button id="restart-button" class="restart-btn" style="animation: slide-in 0.5s ease-out 0.6s both;">
+                PLAY AGAIN
             </button>
         `;
         
+        gameOverDiv.appendChild(innerDiv);
         document.body.appendChild(gameOverDiv);
         
         // Add event listener to restart button
