@@ -1,39 +1,96 @@
 @import "materials/main.scss";
 
-.search-result-preview {
-    // the text
+// Enhanced variables
+$transition-speed: 0.3s;
+$hover-scale: 1.02;
+$shadow-color: rgba(0, 0, 0, 0.5);
+$gradient-dark: #121212;
+$gradient-medium: #1e1e1e;
+$highlight-glow: 0 0 8px rgba($lightBlue1, 0.5);
 
-    color: $gray1 !important;
-    list-style-type: none !important;
-    list-style: none !important;
-    background-color: #1e1e1e !important;
-    border-bottom-left-radius: $border-size;
-    border-bottom-right-radius: $border-size;
-
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-.search-result-highlight {
-    color: $lightBlue1 !important;
-    font-weight: bold !important;
-    list-style-type: none !important;
-    list-style: none !important;
+.search-results-list-item {
+  list-style-type: none !important;
+  margin-bottom: 16px !important;
+  transition: transform $transition-speed ease-in-out;
+  
+  &:hover {
+    transform: scale($hover-scale);
+    box-shadow: 0 5px 15px $shadow-color;
+  }
 }
 
 .search-results-list-item .search-result-title {
-    // the title
-    color: $white1 !important;
-    list-style-type: none !important;
-    border-top-left-radius: $border-size;
-    border-top-right-radius: $border-size;
-    background-color: #1e1e1e !important;
-
-    padding: 10px;
+  // the title
+  color: $white1 !important;
+  list-style-type: none !important;
+  border-top-left-radius: $border-size;
+  border-top-right-radius: $border-size;
+  background: linear-gradient(135deg, $gradient-medium 0%, $gradient-dark 100%) !important;
+  padding: 14px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background-color: $lightBlue1;
+    opacity: 0.8;
+  }
 }
 
-.search-results-list-item {
-    list-style-type: none !important;
-    margin-bottom: 10px !important;
+.search-result-preview {
+  // the text
+  color: $gray1 !important;
+  list-style-type: none !important;
+  list-style: none !important;
+  background-color: $gradient-medium !important;
+  border-bottom-left-radius: $border-size;
+  border-bottom-right-radius: $border-size;
+  padding: 14px;
+  line-height: 1.5;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.search-result-highlight {
+  color: $lightBlue1 !important;
+  font-weight: bold !important;
+  list-style-type: none !important;
+  list-style: none !important;
+  text-shadow: $highlight-glow;
+  position: relative;
+  padding: 0 2px;
+  transition: all $transition-speed ease;
+  
+  &:hover {
+    color: lighten($lightBlue1, 15%) !important;
+    text-shadow: 0 0 12px rgba($lightBlue1, 0.7);
+  }
+}
+
+// Adding animations
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.search-results-list {
+  & > li {
+    animation: fadeIn 0.4s ease-out forwards;
+    
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.05}s;
+      }
+    }
+  }
 }
