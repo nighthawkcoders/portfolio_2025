@@ -2,6 +2,7 @@ import GameControl from './GameEngine/GameControl.js';
 import Quiz from './Quiz.js';
 import Inventory from "./Inventory.js";
 import { defaultItems } from "./items.js";
+import GameLevelEnd from './GameLevelEnd.js'; // Import GameLevelEnd
 
 class Game {
     constructor() {
@@ -38,9 +39,10 @@ class Game {
 
         this.gname = null;
         
-        // Initialize game timer
+        // Initialize game timer and level reference
         this.gameTimer = 0;
         this.timerInterval = null;
+        this.currentLevelInstance = null;
 
         // start the game immediately
         const gameLevelClasses = environment.gameLevelClasses;
@@ -49,6 +51,12 @@ class Game {
         
         // Start the stopwatch
         this.startStopwatch();
+    }
+
+    // Set the current level instance for time checks
+    static setCurrentLevelInstance(instance) {
+        this.currentLevelInstance = instance;
+        console.log("Current level instance set:", instance);
     }
 
     static initUser() {
@@ -403,8 +411,22 @@ class Game {
                 }
             }
             
-            // When timer reaches 45 seconds, stop the game
-            if (this.gameTimer >= 45) {
+            // Check if we're in the end level and the time limit has been reached
+            if (this.currentLevelInstance && 
+                this.currentLevelInstance.constructor.name === 'GameLevelEnd') {
+                // Check time limit using GameLevelEnd's static method
+                const gameEnded = GameLevelEnd.checkTimeLimit(this.currentLevelInstance);
+                
+                // If the game has ended due to time limit, stop the timer
+                if (gameEnded) {
+                    clearInterval(this.timerInterval);
+                }
+            }
+            
+            // When timer reaches 45 seconds, stop the game if we're not in the end level
+            if (this.gameTimer >= 45 && 
+                (!this.currentLevelInstance || 
+                this.currentLevelInstance.constructor.name !== 'GameLevelEnd')) {
                 this.stopGame();
             }
         }, 100); // Update every 100ms for smoother animation
