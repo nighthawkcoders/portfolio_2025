@@ -35,7 +35,7 @@ class Game {
         this.id;
         this.initUser();
         this.initStatsUI();
-        this.createGameInterface();
+        this.createStopwatch();
 
         this.gname = null;
         
@@ -43,7 +43,6 @@ class Game {
         this.gameTimer = 0;
         this.timerInterval = null;
         this.currentLevelInstance = null;
-        this.enderyeesCollected = 0;
 
         // start the game immediately
         const gameLevelClasses = environment.gameLevelClasses;
@@ -111,11 +110,6 @@ class Game {
                     } else {
                         document.getElementById(key).innerHTML = data ?? 0;
                         localStorage.setItem(key, data ?? 0);
-                        // Update enderyees collected
-                        if (key === "balance") {
-                            this.enderyeesCollected = data ?? 0;
-                            document.getElementById('enderyees-count').textContent = this.enderyeesCollected;
-                        }
                     }
                 })
                 .catch(err => console.error(`Error fetching ${key}:`, err));
@@ -288,117 +282,83 @@ class Game {
         document.body.appendChild(statsContainer);
     }
     
-    // Create a futuristic game interface with the timer and enderyees counter in bottom right
-    static createGameInterface() {
-        // Import custom fonts
-        const fontLink1 = document.createElement('link');
-        fontLink1.href = 'https://fonts.cdnfonts.com/css/digital-7-mono';
-        fontLink1.rel = 'stylesheet';
-        document.head.appendChild(fontLink1);
+    // Create a styled stopwatch
+    static createStopwatch() {
+        const stopwatchContainer = document.createElement('div');
+        stopwatchContainer.id = 'stopwatch-container';
+        stopwatchContainer.style.position = 'fixed';
+        stopwatchContainer.style.top = '10px';
+        stopwatchContainer.style.left = '50%';
+        stopwatchContainer.style.transform = 'translateX(-50%)';
+        stopwatchContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        stopwatchContainer.style.borderRadius = '20px';
+        stopwatchContainer.style.padding = '10px 20px';
+        stopwatchContainer.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.7)';
+        stopwatchContainer.style.zIndex = '1000';
+        stopwatchContainer.style.display = 'flex';
+        stopwatchContainer.style.flexDirection = 'column';
+        stopwatchContainer.style.alignItems = 'center';
+        stopwatchContainer.style.justifyContent = 'center';
+        stopwatchContainer.style.border = '2px solid cyan';
         
-        const fontLink2 = document.createElement('link');
-        fontLink2.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap';
-        fontLink2.rel = 'stylesheet';
-        document.head.appendChild(fontLink2);
-
-        // Add global styles
-        const globalStyles = document.createElement('style');
-        globalStyles.innerHTML = `
-            @keyframes pulse-glow {
-                0% { text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff; }
-                50% { text-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff; }
-                100% { text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff; }
-            }
-            
-            @keyframes rotate-border {
-                0% { border-image: linear-gradient(0deg, #00ffff, #0088ff) 1; }
-                25% { border-image: linear-gradient(90deg, #00ffff, #0088ff) 1; }
-                50% { border-image: linear-gradient(180deg, #00ffff, #0088ff) 1; }
-                75% { border-image: linear-gradient(270deg, #00ffff, #0088ff) 1; }
-                100% { border-image: linear-gradient(360deg, #00ffff, #0088ff) 1; }
-            }
-            
-            @keyframes flicker {
-                0% { opacity: 1; }
-                5% { opacity: 0.8; }
-                10% { opacity: 1; }
-                15% { opacity: 0.9; }
-                20% { opacity: 1; }
-                55% { opacity: 1; }
-                60% { opacity: 0.8; }
-                65% { opacity: 1; }
-                70% { opacity: 0.9; }
-                75% { opacity: 1; }
-                100% { opacity: 1; }
-            }
-        `;
-        document.head.appendChild(globalStyles);
+        // Create the display for the timer
+        const timerDisplay = document.createElement('div');
+        timerDisplay.id = 'timer-display';
+        timerDisplay.style.fontFamily = "'Digital-7', monospace";
+        timerDisplay.style.fontSize = '32px';
+        timerDisplay.style.fontWeight = 'bold';
+        timerDisplay.style.color = '#00ffff';
+        timerDisplay.style.textShadow = '0 0 10px rgba(0, 255, 255, 0.7)';
+        timerDisplay.textContent = '00:00';
         
-        // Create game status container in bottom right
-        const gameStatusContainer = document.createElement('div');
-        gameStatusContainer.id = 'game-status-container';
-        gameStatusContainer.style.position = 'fixed';
-        gameStatusContainer.style.bottom = '20px';
-        gameStatusContainer.style.right = '20px';
-        gameStatusContainer.style.zIndex = '1000';
-        gameStatusContainer.style.display = 'flex';
-        gameStatusContainer.style.flexDirection = 'column';
-        gameStatusContainer.style.gap = '10px';
-        document.body.appendChild(gameStatusContainer);
+        // Create the progress bar
+        const progressBarContainer = document.createElement('div');
+        progressBarContainer.style.width = '100%';
+        progressBarContainer.style.height = '10px';
+        progressBarContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+        progressBarContainer.style.borderRadius = '5px';
+        progressBarContainer.style.margin = '5px 0';
+        progressBarContainer.style.overflow = 'hidden';
         
-        // Create timer display
-        const timerContainer = document.createElement('div');
-        timerContainer.id = 'timer-container';
-        timerContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-        timerContainer.style.borderRadius = '10px';
-        timerContainer.style.padding = '10px 15px';
-        timerContainer.style.border = '2px solid #00ffff';
-        timerContainer.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.7)';
-        timerContainer.style.animation = 'rotate-border 5s linear infinite';
-        timerContainer.style.display = 'flex';
-        timerContainer.style.alignItems = 'center';
-        timerContainer.style.justifyContent = 'center';
+        const progressBar = document.createElement('div');
+        progressBar.id = 'timer-progress';
+        progressBar.style.height = '100%';
+        progressBar.style.width = '0%';
+        progressBar.style.backgroundColor = '#00ffff';
+        progressBar.style.borderRadius = '5px';
+        progressBar.style.transition = 'width 0.5s ease';
         
-        // Timer label and display
-        const timerContent = document.createElement('div');
-        timerContent.innerHTML = `
-            <div style="font-family: 'Orbitron', sans-serif; color: #00ffff; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 3px; text-align: center;">Time</div>
-            <div id="timer-display" style="font-family: 'Digital-7', monospace; color: #00ffff; font-size: 28px; font-weight: bold; text-align: center; animation: pulse-glow 2s infinite;">00:00.0</div>
-        `;
-        timerContainer.appendChild(timerContent);
-        gameStatusContainer.appendChild(timerContainer);
+        // Label for the stopwatch
+        const timerLabel = document.createElement('div');
+        timerLabel.textContent = 'TIME ATTACK';
+        timerLabel.style.fontSize = '12px';
+        timerLabel.style.fontWeight = 'bold';
+        timerLabel.style.color = 'white';
+        timerLabel.style.marginBottom = '5px';
         
-        // Create enderyees counter display
-        const enderyeesContainer = document.createElement('div');
-        enderyeesContainer.id = 'enderyees-container';
-        enderyeesContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-        enderyeesContainer.style.borderRadius = '10px';
-        enderyeesContainer.style.padding = '10px 15px';
-        enderyeesContainer.style.border = '2px solid #00ffff';
-        enderyeesContainer.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.7)';
-        enderyeesContainer.style.animation = 'rotate-border 5s linear infinite';
-        enderyeesContainer.style.display = 'flex';
-        enderyeesContainer.style.alignItems = 'center';
-        enderyeesContainer.style.justifyContent = 'center';
+        // Add custom font for digital look
+        const fontLink = document.createElement('link');
+        fontLink.href = 'https://fonts.cdnfonts.com/css/digital-7-mono';
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
         
-        // Enderyees icon and counter
-        const enderyeesContent = document.createElement('div');
-        enderyeesContent.style.textAlign = 'center';
-        enderyeesContent.innerHTML = `
-            <div style="font-family: 'Orbitron', sans-serif; color: #00ffff; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 3px;">Enderyees</div>
-            <div style="display: flex; align-items: center; justify-content: center;">
-                <div style="color: #00ffff; margin-right: 5px; font-size: 22px;">✦</div>
-                <div id="enderyees-count" style="font-family: 'Digital-7', monospace; color: #00ffff; font-size: 28px; font-weight: bold; animation: pulse-glow 2s infinite;">0</div>
-            </div>
-        `;
-        enderyeesContainer.appendChild(enderyeesContent);
-        gameStatusContainer.appendChild(enderyeesContainer);
+        // Assemble the stopwatch
+        progressBarContainer.appendChild(progressBar);
+        stopwatchContainer.appendChild(timerLabel);
+        stopwatchContainer.appendChild(timerDisplay);
+        stopwatchContainer.appendChild(progressBarContainer);
+        document.body.appendChild(stopwatchContainer);
     }
     
     // Game timer functionality
     static startStopwatch() {
         // Get the elements
         const timerDisplay = document.getElementById('timer-display');
+        const progressBar = document.getElementById('timer-progress');
+        if (!timerDisplay || !progressBar) {
+            console.error("Timer elements not found in the DOM");
+            return;
+        }
         
         // Clear any existing interval
         if (this.timerInterval) {
@@ -408,27 +368,47 @@ class Game {
         // Set timer to 0
         this.gameTimer = 0;
         this.updateTimerDisplay(timerDisplay, this.gameTimer);
+        progressBar.style.width = '0%';
         
-        // Start the stopwatch (updating every 100ms for smoother animation)
+        // Start the stopwatch (updating every 100ms for smoother progress bar)
         this.timerInterval = setInterval(() => {
             this.gameTimer += 0.1;
             
             // Update timer display every 100ms
             this.updateTimerDisplay(timerDisplay, this.gameTimer);
             
-            // Update timer color based on remaining time
+            // Update progress bar (0-45 seconds = 0-100%)
+            const progressPercentage = (this.gameTimer / 45) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            
+            // Change color as time progresses
             if (this.gameTimer > 30) {
-                timerDisplay.style.color = '#ff3333'; // Red for last 15 seconds
+                progressBar.style.backgroundColor = '#ff3333'; // Red for last 15 seconds
+                progressBar.style.boxShadow = '0 0 10px rgba(255, 51, 51, 0.7)';
+                timerDisplay.style.color = '#ff3333';
                 timerDisplay.style.textShadow = '0 0 10px rgba(255, 51, 51, 0.7)';
             } else if (this.gameTimer > 15) {
-                timerDisplay.style.color = '#ffff33'; // Yellow for middle 15 seconds
+                progressBar.style.backgroundColor = '#ffff33'; // Yellow for middle 15 seconds
+                progressBar.style.boxShadow = '0 0 10px rgba(255, 255, 51, 0.7)';
+                timerDisplay.style.color = '#ffff33';
                 timerDisplay.style.textShadow = '0 0 10px rgba(255, 255, 51, 0.7)';
             }
             
-            // Add warning effects when time is running out
+            // Add pulsing effect in the last 5 seconds
             if (this.gameTimer > 40) {
-                const gameStatusContainer = document.getElementById('game-status-container');
-                gameStatusContainer.style.animation = 'flicker 1s infinite';
+                const stopwatchContainer = document.getElementById('stopwatch-container');
+                stopwatchContainer.style.animation = 'pulse 0.5s infinite alternate';
+                if (!document.getElementById('pulse-animation')) {
+                    const style = document.createElement('style');
+                    style.id = 'pulse-animation';
+                    style.innerHTML = `
+                        @keyframes pulse {
+                            from { transform: translateX(-50%) scale(1); }
+                            to { transform: translateX(-50%) scale(1.05); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
             }
             
             // Check if we're in the end level and the time limit has been reached
@@ -579,7 +559,7 @@ class Game {
             <h1 style="font-size: 60px; margin: 0; color: red; font-weight: bold; animation: glow 1.5s infinite alternate, slide-in 0.5s ease-out;">TIME'S UP!</h1>
             <p style="font-size: 24px; color: white; margin: 20px 0; animation: slide-in 0.5s ease-out 0.2s both;">Your 45-second challenge has ended</p>
             <div style="margin: 20px 0; font-size: 18px; color: #cccccc; animation: slide-in 0.5s ease-out 0.4s both;">
-                Final score: <span style="color: #00ffff; font-weight: bold;">${this.enderyeesCollected}</span> enderyees
+                Final score: <span style="color: yellow; font-weight: bold;">${document.getElementById('balance')?.innerHTML || '0'}</span>
             </div>
             <button id="restart-button" class="restart-btn" style="animation: slide-in 0.5s ease-out 0.6s both;">
                 PLAY AGAIN
@@ -627,12 +607,6 @@ class Game {
     getItemQuantity(itemId) {
         const item = Inventory.getInstance().items.find(item => item.id === itemId);
         return item ? item.quantity : 0;
-    }
-
-    // Add method to increment enderyees count
-    static incrementEnderyees(amount = 1) {
-        this.enderyeesCollected += amount;
-        document.getElementById('enderyees-count').textContent = this.enderyeesCollected;
     }
 
     // Add method to give starting items
