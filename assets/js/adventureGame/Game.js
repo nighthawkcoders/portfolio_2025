@@ -43,7 +43,7 @@ class Game {
         this.gameTimer = 0;
         this.timerInterval = null;
         this.currentLevelInstance = null;
-        this.endereyesCollected = 0;
+        this.enderyeesCollected = 0;
 
         // start the game immediately
         const gameLevelClasses = environment.gameLevelClasses;
