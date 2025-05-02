@@ -131,7 +131,7 @@ class GameLevelEnd {
     const sprite_src_eye = path + "/images/gamify/eyeOfEnder.png";
     const sprite_data_eye = {
         id: 'Eye of Ender',
-        greeting: `Get close and press E to claim this Eye of Ender.`,
+        greeting: `Press E to claim this Eye of Ender.`,
         src: sprite_src_eye,
         SCALE_FACTOR: 20,
         ANIMATION_RATE: 9007199254740991,
@@ -142,12 +142,9 @@ class GameLevelEnd {
         hitbox: { widthPercentage: 0.2, heightPercentage: 0.2 },
         zIndex: 10,  // Same z-index as player
         reaction: function() {
-          alert(`Get close and press E to claim this Eye of Ender.`);
+          alert(`Press E to claim this Eye of Ender.`);
         },
         interact: function() {
-          // This function is now only called by the Collectible class when a player
-          // is in collision with this eye AND presses the interact key (E or U)
-          
           self.eyesCollected++;
           
           // Update the eye counter display
@@ -186,40 +183,6 @@ class GameLevelEnd {
     
     // Create eye counter UI
     this.createEyeCounter();
-    
-    // Create proximity hint UI
-    this.createProximityHint();
-  }
-  
-  // Create UI hint for proximity interaction
-  createProximityHint() {
-    const hintContainer = document.createElement('div');
-    hintContainer.id = 'proximity-hint';
-    hintContainer.style.position = 'fixed';
-    hintContainer.style.bottom = '20px';
-    hintContainer.style.left = '50%';
-    hintContainer.style.transform = 'translateX(-50%)';
-    hintContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-    hintContainer.style.color = '#00FFFF';
-    hintContainer.style.padding = '10px 20px';
-    hintContainer.style.borderRadius = '5px';
-    hintContainer.style.fontFamily = "'Press Start 2P', cursive";
-    hintContainer.style.fontSize = '14px';
-    hintContainer.style.textAlign = 'center';
-    hintContainer.style.zIndex = '1000';
-    hintContainer.style.opacity = '0';
-    hintContainer.style.transition = 'opacity 0.5s';
-    hintContainer.textContent = 'PRESS E TO COLLECT';
-    
-    document.body.appendChild(hintContainer);
-  }
-  
-  // Show/hide proximity hint based on player collision
-  updateProximityHint(isColliding) {
-    const hint = document.getElementById('proximity-hint');
-    if (hint) {
-      hint.style.opacity = isColliding ? '1' : '0';
-    }
   }
   
   // Create a UI counter for the eyes
