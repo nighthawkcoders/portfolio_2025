@@ -260,6 +260,10 @@ class Game {
     }
 
     static initStatsUI() {
+        // Create theme colors for consistent UI
+        const themeColor = '#4a86e8'; // Main theme color (blue)
+        const themeShadow = 'rgba(74, 134, 232, 0.7)'; // Shadow color matching theme
+        
         const statsContainer = document.createElement('div');
         statsContainer.id = 'stats-container';
         statsContainer.style.position = 'fixed';
@@ -267,23 +271,38 @@ class Game {
         statsContainer.style.right = '10px';
         statsContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
         statsContainer.style.color = 'white';
-        statsContainer.style.padding = '10px';
-        statsContainer.style.borderRadius = '5px';
-    
-        const cookies = document.cookie.split(';');
-        const gameKeyCookie = cookies.find(cookie => cookie.trim().startsWith('gameKey='));
-        const meteorKeyStatus = gameKeyCookie ? '✅ Meteor Key Earned' : '❌ Meteor Key Not Earned';
+        statsContainer.style.padding = '15px';
+        statsContainer.style.borderRadius = '10px';
+        statsContainer.style.border = `2px solid ${themeColor}`;
+        statsContainer.style.boxShadow = `0 0 15px ${themeShadow}`;
+        statsContainer.style.fontFamily = "'Montserrat', sans-serif";
     
         statsContainer.innerHTML = `
-            <div>Balance: <span id="balance">0</span></div>
-            <div>Question Accuracy: <span id="questionAccuracy">0%</span></div>
-            <div style="color: ${gameKeyCookie ? '#00ff00' : '#ff4444'}">${meteorKeyStatus}</div>
+            <div style="font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;">
+                <span style="margin-right: 8px;">💰</span>
+                <span>Balance: <span id="balance" style="color: ${themeColor}; font-weight: bold;">0</span></span>
+            </div>
+            <div style="font-size: 14px; display: flex; align-items: center;">
+                <span style="margin-right: 8px;">📊</span>
+                <span>Accuracy: <span id="questionAccuracy" style="color: ${themeColor}; font-weight: bold;">0%</span></span>
+            </div>
         `;
+        
+        // Add Google font for better typography
+        const fontLink = document.createElement('link');
+        fontLink.href = 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap';
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
+        
         document.body.appendChild(statsContainer);
     }
     
     // Create a styled stopwatch
     static createStopwatch() {
+        // Use the theme color for consistent design
+        const themeColor = '#4a86e8';
+        const themeShadow = 'rgba(74, 134, 232, 0.7)';
+        
         const stopwatchContainer = document.createElement('div');
         stopwatchContainer.id = 'stopwatch-container';
         stopwatchContainer.style.position = 'fixed';
@@ -292,14 +311,15 @@ class Game {
         stopwatchContainer.style.transform = 'translateX(-50%)';
         stopwatchContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
         stopwatchContainer.style.borderRadius = '20px';
-        stopwatchContainer.style.padding = '10px 20px';
-        stopwatchContainer.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.7)';
+        stopwatchContainer.style.padding = '12px 25px';
+        stopwatchContainer.style.boxShadow = `0 0 15px ${themeShadow}`;
         stopwatchContainer.style.zIndex = '1000';
         stopwatchContainer.style.display = 'flex';
         stopwatchContainer.style.flexDirection = 'column';
         stopwatchContainer.style.alignItems = 'center';
         stopwatchContainer.style.justifyContent = 'center';
-        stopwatchContainer.style.border = '2px solid cyan';
+        stopwatchContainer.style.border = `2px solid ${themeColor}`;
+        stopwatchContainer.style.fontFamily = "'Montserrat', sans-serif";
         
         // Create the display for the timer
         const timerDisplay = document.createElement('div');
@@ -307,24 +327,24 @@ class Game {
         timerDisplay.style.fontFamily = "'Digital-7', monospace";
         timerDisplay.style.fontSize = '32px';
         timerDisplay.style.fontWeight = 'bold';
-        timerDisplay.style.color = '#00ffff';
-        timerDisplay.style.textShadow = '0 0 10px rgba(0, 255, 255, 0.7)';
+        timerDisplay.style.color = themeColor;
+        timerDisplay.style.textShadow = `0 0 10px ${themeShadow}`;
         timerDisplay.textContent = '00:00';
         
         // Create the progress bar
         const progressBarContainer = document.createElement('div');
         progressBarContainer.style.width = '100%';
-        progressBarContainer.style.height = '10px';
+        progressBarContainer.style.height = '8px';
         progressBarContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
         progressBarContainer.style.borderRadius = '5px';
-        progressBarContainer.style.margin = '5px 0';
+        progressBarContainer.style.margin = '8px 0 0 0';
         progressBarContainer.style.overflow = 'hidden';
         
         const progressBar = document.createElement('div');
         progressBar.id = 'timer-progress';
         progressBar.style.height = '100%';
         progressBar.style.width = '0%';
-        progressBar.style.backgroundColor = '#00ffff';
+        progressBar.style.backgroundColor = themeColor;
         progressBar.style.borderRadius = '5px';
         progressBar.style.transition = 'width 0.5s ease';
         
@@ -335,6 +355,7 @@ class Game {
         timerLabel.style.fontWeight = 'bold';
         timerLabel.style.color = 'white';
         timerLabel.style.marginBottom = '5px';
+        timerLabel.style.letterSpacing = '1px';
         
         // Add custom font for digital look
         const fontLink = document.createElement('link');
@@ -352,6 +373,14 @@ class Game {
     
     // Game timer functionality
     static startStopwatch() {
+        // Theme colors
+        const themeColor = '#4a86e8';
+        const themeShadow = 'rgba(74, 134, 232, 0.7)';
+        const warningColor = '#f6b26b'; // Orange
+        const warningShadow = 'rgba(246, 178, 107, 0.7)';
+        const dangerColor = '#ff5252'; // Red
+        const dangerShadow = 'rgba(255, 82, 82, 0.7)';
+        
         // Get the elements
         const timerDisplay = document.getElementById('timer-display');
         const progressBar = document.getElementById('timer-progress');
@@ -383,15 +412,15 @@ class Game {
             
             // Change color as time progresses
             if (this.gameTimer > 30) {
-                progressBar.style.backgroundColor = '#ff3333'; // Red for last 15 seconds
-                progressBar.style.boxShadow = '0 0 10px rgba(255, 51, 51, 0.7)';
-                timerDisplay.style.color = '#ff3333';
-                timerDisplay.style.textShadow = '0 0 10px rgba(255, 51, 51, 0.7)';
+                progressBar.style.backgroundColor = dangerColor; // Red for last 15 seconds
+                progressBar.style.boxShadow = `0 0 10px ${dangerShadow}`;
+                timerDisplay.style.color = dangerColor;
+                timerDisplay.style.textShadow = `0 0 10px ${dangerShadow}`;
             } else if (this.gameTimer > 15) {
-                progressBar.style.backgroundColor = '#ffff33'; // Yellow for middle 15 seconds
-                progressBar.style.boxShadow = '0 0 10px rgba(255, 255, 51, 0.7)';
-                timerDisplay.style.color = '#ffff33';
-                timerDisplay.style.textShadow = '0 0 10px rgba(255, 255, 51, 0.7)';
+                progressBar.style.backgroundColor = warningColor; // Orange for middle 15 seconds
+                progressBar.style.boxShadow = `0 0 10px ${warningShadow}`;
+                timerDisplay.style.color = warningColor;
+                timerDisplay.style.textShadow = `0 0 10px ${warningShadow}`;
             }
             
             // Add pulsing effect in the last 5 seconds
@@ -486,6 +515,10 @@ class Game {
     }
     
     static showGameOverScreen() {
+        // Use theme colors for consistent design
+        const themeColor = '#4a86e8';
+        const themeShadow = 'rgba(74, 134, 232, 0.7)';
+        
         // Create game over container with cool styling
         const gameOverDiv = document.createElement('div');
         gameOverDiv.id = 'game-over';
@@ -501,14 +534,15 @@ class Game {
         gameOverDiv.style.alignItems = 'center';
         gameOverDiv.style.zIndex = '1000';
         gameOverDiv.style.backdropFilter = 'blur(10px)';
+        gameOverDiv.style.fontFamily = "'Montserrat', sans-serif";
         
         // Add a pulsing border effect
         const innerDiv = document.createElement('div');
         innerDiv.style.padding = '40px';
         innerDiv.style.borderRadius = '20px';
         innerDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-        innerDiv.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.7)';
-        innerDiv.style.border = '3px solid red';
+        innerDiv.style.boxShadow = `0 0 30px ${themeShadow}`;
+        innerDiv.style.border = `3px solid ${themeColor}`;
         innerDiv.style.textAlign = 'center';
         innerDiv.style.animation = 'pulse-border 2s infinite alternate';
         
@@ -516,8 +550,8 @@ class Game {
         const style = document.createElement('style');
         style.innerHTML = `
             @keyframes pulse-border {
-                from { box-shadow: 0 0 30px rgba(255, 0, 0, 0.7); }
-                to { box-shadow: 0 0 50px rgba(255, 0, 0, 0.9); }
+                from { box-shadow: 0 0 30px ${themeShadow}; }
+                to { box-shadow: 0 0 50px ${themeShadow}; }
             }
             
             @keyframes slide-in {
@@ -526,12 +560,12 @@ class Game {
             }
             
             @keyframes glow {
-                from { text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); }
-                to { text-shadow: 0 0 30px rgba(255, 0, 0, 0.9); }
+                from { text-shadow: 0 0 10px ${themeShadow}; }
+                to { text-shadow: 0 0 30px ${themeShadow}; }
             }
             
             .restart-btn {
-                background: linear-gradient(to bottom, #ff3333, #cc0000);
+                background: linear-gradient(to bottom, ${themeColor}, #2b5797);
                 color: white;
                 border: none;
                 padding: 15px 30px;
@@ -544,22 +578,23 @@ class Game {
                 box-shadow: 0 5px 15px rgba(0,0,0,0.3);
                 text-transform: uppercase;
                 letter-spacing: 1px;
+                font-family: 'Montserrat', sans-serif;
             }
             
             .restart-btn:hover {
                 transform: scale(1.05);
                 box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-                background: linear-gradient(to bottom, #ff5555, #ff0000);
+                background: linear-gradient(to bottom, #5a96f8, ${themeColor});
             }
         `;
         document.head.appendChild(style);
         
         // Game over content
         innerDiv.innerHTML = `
-            <h1 style="font-size: 60px; margin: 0; color: red; font-weight: bold; animation: glow 1.5s infinite alternate, slide-in 0.5s ease-out;">TIME'S UP!</h1>
+            <h1 style="font-size: 60px; margin: 0; color: ${themeColor}; font-weight: bold; animation: glow 1.5s infinite alternate, slide-in 0.5s ease-out;">TIME'S UP!</h1>
             <p style="font-size: 24px; color: white; margin: 20px 0; animation: slide-in 0.5s ease-out 0.2s both;">Your 45-second challenge has ended</p>
             <div style="margin: 20px 0; font-size: 18px; color: #cccccc; animation: slide-in 0.5s ease-out 0.4s both;">
-                Final score: <span style="color: yellow; font-weight: bold;">${document.getElementById('balance')?.innerHTML || '0'}</span>
+                Final score: <span style="color: ${themeColor}; font-weight: bold;">${document.getElementById('balance')?.innerHTML || '0'}</span>
             </div>
             <button id="restart-button" class="restart-btn" style="animation: slide-in 0.5s ease-out 0.6s both;">
                 PLAY AGAIN
