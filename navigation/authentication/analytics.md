@@ -393,7 +393,13 @@ search_exclude: true
             }
 
             const dateElement = document.createElement("p");
-            dateElement.textContent = `📅 ${dateStr}`;
+            const dateOnly = new Date(commit.date).toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            dateElement.textContent = `📅 ${dateOnly}`;
+
             dateElement.style.fontSize = "0.9em";
             dateElement.style.color = "#bbb";
 
