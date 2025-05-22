@@ -349,9 +349,13 @@ search_exclude: true
             const nodes = item.contributions?.nodes || [];
 
             for (const node of nodes) {
+
+                console.log("Commit node:", node);
+
                 allCommits.push({
                     repo,
-                    message: node.message || "No message",
+                    message: `🧾 ${node.commitCount} commit${node.commitCount > 1 ? 's' : ''}`,
+
                     date: node.occurredAt || node.committedDate || node.pushedDate || "Unknown date"
                 });
             }
