@@ -166,6 +166,8 @@ search_exclude: true
                 <p id="following"></p>
             </div>
         </div>
+        <!-- Commit cards will be inserted here -->
+        <div id="commitCardsContainer" style="margin-top: 20px;"></div>
     </div>
 </div>
 
@@ -247,7 +249,6 @@ search_exclude: true
 <script type="module">
     import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
 
-    // URLs to fetch profile links, user data, and commits
     const profileLinksUrl = `${pythonURI}/api/analytics/github/user/profile_links`;
     const userProfileUrl = `${pythonURI}/api/analytics/github/user`;
     const commitsUrl = `${pythonURI}/api/analytics/github/user/commits`;
@@ -256,14 +257,12 @@ search_exclude: true
 
     async function fetchData() {
         try {
-            // Define the fetch requests
             const profileLinksRequest = fetch(profileLinksUrl, fetchOptions);
             const userProfileRequest = fetch(userProfileUrl, fetchOptions);
             const commitsRequest = fetch(commitsUrl, fetchOptions);
             const prsRequest = fetch(prsUrl, fetchOptions);
             const issuesRequest = fetch(issuesUrl, fetchOptions);
 
-            // Run all fetch requests concurrently
             const [profileLinksResponse, userProfileResponse, commitsResponse, prsResponse, issuesResponse] = await Promise.all([
                 profileLinksRequest,
                 userProfileRequest,
@@ -272,31 +271,16 @@ search_exclude: true
                 issuesRequest
             ]);
 
-            // Check for errors in the responses
-            if (!profileLinksResponse.ok) {
-                throw new Error('Failed to fetch profile links: ' + profileLinksResponse.statusText);
-            }
-            if (!userProfileResponse.ok) {
-                throw new Error('Failed to fetch user profile: ' + userProfileResponse.statusText);
-            }
-            if (!commitsResponse.ok) {
-                throw new Error('Failed to fetch commits: ' + commitsResponse.statusText);
-            }
-            if (!prsResponse.ok) {
-                throw new Error('Failed to fetch pull requests: ' + prsResponse.statusText);
-            }
-            if (!issuesResponse.ok) {
-                throw new Error('Failed to fetch issues: ' + issuesResponse.statusText);
+            if (!profileLinksResponse.ok || !userProfileResponse.ok || !commitsResponse.ok || !prsResponse.ok || !issuesResponse.ok) {
+                throw new Error('Failed to fetch one or more resources');
             }
 
-            // Parse the JSON data
             const profileLinks = await profileLinksResponse.json();
             const userProfile = await userProfileResponse.json();
             const commitsData = await commitsResponse.json();
             const prsData = await prsResponse.json();
             const issuesData = await issuesResponse.json();
 
-            // Extract commits count
             const commitsArray = commitsData.details_of_commits || [];
             const commitsCount = commitsData.total_commit_contributions || 0;
             const prsArray = prsData.pull_requests || [];
@@ -304,23 +288,22 @@ search_exclude: true
             const issuesArray = issuesData.issues || [];
             const issuesCount = issuesArray.length || 0;
 
-            // Extract relevant information from the user profile data
             const username = userProfile.login || 'N/A';
             const profileUrl = profileLinks.profile_url || 'N/A';
             const avatarUrl = userProfile.avatar_url || '';
-            const publicReposUrl = profileLinks.repos_url || 'N/A';  // Added for repos URL
+            const publicReposUrl = profileLinks.repos_url || 'N/A';
             const publicRepos = userProfile.public_repos || 'N/A';
             const publicGists = userProfile.public_gists || 'N/A';
             const followers = userProfile.followers || 'N/A';
             const following = userProfile.following || 'N/A';
 
-            // Update the HTML elements with the data
             document.getElementById('avatar').src = avatarUrl;
             document.getElementById('username').textContent = `Username: ${username}`;
-            document.getElementById('profile-url').innerHTML = `Profile URL: <a href="${profileUrl}" target="_blank">${profileUrl}</a>`;  // Added link to profile URL
+            document.getElementById('profile-url').innerHTML = `Profile URL: <a href="${profileUrl}" target="_blank">${profileUrl}</a>`;
             document.getElementById('public-repos').textContent = `Public Repos: ${publicRepos}`;
             document.getElementById('public-gists').textContent = `Public Gists: ${publicGists}`;
             document.getElementById('followers').textContent = `Followers: ${followers}`;
+            document.getElementById('following').textContent = `Following: ${following}`;
 
             document.getElementById('commits-count').innerHTML = '<a href="#" class="info-link"><i class="fas fa-info-circle info-icon"></i></a>' + `Commits: ${commitsCount}`;
             document.querySelector('#commits-count .info-link').addEventListener('click', (event) => {
@@ -340,41 +323,112 @@ search_exclude: true
                 showModal(issuesArray);
             });
 
+            // 🔽 Add this to render commit cards beneath profile
+            console.log("Sample commit:", commitsArray[0]);
+
+            renderCommitCards(commitsArray, username);
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     }
 
-    // Function to convert JSON data to a string with clickable links via Regular Expression (RegEx)
+    function renderCommitCards(commitsArray, username) {
+        const container = document.getElementById("commitCardsContainer");
+        container.innerHTML = ""; // Clear old cards
+
+        if (!commitsArray.length) {
+            container.innerHTML = `<p>No recent commits found.</p>`;
+            return;
+        }
+
+        // Flatten all commits from contributions.nodes
+        let allCommits = [];
+        for (const item of commitsArray) {
+            const repo = item.repository?.nameWithOwner || "Unknown Repo";
+            const nodes = item.contributions?.nodes || [];
+
+            for (const node of nodes) {
+                allCommits.push({
+                    repo,
+                    message: node.message || "No message",
+                    date: node.occurredAt || node.committedDate || node.pushedDate || "Unknown date"
+                });
+            }
+        }
+
+        // Sort by date (most recent first)
+        allCommits.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // Render top 10
+        allCommits.slice(0, 10).forEach((commit, index) => {
+            const card = document.createElement("div");
+            card.className = "card animate__animated animate__fadeInUp";
+            card.style.backgroundColor = "#34495e";
+            card.style.color = "#fff";
+            card.style.padding = "15px";
+            card.style.borderRadius = "10px";
+            card.style.marginBottom = "10px";
+            card.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+            card.style.animationDelay = `${index * 0.1}s`;
+
+            const repoLink = document.createElement("a");
+            repoLink.href = `https://github.com/${commit.repo}`;
+            repoLink.target = "_blank";
+            repoLink.textContent = commit.repo;
+            repoLink.style.color = "#1abc9c";
+            repoLink.style.textDecoration = "none";
+
+            const message = document.createElement("p");
+            message.textContent = `📝 ${commit.message}`;
+
+            let dateStr = "Unknown time";
+            const parsed = Date.parse(commit.date);
+            if (!isNaN(parsed)) {
+                dateStr = new Date(parsed).toLocaleString();
+            }
+
+            const dateElement = document.createElement("p");
+            dateElement.textContent = `📅 ${dateStr}`;
+            dateElement.style.fontSize = "0.9em";
+            dateElement.style.color = "#bbb";
+
+            card.appendChild(repoLink);
+            card.appendChild(message);
+            card.appendChild(dateElement);
+
+            container.appendChild(card);
+        });
+    }
+
     function jsonToHtml(json) {
         const jsonString = JSON.stringify(json, null, 2);
         const urlPattern = /(https?:\/\/[^\s]+)/g;
         return jsonString.replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
     }
 
-    // Function to show modal with data
     function showModal(data) {
         const modal = document.getElementById('dataModal');
         const modalData = document.getElementById('modalData');
-        const closeBtn = document.getElementsByClassName['close'](0);
+        const closeBtn = document.getElementsByClassName('close')[0];
 
         modalData.innerHTML = jsonToHtml(data);
         modal.style.display = 'block';
 
         closeBtn.onclick = function () {
             modal.style.display = 'none';
-        }
+        };
 
         window.onclick = function (event) {
             if (event.target == modal) {
                 modal.style.display = 'none';
             }
-        }
+        };
     }
 
-    // Call the fetchData function to initiate the requests
     fetchData();
 </script>
+
 
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
