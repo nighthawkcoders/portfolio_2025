@@ -1,132 +1,276 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 
-<script type="module">
-  import { login, pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-  async function verifyAuthentication() {
-    const URL = `${javaURI}/api/person/get`;
-    try {
-      const response = await fetch(URL, fetchOptions);
-      if (!response.ok) {
-        throw new Error(`Spring server response: ${response.status}`);
-      }
-      return true; // Successful authentication
-    } catch (error) {
-      return false; // Authentication failed
-    }
-  }
-
-  window.onload = async function() {
-    const isAuthenticated = await verifyAuthentication();
-    const loadingElement = document.getElementById('loadingElement');
-    
-    if (isAuthenticated) {
-      loadingElement.style.display = "none";  // Hide the loading screen
-    } else {
-      // Create a blurred background overlay
-      const overlay = document.createElement('div');
-      overlay.style.position = 'fixed';
-      overlay.style.top = '0';
-      overlay.style.left = '0';
-      overlay.style.width = '100%';
-      overlay.style.height = '100%';
-      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Semi-transparent black
-      overlay.style.backdropFilter = 'blur(10px)'; // Blur effect
-      overlay.style.zIndex = '999'; // Ensure it appears above other elements
-      document.body.appendChild(overlay);
-
-      // Create the "Please login" message box
-      const message = document.createElement('div');
-      message.style.position = 'absolute';
-      message.style.top = '50%';
-      message.style.left = '50%';
-      message.style.transform = 'translate(-50%, -50%)';
-      message.style.backgroundColor = 'black'; // Solid black background
-      message.style.padding = '20px';
-      message.style.fontSize = '20px';
-      message.style.color = '#fff'; // White text color
-      message.style.borderRadius = '10px';
-      message.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'; // Optional shadow for better visibility
-      message.style.zIndex = '1000'; // Ensure it appears above the overlay
-      message.innerHTML = 'Please login';
-      
-      // Add the message on top of the overlay
-      document.body.appendChild(message);
-
-      // Wait for 2 seconds before redirecting
-      setTimeout(() => {
-        window.location.href = "{{site.baseurl}}/login";  // Redirect to login page
-      }, 2000);  // 2000ms = 2 seconds
-    }
-  }
-</script>
-
-<style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #111111;
-        color: white;
-
-        /* delete later */
-        margin: 0px;
-    }
-
-    h1 {
-        white-space: nowrap;
-    }
-
-    h3 {
-        margin-top: 0px;
-        padding-top: 0px;
-    }
-
-    .container {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-template-rows: 1fr;
-        grid-auto-columns: 1fr;
-        gap: 0px 50px;
-        grid-auto-flow: row;
-        grid-template-areas:
-            "sidebar main-info";
-
-        margin: 50px;
-        margin-top: 100px;
-        margin-left: 8rem;
-    }
-
-    .sidebar {
-        grid-area: sidebar;
-    }
-</style>
-
-<body>
+<body class="min-h-screen flex flex-col flex-auto flex-shrink-0 bg-neutral-800 text-neutral-100 transition-colors">
     <!-- navbar -->
     {%- include Aesthetihawk/header.html -%}
-    
-    <div id="loadingElement" class="loading-container">
-        <div class="spinner"></div>
-    </div>  
 
-    <!-- main content -->
-     
-    <div>
-        <div class="container">
-            <!-- navigation pane on the left (sign in/out, etc.) -->
-            <div class="sidebar">
-                {% include Aesthetihawk/sidebar.html %}
+    <div
+        class="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased text-neutral-50 mt-[53px] bg-neutral-900">
+
+        <!-- Sidebar -->
+        <div class="fixed left-0 top-[53px] w-64 h-full bg-neutral-800 border-r  border-neutral-700 flex flex-col">
+
+            <!-- profile pic section -->
+            <div class="p-6 flex flex-col items-center bg-neutral-800">
+                <div class="w-24 h-24 rounded-full overflow-hidden mb-4 cursor-pointer" id="sidebarPfpBox">
+                    <img src="" alt="Profile picture" class="w-full h-full object-cover" id="sidebarPfp">
+                </div>
+                <h2 class="text-lg font-semibold text-center mb-6" id="sidebarWelcome">Welcome, User</h2>
             </div>
-    
+
+            <!-- Scrollable menu section -->
+            <div class="overflow-y-auto flex-grow">
+
+                <!-- the menu side -->
+                <ul class="flex flex-col py-4 space-y-1">
+
+                    <!-- section title -->
+                    <li class="px-5">
+                        <div class="flex flex-row items-center h-8">
+                            <div class="text-sm font-light tracking-wide text-neutral-500">Menu</div>
+                        </div>
+                    </li>
+
+                    <!-- dashboard button -->
+                    <li>
+                        <a id="Dashboard" href="{{site.baseurl}}/dashboard" onclick="setActiveTab(this)"
+                            class="nav-item relative flex flex-row items-center h-11 focus:outline-none text-neutral-600 hover:text-neutral-50 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                            <span class="inline-flex justify-center items-center ml-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                    </path>
+                                </svg>
+                            </span>
+                            <span class="ml-2 text-sm tracking-wide truncate">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <!-- analytics button -->
+                    <li>
+                        <a id="Profile" href="{{site.baseurl}}/profile" onclick="setActiveTab(this)"
+                            class="nav-item relative flex flex-row items-center h-11 focus:outline-none text-neutral-600 hover:text-neutral-50 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                            <span class="inline-flex justify-center items-center ml-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h2m10 1a3 3 0 0 1-3 3m3-3a3 3 0 0 0-3-3m3 3h1m-4 3a3 3 0 0 1-3-3m3 3v1m-3-4a3 3 0 0 1 3-3m-3 3h-1m4-3v-1m-2.121 1.879-.707-.707m5.656 5.656-.707-.707m-4.242 0-.707.707m5.656-5.656-.707.707M12 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
+                            </span>
+                            <span class="ml-2 text-sm tracking-wide truncate">Profile</span>
+                        </a>
+                    </li>
+
+                    <!-- logout -->
+                    <li>
+                        <a id="Logout" href="#" onclick="handleLogout()"
+                            class="nav-item relative flex flex-row items-center h-11 focus:outline-none text-neutral-600 hover:text-neutral-50 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                            <span class="inline-flex justify-center items-center ml-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                    </path>
+                                </svg>
+                            </span>
+                            <span class="ml-2 text-sm tracking-wide truncate">Logout</span>
+                        </a>
+                    </li>
+
+                    <!-- student toolkit section -->
+                    <li class="px-5">
+                        <div class="flex flex-row items-center h-8">
+                            <div class="text-sm font-light tracking-wide text-neutral-500">Toolkit</div>
+                        </div>
+                    </li>
+
+                  
+
+                    <!-- groups -->
+                    <li>
+                        <a id="Groups" href="{{site.baseurl}}/student/groups" onclick="setActiveTab(this)"
+                            class="nav-item relative flex flex-row items-center h-11 focus:outline-none text-neutral-600 hover:text-neutral-50 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                            <span class="inline-flex justify-center items-center ml-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                                    </path>
+                                </svg>
+                            </span>
+                            <span class="ml-2 text-sm tracking-wide truncate">Groups</span>
+                        </a>
+                    </li>
+
+                    <!-- screen queue -->
+                    <li>
+                        <a id="ScreenQueue" href="{{site.baseurl}}/student/queue" onclick="setActiveTab(this)"
+                            class="nav-item relative flex flex-row items-center h-11 focus:outline-none text-neutral-600 hover:text-neutral-50 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                            <span class="inline-flex justify-center items-center ml-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4" />
+                                </svg>
+                            </span>
+                            <span class="ml-2 text-sm tracking-wide truncate">Screen Queue</span>
+                        </a>
+                    </li>
+
+                    <!-- assignment submissions -->
+                    <li>
+                        <a id="AssignmentSubmissions" href="{{site.baseurl}}/student/submissions" onclick="setActiveTab(this)"
+                            class="nav-item relative flex flex-row items-center h-11 focus:outline-none text-neutral-600 hover:text-neutral-50 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                            <span class="inline-flex justify-center items-center ml-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 10V4a1 1 0 0 0-1-1H9.914a1 1 0 0 0-.707.293L5.293 7.207A1 1 0 0 0 5 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2M10 3v4a1 1 0 0 1-1 1H5m5 6h9m0 0-2-2m2 2-2 2" />
+                                </svg>
+                            </span>
+
+                            <span class="ml-2 text-sm tracking-wide truncate">Assignment Submissions</span>
+                        </a>
+                    </li>
+
+                    <!-- Team Teach Signup -->
+                    <li>
+                        <a id="TeamTeachSignup" href="{{site.baseurl}}/student/teamteachsignup" onclick="setActiveTab(this)"
+                            class="nav-item relative flex flex-row items-center h-11 focus:outline-none text-neutral-600 hover:text-neutral-50 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                            <span class="inline-flex justify-center items-center ml-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                                </svg>
+                            </span>
+                            <span class="ml-2 text-sm tracking-wide truncate">Team Teach Signup</span>
+                        </a>
+                    </li>
+
+                    <!-- View grades -->
+                    <li>
+                        <a id="ViewGrades" href="{{site.baseurl}}/student/grades" onclick="setActiveTab(this)"
+                            class="nav-item relative flex flex-row items-center h-11 focus:outline-none text-neutral-600 hover:text-neutral-50 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                            <span class="inline-flex justify-center items-center ml-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                </svg>
+                            </span>
+                            <span class="ml-2 text-sm tracking-wide truncate">View Grades</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="ml-64 p-8 bg-neutral-900">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold">{{page.title}}</h1>
+            </div>
+
             {{ content }}
         </div>
     </div>
-
 </body>
 
 </html>
+
+
+<!-- set active sidebar tab -->
+<script>
+    // function to set active tab by element or id
+    function setActiveTab(elementOrId) {
+        // remove active classes from all nav items
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.classList.remove('bg-neutral-700', 'text-neutral-50', 'border-indigo-500');
+            item.classList.add('text-neutral-600', 'border-transparent');
+        });
+
+        // get element if id string is passed
+        let el = elementOrId;
+        if (typeof elementOrId === 'string') {
+            el = document.getElementById(elementOrId);
+        }
+
+        // add active classes to clicked tab
+        if (el) {
+            el.classList.add('bg-neutral-700', 'text-neutral-50', 'border-indigo-500');
+            el.classList.remove('text-neutral-600', 'border-transparent');
+            // store active tab id in localstorage
+            localStorage.setItem('activeTabId', el.id);
+        }
+    }
+
+    // on page load, re-apply active tab from localstorage or front matter
+    window.addEventListener('DOMContentLoaded', () => {
+        let activeId = localStorage.getItem('activeTabId');
+        let activeLink = null;
+
+        if (activeId) activeLink = document.getElementById(activeId);
+
+        // if no active tab in localstorage, use the one from front matter
+        if (!activeLink) {
+            const fallback = "{{ page.act_tab | escape }}";
+            if (fallback) {
+                setActiveTab(fallback);
+                return;
+            }
+        }
+        activeLink && setActiveTab(activeLink);
+
+        // set sidebar welcome name
+        // try to get from localstorage, or fallback to 'user'
+        document.getElementById('sidebarWelcome').innerHTML = 'Welcome,<br>' + localStorage.getItem('name');
+    });
+
+    // logout from both java and python backends
+    async function handleLogout() {
+        // import config dynamically since we can't use import in non-module script
+        const configModule = await import('{{site.baseurl}}/assets/js/api/config.js');
+        const fetchOptions = configModule.fetchOptions;
+        const pythonURI = configModule.pythonURI;
+        const javaURI = configModule.javaURI;
+
+        // logout from python backend
+        try {
+            await fetch(pythonURI + '/api/authenticate', {
+                ...fetchOptions,
+                method: 'DELETE'
+            });
+        } catch (e) {
+            // log error but continue
+            console.error('python logout failed:', e);
+        }
+
+        // logout from java backend
+        try {
+            await fetch(javaURI + '/my/logout', {
+                ...fetchOptions,
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (e) {
+            // log error but continue
+            console.error('java logout failed:', e);
+        }
+
+        // redirect to login page
+        window.location.href = "{{site.baseurl}}/login";
+    }
+</script>

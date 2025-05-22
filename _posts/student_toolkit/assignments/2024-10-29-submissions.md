@@ -1,5 +1,5 @@
 ---
-layout: toolkit
+layout: aesthetihawk
 title: Submission Page
 active_tab: submissions
 permalink: /student/submissions

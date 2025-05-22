@@ -111,7 +111,7 @@ async function loadUserBalance() {
     }
     
     // Format balance with proper decimal places
-    const balance = Number(userData.balance).toFixed(2);
+    const balance = Number(userData.banks.balance).toFixed(2);
     balanceElement.textContent = `$${balance}`;
     
   } catch (error) {
@@ -125,7 +125,7 @@ async function loadUserBalance() {
       usernameElement.textContent = userData.uid || "Guest";
     }
     if (balanceElement) {
-      balanceElement.textContent = `$${Number(userData.balance).toFixed(2)}`;
+      balanceElement.textContent = `$${Number(userData.banks.balance).toFixed(2)}`;
     }
   } catch (error) {
     console.error("Error loading user info:", error);

@@ -361,24 +361,51 @@ async function fetchCurrentEnergyPlan() {
 
 async function initializeMiningState() {
     try {
-        const options = {
+        const response = await fetch(`${javaURI}/api/mining/energy`, {
             ...fetchOptions,
             method: 'GET',
-            cache: 'no-cache'
-        };
-        // Fetch initial mining state
-        const response = await fetch(`${javaURI}/api/mining/state`, options);
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Please log in to view energy plan');
+            } else {
+                throw new Error(`Failed to fetch energy plan (Status: ${response.status})`);
+            }
+        }
+        
+        const data = await response.json();
+        const energyPlanElement = document.getElementById('current-energy-plan');
+        
+        if (data && data.supplierName) {
+            energyPlanElement.textContent = `${data.supplierName} (${data.EEM || '0.00'} EEM)`;
+            energyPlanElement.className = 'stat-value text-green-400';
+        } else {
+            energyPlanElement.textContent = 'No Energy Plan';
+            energyPlanElement.className = 'stat-value text-red-400';
+        }
+    } catch (error) {
+        console.error('Error fetching energy plan:', error);
+        const energyPlanElement = document.getElementById('current-energy-plan');
+        energyPlanElement.textContent = 'Error Loading Plan';
+        energyPlanElement.className = 'stat-value text-red-400';
+    }
+}
+
+async function initializeMiningState() {
+    try {
+        const response = await fetch(`${javaURI}/api/mining/state`, fetchOptions);
         if (!response.ok) {
             throw new Error('Failed to fetch mining state');
         }
         const state = await response.json();
-        console.log('Initial mining state:', state);
-        // Update UI with initial state
-        updateDisplay(state);
+        
+        // Update UI with persisted state
         updateMiningButton(state.isMining);
-        // Start periodic updates if mining is active
         if (state.isMining) {
             startPeriodicUpdates();
+            startCountdown();
         }
         // Fetch current energy plan
         await fetchCurrentEnergyPlan();
@@ -488,10 +515,6 @@ window.buyGpu = async function (gpuId, quantity) {
 }
 
 async function updateMiningStats() {
-    // Get current cryptocurrency from localStorage or default to BTC
-    let currentSymbol = localStorage.getItem('currentMiningCrypto') || 'BTC';
-    // Update the pool info with the current cryptocurrency
-    document.getElementById('pool-info').textContent = `Mining: ${currentSymbol}`;
     try {
         const options = {
             ...fetchOptions,
@@ -499,54 +522,41 @@ async function updateMiningStats() {
             cache: 'no-cache'
         };
         
-        // First fetch the stats
-        const statsResponse = await fetch(`${javaURI}/api/mining/stats`, options);
-        if (!statsResponse.ok) {
-            throw new Error(`Failed to fetch stats: ${statsResponse.status}`);
-        }
-        const stats = await statsResponse.json();
+        // First fetch the stats with retry
+        const stats = await fetchWithRetry(`${javaURI}/api/mining/stats`, options);
         
         // Try to fetch GPU shop data, but don't fail if it errors
         let gpuPriceMap = {};
         try {
-            const gpusResponse = await fetch(`${javaURI}/api/mining/shop`, options);
-            if (gpusResponse.ok) {
-                const gpus = await gpusResponse.json();
-                console.log('Shop GPUs:', gpus);
-                // Create a map of GPU prices
-                gpus.forEach(gpu => {
-                    gpuPriceMap[gpu.id] = gpu.price;
-                    console.log(`GPU ${gpu.id} (${gpu.name}) price: ${gpu.price}`);
-                });
-            } else {
-                console.warn('Failed to fetch GPU shop data:', gpusResponse.status);
-            }
+            const gpus = await fetchWithRetry(`${javaURI}/api/mining/shop`, options);
+            gpus.forEach(gpu => {
+                gpuPriceMap[gpu.id] = gpu.price;
+            });
         } catch (shopError) {
             console.warn('Error fetching GPU shop data:', shopError);
         }
         
         // Add prices to the stats.gpus array
         if (stats.gpus) {
-            stats.gpus = stats.gpus.map(gpu => {
-                const price = gpuPriceMap[gpu.id] || gpu.price || 0; // Use existing price if available
-                console.log(`Merging GPU ${gpu.id} (${gpu.name}) with price: ${price}`);
-                return {
-                    ...gpu,
-                    price: price
-                };
-            });
+            stats.gpus = stats.gpus.map(gpu => ({
+                ...gpu,
+                price: gpuPriceMap[gpu.id] || gpu.price || 0
+            }));
         } else {
             stats.gpus = [];
         }
-        
-        console.log('Final Stats GPUs with Prices:', stats.gpus);
         
         updateDisplay(stats);
         renderGpuInventory(stats);
         updateCharts(stats);
     } catch (error) {
         console.error('Error updating mining stats:', error);
-        showNotification('Failed to fetch mining data, check your connection');
+        showNotification('Failed to fetch mining data, check your connection', true);
+        // Reset UI to safe state
+        document.getElementById('hashrate').textContent = '0 MH/s';
+        document.getElementById('shares').textContent = '0';
+        document.getElementById('gpu-temp').textContent = '0°C';
+        document.getElementById('power-draw').textContent = '0W';
     }
 }
 
@@ -700,38 +710,40 @@ function updateCharts(stats) {
         console.warn('updateCharts called without stats');
         return;
     }
-    console.log('Updating charts with:', {
-        hashrate: stats.hashrate,
-        dailyRevenue: stats.dailyRevenue,
-        powerCost: stats.powerCost
-    });
+
+    const MAX_DATA_POINTS = 50; // Maximum number of data points to keep
     const now = new Date().toLocaleTimeString();
+
     // Update hashrate chart
     if (hashrateChart) {
         const numericHashrate = parseFloat(stats.hashrate) || 0;
-        console.log('Adding hashrate data point:', numericHashrate);
-        hashrateChart.data.labels.push(now);
-        hashrateChart.data.datasets[0].data.push(numericHashrate);
-        if (hashrateChart.data.labels.length > 50) {
+        
+        // Remove old data points if exceeding limit
+        while (hashrateChart.data.labels.length >= MAX_DATA_POINTS) {
             hashrateChart.data.labels.shift();
             hashrateChart.data.datasets[0].data.shift();
         }
+        
+        hashrateChart.data.labels.push(now);
+        hashrateChart.data.datasets[0].data.push(numericHashrate);
         hashrateChart.update('none');
-        console.log('Hashrate chart updated');
     }
-    // Update profit chart with total profit (Power Cost + USD Value)
+
+    // Update profit chart
     if (profitChart) {
         const dailyRevenue = typeof stats.dailyRevenue === 'number' ? stats.dailyRevenue : 0;
         const powerCost = typeof stats.powerCost === 'number' ? stats.powerCost : 0;
         const totalBalanceUSD = parseFloat(stats.totalBalanceUSD) || 0;
-        const totalProfit = totalBalanceUSD + powerCost; // Add power cost to total balance
-        console.log('Calculated total profit:', { dailyRevenue, powerCost, totalBalanceUSD, totalProfit });
-        profitChart.data.labels.push(now);
-        profitChart.data.datasets[0].data.push(totalProfit);
-        if (profitChart.data.labels.length > 50) {
+        const totalProfit = totalBalanceUSD + powerCost;
+        
+        // Remove old data points if exceeding limit
+        while (profitChart.data.labels.length >= MAX_DATA_POINTS) {
             profitChart.data.labels.shift();
             profitChart.data.datasets[0].data.shift();
         }
+        
+        profitChart.data.labels.push(now);
+        profitChart.data.datasets[0].data.push(totalProfit);
         profitChart.update('none');
         console.log('Profit chart updated');
     }

@@ -188,7 +188,6 @@ permalink: /crypto/miningbackup
             </div>
         </div>
     </div>
-    <!-- Add this right before the closing </body> tag -->
     <div id="active-gpus-modal" class="active-gpus-modal hidden">
         <div class="active-gpus-content">
             <div class="flex justify-between items-center mb-4">

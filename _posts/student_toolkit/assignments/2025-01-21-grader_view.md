@@ -274,7 +274,7 @@ comments: false
         console.log(studentIds);
 
         fetch(`${javaURI}/api/synergy/grades/requests/bulk`, {
-            ...fetchOptions
+            ...fetchOptions,
             method: 'POST',
             body: JSON.stringify({
                 'studentIds': studentIds,

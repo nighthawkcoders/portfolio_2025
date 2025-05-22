@@ -1,598 +1,175 @@
 ---
-title: Profile
+title: Profile Settings
 layout: aesthetihawk
 active_tab: profile
 ---
 
-<style>
-    /* Base styles for the switch */
-    .switch {
-        display: inline-block;
-        position: relative;
-        width: 50px;
-        height: 25px;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: 0.4s;
-        border-radius: 25px;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 19px;
-        width: 19px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: 0.4s;
-        border-radius: 50%;
-    }
-
-    input:checked+.slider {
-        background-color: #2196F3;
-    }
-
-    input:checked+.slider.green {
-        background-color: #4CAF50;
-    }
-
-    input:checked+.slider:before {
-        transform: translateX(25px);
-    }
-
-    .label-text {
-        margin-left: 10px;
-        font-size: 16px;
-        vertical-align: middle;
-    }
-
-    @media (min-width: 1400PX) {
-        .cards {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    .header {
-        grid-area: header;
-    }
-
-    .name-info {
-        display: grid;
-        grid-template-columns: 1fr max-content;
-        grid-template-rows: 1fr;
-        gap: 0px 0px;
-        grid-auto-flow: row;
-        grid-template-areas:
-            "name-details name-icon";
-        grid-area: name-info;
-    }
-
-    .name-details {
-        grid-area: name-details;
-    }
-
-    .name-icon {
-        grid-area: name-icon;
-    }
-
-    .uid-info {
-        display: grid;
-        grid-template-columns: 1fr min-content;
-        grid-template-rows: 1fr;
-        gap: 0px 0px;
-        grid-auto-flow: row;
-        grid-template-areas:
-            "uid-details uid-icon";
-        grid-area: uid-info;
-    }
-
-    .uid-details {
-        grid-area: uid-details;
-    }
-
-    .uid-icon {
-        grid-area: uid-icon;
-    }
-
-    .email-info {
-        display: grid;
-        grid-template-columns: 1fr min-content;
-        grid-template-rows: 1fr;
-        gap: 0px 0px;
-        grid-auto-flow: row;
-        grid-template-areas:
-            "email-details email-icon";
-        grid-area: email-info;
-    }
-
-    .email-details {
-        grid-area: email-details;
-    }
-
-    .email-icon {
-        grid-area: email-icon;
-    }
-
-    .password-info {
-        display: grid;
-        grid-template-columns: 1fr min-content;
-        grid-template-rows: 1fr;
-        gap: 0px 0px;
-        grid-auto-flow: row;
-        grid-template-areas:
-            "password-details password-icon";
-        grid-area: password-info;
-    }
-
-    .password-details {
-        grid-area: password-details;
-    }
-
-    .password-icon {
-        grid-area: password-icon;
-    }
-
-    .kasm-info {
-        display: grid;
-        grid-template-columns: 1fr min-content;
-        grid-template-rows: 1fr;
-        gap: 0px 0px;
-        grid-auto-flow: row;
-        grid-template-areas:
-            "kasm-details kasm-icon";
-        grid-area: kasm-info;
-    }
-
-    .kasm-details {
-        grid-area: kasm-details;
-    }
-
-    .kasm-icon {
-        grid-area: kasm-icon;
-    }
-
-    .class-info {
-        display: grid;
-        grid-template-columns: 1fr min-content;
-        grid-template-rows: 1fr;
-        gap: 0px 0px;
-        grid-auto-flow: row;
-        grid-template-areas:
-            "class-details class-icon";
-        grid-area: class-info;
-    }
-
-    .class-details {
-        grid-area: class-details;
-    }
-
-    .class-icon {
-        grid-area: class-icon;
-    }
-
-    .pfp-info {
-        display: grid;
-        grid-template-columns: 1fr min-content;
-        grid-template-rows: 1fr;
-        gap: 0px 0px;
-        grid-auto-flow: row;
-        grid-template-areas:
-            "pfp-details pfp-icon";
-        grid-area: pfp-info;
-    }
-
-    .pfp-details {
-        grid-area: pfp-details;
-    }
-
-    .pfp-icon {
-        grid-area: pfp-icon;
-    }
-
-    .dummy-info {
-        display: grid;
-        grid-template-columns: 1fr min-content;
-        grid-template-rows: 1fr;
-        gap: 0px 0px;
-        grid-auto-flow: row;
-        grid-template-areas:
-            "dummy-details dummy-icon";
-        grid-area: dummy-info;
-    }
-
-    .dummy-details {
-        grid-area: dummy-details;
-    }
-
-    .dummy-icon {
-        grid-area: dummy-icon;
-    }
-
-    .card {
-        /* colors */
-        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
-
-        /* border */
-        border-radius: 10px;
-        border: 1px solid hsla(240, 6%, 30%, 0.63);
-
-        /* shadow */
-        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
-
-        /* sizing */
-        box-sizing: border-box;
-        height: 100%;
-        overflow: hidden;
-        position: relative;
-        width: 100%;
-        max-width: 100%;
-
-        /* spacing */
-        padding: 30px;
-
-        /* other */
-        cursor: pointer;
-    }
-
-    .change-info-card {
-        /* colors */
-        background-color: hsla(240, 3%, 12%, 0.90);
-
-        /* border */
-        border-radius: 10px;
-        border: 1px solid hsla(240, 6%, 30%, 0.63);
-
-        /* shadow */
-        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
-
-        /* spacing */
-        padding: 30px;
-        width: min-content;
-        text-align: center;
-
-        /* positioning for centering */
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-
-        /* other */
-        z-index: 999;
-    }
-
-    input {
-        /* colors */
-        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
-        color: white;
-
-        /* border */
-        border-radius: 10px;
-        border: 1px solid hsla(240, 6%, 30%, 0.63);
-
-        /* shadow */
-        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
-
-        /* spacing */
-        padding: 15px;
-        margin: 10px;
-
-        /* other */
-        font-size: large;
-    }
-
-    .close {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-
-        cursor: pointer;
-    }
-
-    /* CHECKBOX STUFF ================================ */
-    /* The container-checkbox */
-    .container-checkbox {
-        display: block;
-        position: relative;
-        padding-left: 35px;
-        cursor: pointer;
-        font-size: 22px;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-
-    /* Hide the browser's default checkbox */
-    .container-checkbox input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-    }
-
-    /* Create a custom checkbox */
-    .checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 25px;
-        width: 25px;
-        background-color: #eee;
-        border-radius: 5px;
-    }
-
-    /* On mouse-over, add a grey background color */
-    .container-checkbox:hover input~.checkmark {
-        background-color: #ccc;
-    }
-
-    /* When the checkbox is checked, add a blue background */
-    .container-checkbox input:checked~.checkmark {
-        background-color: #2196F3;
-    }
-
-    /* Create the checkmark/indicator (hidden when not checked) */
-    .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-    }
-
-    /* Show the checkmark when checked */
-    .container-checkbox input:checked~.checkmark:after {
-        display: block;
-    }
-
-    /* Style the checkmark/indicator */
-    .container-checkbox .checkmark:after {
-        left: 9px;
-        top: 5px;
-        width: 5px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 3px 3px 0;
-        -webkit-transform: rotate(45deg);
-        -ms-transform: rotate(45deg);
-        transform: rotate(45deg);
-    }
-
-    /* fancy user panel css */
-    .userPanel {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        /* 2 columns of equal width */
-        grid-template-rows: repeat(3, auto);
-        /* 3 rows with height based on content */
-        gap: 20px;
-        /* Adjust spacing between items */
-        grid-auto-flow: row;
-        /* Fill rows first */
-        justify-content: center;
-        /* Center the grid horizontally */
-        align-items: start;
-        /* Align items to the top */
-        border: 2px solid hsla(240, 6%, 30%, 0.63);
-        /* Add a visible border */
-        border-radius: 15px;
-        /* Rounded corners */
-        background-color: hsla(240, 3%, 20%, 0.5);
-        /* Subtle background */
-        padding: 20px;
-        /* Some space inside */
-        margin-top: 20px;
-        /* Spacing from other content */
-    }
-
-    .class-actions {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 30px;
-    }
-
-    .kasm-toggle-container {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        /* Adjust spacing between the toggle and the text */
-    }
-
-    .kasm-toggle-container .label-text {
-        margin: 0;
-        /* Remove any default margin */
-        font-size: 16px;
-        /* Ensure consistent font size */
-        vertical-align: middle;
-        /* Align text vertically with the toggle */
-    }
-</style>
-
-<!-- change class box -->
-<div id="change-class" class="change-info-card" style="visibility: hidden;">
-    <ion-icon name="school-outline" size="large"></ion-icon>
-    <h1>Student Id</h1>
-    <form onsubmit="return changeSid(event)">
-        <input type="text" id="sidInput" placeholder="Enter new Student Id">
-        <input type="submit" value="Save changes">
-    </form>
-    <div class="close" onclick="document.getElementById('change-password').style.visibility = 'hidden'">
-        <ion-icon name="close-outline" size="large" class="close"></ion-icon>
-    </div>
-</div>
-
-
-<!-- change profile pic box -->
-<div id="change-pfp" class="change-info-card" style="visibility: hidden;">
-    <ion-icon name="image-outline" size="large"></ion-icon>
-    <h1>Profile Picture</h1>
-    <form onsubmit="return changeProfilePicture(event)">
-        <label class="container-checkbox" style="white-space: nowrap; padding-left: 0px;">Click to upload a profile
-            picture.
-            <input type="file" id="profilePictureInput" name="filename" style="visibility: hidden;">
-            <input type="submit" style="visibility: hidden;">
-            <ion-icon name="cloud-upload-outline"></ion-icon>
-        </label>
-        <input type="submit" value="Save changes">
-        <br>
-    </form>
-    <div class="close" onclick="document.getElementById('change-pfp').style.visibility = 'hidden'">
-        <ion-icon name="close-outline" size="large" class="close"></ion-icon>
-    </div>
-</div>
-
-<!-- main user info cards -->
-<!-- your personal information -->
-<div class="main-info">
-    <!-- the info header at the top of the page -->
-    <div class="header">
-        <h1>Personal Information (Beta)</h1>
-        <p>Manage your personal information, including name, user ID, email, class specific information, and
-            more.</p>
-    </div>
-
-    <!-- Fancy total panel  -->
-    <div class="userPanel">
-        <div class="userPanel_name">
-            <h2 id="name">Name</h2>
-            <form onsubmit="return changeName(event)">
-                <input type="text" id="nameChangeInput" value="Loading name..." />
-                <input type="submit" value="Save changes" />
-            </form>
-        </div>
-        <div class="userPanel_uid">
-            <h2 id="uid">User ID</h2>
-            <form onsubmit="return changeUid(event)">
-                <input type="text" id="uidChangeInput" value="Loading UID..." />
-                <input type="submit" value="Save changes" />
-            </form>
-        </div>
-        <div class="userPanel_password">
-            <h2 id="password">Password</h2>
-            <form onsubmit="return changePassword(event)">
-                <input type="password" id="passwordChangeInput" placeholder="Enter new password.">
-                <input type="submit" value="Save changes">
-            </form>
-        </div>
-        <div class="userPanel_email">
-            <h2 id="email">Email</h2>
-            <form onsubmit="return changeEmail(event)">
-                <input type="text" id="emailChangeInput" value="Loading email..." />
-                <input type="submit" value="Save changes" />
-            </form>
-        </div>
-        <div class="userPanel_kasm">
-            <h2 id="kasm">Kasm</h2>
-            <form class="kasm-toggle-container">
-                <label class="switch">
-                    <span class="toggle">
-                        <input type="checkbox" id="kasmNeeded" onchange="changeKasmServerStatus(event)">
-                        <span class="slider"></span>
-                    </span>
+<head>
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/Aesthetihawk/shake.css">
+</head>
+
+
+<form id="profileSettingsForm">
+    <!-- Personal Information Section -->
+    <div class="bg-neutral-800 rounded-lg shadow-md p-6 mb-6 border-neutral-700 border">
+        <h2 class="text-xl font-semibold mb-6">Personal Information</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Full Name -->
+            <div>
+                <label for="nameChangeInput" class="block text-sm font-medium text-gray-300 mb-1">Full
+                    Name</label>
+                <input type="text" id="nameChangeInput" name="fullName"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-600 bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value="" onchange="checkForChanges()" autocomplete="off">
+            </div>
+
+            <!-- User ID -->
+            <div>
+                <label for="uidChangeInput" class="block text-sm font-medium text-gray-300 mb-1">User
+                    ID</label>
+                <input type="text" id="uidChangeInput" name="userId"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-600 bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value="" onchange="checkForChanges()" autocomplete="off">
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="emailChangeInput" class="block text-sm font-medium text-gray-300 mb-1">Email
+                    Address</label>
+                <input type="email" id="emailChangeInput" name="new-email"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-600 bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value="" onchange="checkForChanges()" autocomplete="off">
+            </div>
+
+            <!-- Student ID -->
+            <div>
+                <label for="sidChangeInput" class="block text-sm font-medium text-gray-300 mb-1">Student
+                    ID (7
+                    digits)</label>
+                <input type="text" id="sidChangeInput" name="studentId"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-600 bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value="" maxlength="7" pattern="\d{7}" onchange="checkForChanges()" autocomplete="off">
+            </div>
+
+            <!-- Kasm Server Toggle -->
+            <div class="flex items-center">
+                <label for="kasmChangeInput" class="flex items-center cursor-pointer">
+                    <div class="relative">
+                        <input type="checkbox" id="kasmChangeInput" class="sr-only" onchange="checkForChanges()">
+                        <div class="block bg-neutral-600 w-14 h-8 rounded-full"></div>
+                        <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform">
+                        </div>
+                    </div>
+                    <div class="ml-3 text-sm font-medium text-gray-300">
+                        Enable Kasm Server
+                    </div>
                 </label>
-                <span class="label-text">Kasm Server</span>
-            </form>
-        </div>
-        <div class="userPanel_class">
-            <h2 id="class">Class Info</h2>
-            <div class="class-actions">
-                <div class="class-details">
-                    <a id="classDisplayedInfo">CSA 2025</a>
-                </div>
-                <input type="submit" value="Change class"
-                    onclick="document.getElementById('change-class').style.visibility = 'visible'">
+            </div>
+
+            <!-- Password Change -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-300 mb-1">New
+                    Password</label>
+                <input type="password" id="password" name="password"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-600 bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="Enter new password" onchange="checkForChanges()" autocomplete="new-password">
             </div>
         </div>
     </div>
+
+    <!-- Classes Section -->
+    <div class="bg-neutral-800 rounded-lg shadow-md p-6 mb-6 border-neutral-700 border">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold">Classes</h2>
+            <button type="button" id="addClassBtn"
+                class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 focus:outline-none"
+                onclick="addClass()">
+                Add Class
+            </button>
+        </div>
+
+        <div id="classesContainer">
+            <!-- Classes will be added here dynamically -->
+            <div class="class-entry mb-4 p-4 border rounded-lg border-neutral-700 border">
+                <div class="flex flex-col md:flex-row md:space-x-4 mb-2">
+                    <div class="flex-grow mb-2 md:mb-0">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Class
+                            Name</label>
+                        <input type="text"
+                            class="class-name w-full px-4 py-2 rounded-lg border border-gray-600 bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            value="Computer Science" onchange="checkForChanges()">
+                    </div>
+                    <div class="w-full md:w-1/3">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Year</label>
+                        <select
+                            class="class-year w-full px-4 py-2 rounded-lg border border-gray-600 bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            onchange="checkForChanges()">
+                            <option>2025</option>
+                            <option>2026</option>
+                            <option>2027</option>
+                            <option>2028</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" class="text-red-500 hover:text-red-700 text-sm font-medium"
+                    onclick="removeClass(this)">
+                    Remove
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="flex justify-between items-center mb-8">
+    <button id="saveChangesBtn" disabled
+        class="px-6 py-2 bg-neutral-300 text-gray-500 cursor-not-allowed rounded-lg transition-all duration-300"
+        onclick="saveChanges()">
+        Save Changes
+    </button>
 </div>
 
-<!-- icons -->
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-<!-- js tilt feature -->
-<script src="{{ site.baseurl }}/scripts/tilt.js"></script>
+<!-- toasts -->
+<script type="module">
+    // import the toast handler module
+    import { showToast } from "{{site.baseurl}}/assets/js/Aesthetihawk/shared/toastHandler.js";
+
+    window.addEventListener('load', () => {
+        const callToast = document.querySelector("#saveChangesBtn");
+
+        callToast.addEventListener("click", () => {
+            showToast({
+                message: "Changes Saved.",
+                icon: `<svg class="size-5 text-teal-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                    </svg>`,
+                duration: 3000
+            });
+        });
+    });
+</script>
 
 <script type="module">
     import { javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
-    // Import fetchOptions from config.js
     import { pythonURI } from '{{site.baseurl}}/assets/js/api/config.js';
-    // Import functions from config.js
     import { putUpdate, postUpdate, deleteData, logoutUserJava } from "{{site.baseurl}}/assets/js/api/profile.js";
+
+    // external functions
+    import { fetchUserData } from '{{site.baseurl}}/assets/js/Aesthetihawk/profile/fetchUserData.js';
+    import { setUserData } from '{{site.baseurl}}/assets/js/Aesthetihawk/profile/setUserData.js';
+
 
     // this runs on page load
     document.addEventListener("DOMContentLoaded", async () => {
         try {
-            await window.loadUserData();
+            await window.setUserData();
         } catch (error) {
             console.error("Error initializing user data:", error.message);
         }
     });
-
-    // Function to continuously fetch user data until all values are loaded
-    async function continuouslyLoadUserData() {
-        const nameInput = document.getElementById("nameChangeInput");
-        const uidInput = document.getElementById("uidChangeInput");
-        const emailInput = document.getElementById("emailChangeInput");
-
-        // Helper function to check if all values are loaded
-        function isDataLoaded() {
-            return (
-                nameInput.value !== "Loading name..." &&
-                uidInput.value !== "Loading UID..." &&
-                emailInput.value !== "Loading email..."
-            );
-        }
-
-        // Retry logic
-        async function fetchAndUpdateData() {
-            try {
-                // Fetch name and UID from Python backend
-                const name = await window.fetchName();
-                const uid = await window.fetchUid();
-
-                // Fetch email from Java backend
-                const email = await window.fetchEmail();
-
-                // Update placeholders if data is available
-                if (name) nameInput.value = name;
-                if (uid) uidInput.value = uid;
-                if (email) emailInput.value = email;
-
-                // Log success if all data is loaded
-                if (isDataLoaded()) {
-                    console.log("All user data loaded successfully.");
-                    return; // Stop retrying
-                }
-            } catch (error) {
-                console.error("Error fetching user data:", error.message);
-            }
-
-            // Retry after 3 seconds if data is still not fully loaded
-            setTimeout(fetchAndUpdateData, 3000);
-        }
-
-        // Start the first fetch attempt
-        fetchAndUpdateData();
-    }
-
-    // Call the function on page load
-    document.addEventListener("DOMContentLoaded", continuouslyLoadUserData);
 
     // make it run constantly to check for esc key press
     document.addEventListener('keydown', function (event) {
@@ -613,26 +190,6 @@ active_tab: profile
         }
     };
 
-    window.changeSteve = async function () {
-        const name = await window.fetchName();
-        if (/steve/i.test(name)) {
-            const profileImageBox = document.getElementById('headerPfp');
-            const currentProfilePicture = profileImageBox.querySelector('img')?.src;
-
-            // Check if the profile picture is already set to steve.jpeg
-            if (!currentProfilePicture || !currentProfilePicture.includes('steve.png')) {
-                // Set the profile picture to steve.jpeg
-                const steveImagePath = "{{site.baseurl}}/images/jokes/steve.png";
-                profileImageBox.innerHTML = `<img src="${steveImagePath}" alt="Profile Picture">`;
-
-                // Save the profile picture to the database
-                await window.changeProfilePictureWithPath(steveImagePath);
-                //reload the page
-                location.reload();
-            }
-        }
-    }
-
     window.changeProfilePictureWithPath = async function (imagePath) {
         try {
             // Fetch the image and convert it to a Blob
@@ -650,308 +207,17 @@ active_tab: profile
         }
     };
 
-    // loading the user data to display
-    window.loadUserData = async function () {
+    
+    window.fetchUserData = fetchUserData; // get the data
+    window.setUserData = setUserData; // setting the user data to display
+    document.addEventListener("DOMContentLoaded", async () => {
         try {
-            // Fetch name and UID from Python backend
-            const name = await window.fetchName();
-            const uid = await window.fetchUid();
-
-            // Fetch email and Kasm status from Java backend
-            const email = await window.fetchEmail();
-            const kasm = await window.fetchKasmStatus();
-
-            // Update the name and UID placeholders
-            const nameInput = document.getElementById("nameChangeInput");
-            const uidInput = document.getElementById("uidChangeInput");
-            const emailInput = document.getElementById("emailChangeInput");
-
-            if (name) {
-                nameInput.value = name;
-                await window.changeSteve();
-            } else {
-                nameInput.placeholder = "Failed to load name";
-            }
-
-            if (uid) {
-                uidInput.placeholder = uid;
-            } else {
-                uidInput.placeholder = "Failed to load UID";
-            }
-
-            if (email) {
-                emailInput.placeholder = email;
-            } else {
-                emailInput.placeholder = "Failed to load email";
-            }
-
-            // Update the Kasm status
-            const kasmCheckbox = document.getElementById("kasmNeeded");
-            if (kasmCheckbox) { // Ensure the checkbox exists
-                kasmCheckbox.checked = kasm; // Set the checkbox state directly
-                document.getElementById("kasm").textContent = kasm ? "Kasm Enabled" : "Kasm Disabled"; // Update the label
-            } else {
-                console.error("Kasm checkbox not found in the DOM.");
-            }
+            await window.setUserData();
         } catch (error) {
-            console.error("Error setting placeholders:", error.message);
+            console.error("Error initializing user data:", error.message);
         }
-    };
+    });
 
-    // FETCH COMMANDS ========
-    window.fetchName = async function () {
-        const URL = pythonURI + "/api/id"; // Adjusted endpoint
-
-        try {
-            const response = await fetch(URL, fetchOptions);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch Name: ${response.status}`);
-            }
-
-            const data = await response.json();
-            return data.name;
-        } catch (error) {
-            console.error('Error fetching Name:', error.message);
-            return null;
-        }
-    };
-
-    window.fetchUid = async function () {
-        const URL = pythonURI + "/api/id"; // Adjusted endpoint
-
-        try {
-            const response = await fetch(URL, fetchOptions);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch UID: ${response.status}`);
-            }
-
-            const data = await response.json();
-            return data.uid;
-        } catch (error) {
-            console.error('Error fetching UID:', error.message);
-            return null;
-        }
-    };
-
-    window.fetchSid = async function () {
-        const URL = javaURI + "/api/person/get"; // Adjusted endpoint
-
-        try {
-            const response = await fetch(URL, fetchOptions);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch UID: ${response.status}`);
-            }
-
-            const data = await response.json();
-            return data.sid;
-        } catch (error) {
-            console.error('Error fetching UID:', error.message);
-            return null;
-        }
-    };
-  
-
-    window.fetchEmail = async function () {
-        const URL = javaURI + "/api/person/get"; // Adjusted endpoint
-
-        try {
-            const response = await fetch(URL, fetchOptions);
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch UID: ${response.status}`);
-            }
-
-            const data = await response.json();
-            return data.email;
-        }
-        catch (error) {
-            document.getElementById("email").textContent = "Failed to load. Are you logged in?";
-            console.error('Error fetching UID:', error.message);
-            return null;
-        }
-    };
-
-    window.fetchKasmStatus = async function () {
-        const URL = javaURI + "/api/person/get"; // Adjusted endpoint
-
-        try {
-            const response = await fetch(URL, fetchOptions);
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch kasm_server_needed: ${response.status}`);
-            }
-
-            const userData = await response.json();
-            const kasmServerNeeded = userData.kasmServerNeeded
-
-            // Update checkbox state based on fetched value
-            if (kasmServerNeeded) {
-                document.getElementById("kasm").textContent = "Kasm Enabled";
-                document.getElementById("kasmNeeded").checked = true; // Set checkbox to checked
-            }
-            else {
-                document.getElementById("kasm").textContent = "Kasm Disabled";
-                document.getElementById("kasmNeeded").checked = false; // Set checkbox to unchecked
-            }
-
-            return kasmServerNeeded;
-        } catch (error) {
-            console.error('Error fetching kasm_server_needed:', error.message);
-            return null;
-        }
-    }
-
-
-    // UPDATE COMMANDS =======
-    window.changeName = async function (event) {
-        // Ensure the input element is selected
-        const nameChangeInput = document.getElementById("nameChangeInput");
-        if (!nameChangeInput) {
-            console.error("Input element not found.");
-            return;
-        }
-
-        // Get value from the input field
-        const name = nameChangeInput.value.trim(); // Trim to remove accidental spaces
-        if (!name) {
-            console.error("Name input is empty.");
-            return;
-        } else {
-            console.log("Name input:", name);
-        }
-
-        // send the post request
-        const URL = pythonURI + "/api/user";
-        const options = {
-            URL,
-            body: { name },
-            message: 'name-message',
-            callback: () => {
-                console.log('Name updated successfully!');
-                window.updateNameField(name);
-            }
-        };
-        try {
-            await putUpdate(options);
-        } catch (error) {
-            console.error('Error updating Name:', error.message);
-            document.getElementById('name-message').textContent = 'Error updating Name: ' + error.message;
-        }
-    };
-
-    window.changeUid = async function (event) {
-        const uid = document.getElementById("uidChangeInput").value.trim(); // Get and trim input value
-
-        // send the post request
-        if (uid) {
-            const URL = pythonURI + "/api/user"; // Adjusted endpoint
-
-            const options = {
-                URL,
-                body: { uid },
-                message: 'uid-message', // Adjust the message area as needed
-                callback: () => {
-                    alert("You updated your Github ID, so you will automatically be logged out. Be sure to remember your new github id to log in!");
-                    console.log('UID updated successfully!');
-                    window.updateUidField(uid);
-                    window.location.href = '{{site.baseurl}}/duallogin';
-                }
-            };
-
-            try {
-                await putUpdate(options);
-            } catch (error) {
-                console.error('Error updating UID:', error.message);
-                document.getElementById('uid-message').textContent = 'Error updating UID: ' + error.message;
-            }
-        }
-        document.getElementById("uid").textContent = uid; //reload the content
-
-    }
-
-
-    window.changeEmail = async function (event) {
-        event.preventDefault(); // Prevent the form from refreshing the page
-
-        const email = document.getElementById("emailChangeInput").value.trim(); // Get and trim input value
-
-        // send the post request
-        if (email) {
-            const URL = javaURI + "/api/person/update";
-            const options = {
-                URL,
-                body: { email },
-                callback: () => {
-                    console.log('Email updated successfully!');
-                }
-            };
-            try {
-                await postUpdate(options);
-            } catch (error) {
-                console.error('Error updating email:', error.message);
-            }
-        }
-
-        document.getElementById("email").textContent = email; //reload the content
-    }
-
-    window.changePassword = async function (event) {
-        event.preventDefault(); // Prevent the form from refreshing the page
-
-        const password = document.getElementById("passwordChangeInput").value.trim(); // Get and trim input value
-
-        if (password) {
-            const URL = pythonURI + "/api/user"; // Adjusted endpoint
-
-            const options = {
-                URL,
-                body: { password },
-                message: 'password-message', // Adjust the message area as needed
-                callback: () => {
-                    console.log('Password updated successfully!');
-                    window.location.href = '{{site.baseurl}}/duallogin';
-                }
-            };
-
-            try {
-                alert("You updated your password, so you will automatically be logged out. Be sure to remember your password!");
-                await putUpdate(options);
-                await logoutUser();
-            } catch (error) {
-                console.error('Error updating password:', error.message);
-                document.getElementById('password-message').textContent = 'Error updating password: ' + error.message;
-            }
-        }
-    }
-
-    window.changeKasmServerStatus = async function (event) {
-        // select the checkbox and scan for updates (did they check or uncheck it?)
-        const checkbox = event.target;
-        const newKasmServerNeeded = checkbox.checked;
-
-        const URL = javaURI + "/api/person/update"; // Adjusted endpoint
-
-        // newKasmServerNeeded is a boolean, so you can just send it directly
-        const options = {
-            URL,
-            body: { kasmServerNeeded: newKasmServerNeeded },
-            callback: () => {
-                console.log('Kasm Server Needed updated successfully!');
-            }
-        };
-        try {
-            await postUpdate(options);
-        } catch (error) {
-            console.error('Error updating kasm_server_needed:', error.message);
-        }
-
-        // Update checkbox state text based on new value
-        if (newKasmServerNeeded) {
-            document.getElementById("kasm").textContent = "Kasm Enabled";
-        } else {
-            document.getElementById("kasm").textContent = "Kasm Disabled";
-        }
-    }
 
     window.changeClass = async function (event) {
         event.preventDefault(); // Prevent the form from refreshing the page
@@ -990,6 +256,8 @@ active_tab: profile
             console.error('Error uploading profile picture:', error.message);
         }
 
+        await new Promise(resolve => setTimeout(resolve, 250));
+        window.location.reload();
     }
 
     // helper function to convert a file to base64 for payload
@@ -1021,5 +289,331 @@ active_tab: profile
             console.error('Error uploading profile picture:', error.message);
         }
     }
+</script>
 
+<script>
+    // Store original form values
+    let originalValues = {};
+    let formChanged = false;
+
+    // how long toast stays (ms)
+    const toastDuration = 10000;
+
+    // Initialize the form
+    document.addEventListener('DOMContentLoaded', function () {
+        // Store original values
+        saveOriginalValues();
+
+        // Set up toggle switch
+        const toggle = document.querySelector('#kasmToggle');
+        const toggleDot = document.querySelector('.dot');
+
+        toggle.addEventListener('change', function () {
+            if (this.checked) {
+                toggleDot.classList.add('translate-x-3');
+                toggle.classList.add('bg-blue-600');
+            } else {
+                toggleDot.classList.remove('translate-x-3');
+                toggle.classList.remove('bg-blue-600');
+            }
+        });
+
+        // Set up beforeunload event
+        window.addEventListener('beforeunload', function (e) {
+            if (formChanged) {
+                showUnsavedChangesAlert();
+            }
+        });
+    });
+
+    // Save original form values
+    function saveOriginalValues() {
+        const form = document.getElementById('profileSettingsForm');
+        const inputs = form.querySelectorAll('input, select');
+
+        inputs.forEach(input => {
+            if (input.type === 'checkbox') {
+                originalValues[input.id] = input.checked;
+            } else {
+                originalValues[input.id] = input.value;
+            }
+        });
+
+        // Save original class entries
+        const classEntries = document.querySelectorAll('.class-entry');
+        originalValues.classEntries = [];
+
+        classEntries.forEach((entry, index) => {
+            originalValues.classEntries[index] = {
+                name: entry.querySelector('.class-name').value,
+                year: entry.querySelector('.class-year').value
+            };
+        });
+    }
+
+    // Check if form values have changed
+    function checkForChanges() {
+        const form = document.getElementById('profileSettingsForm');
+        const inputs = form.querySelectorAll('input, select');
+        const saveButton = document.getElementById('saveChangesBtn');
+
+        formChanged = false;
+
+        // Check standard inputs
+        inputs.forEach(input => {
+            if (input.type === 'checkbox') {
+                if (originalValues[input.id] !== input.checked) {
+                    formChanged = true;
+                }
+            } else if (input.id && originalValues[input.id] !== undefined) {
+                if (originalValues[input.id] !== input.value) {
+                    formChanged = true;
+                }
+            }
+        });
+
+        // Check class entries
+        const classEntries = document.querySelectorAll('.class-entry');
+        if (classEntries.length !== originalValues.classEntries.length) {
+            formChanged = true;
+        } else {
+            classEntries.forEach((entry, index) => {
+                const name = entry.querySelector('.class-name').value;
+                const year = entry.querySelector('.class-year').value;
+
+                if (index >= originalValues.classEntries.length ||
+                    originalValues.classEntries[index].name !== name ||
+                    originalValues.classEntries[index].year !== year) {
+                    formChanged = true;
+                }
+            });
+        }
+
+        // Update save button
+        if (formChanged) {
+            saveButton.disabled = false;
+            saveButton.classList.remove('bg-neutral-300', 'text-neutral-500', 'cursor-not-allowed');
+            saveButton.classList.add('bg-indigo-500', 'text-white', 'hover:bg-indigo-600');
+        } else {
+            saveButton.disabled = true;
+            saveButton.classList.add('bg-neutral-300', 'text-neutral-500', 'cursor-not-allowed');
+            saveButton.classList.remove('bg-indigo-500', 'text-white', 'hover:bg-indigo-600');
+        }
+    }
+
+    // Add new class
+    function addClass() {
+        const container = document.getElementById('classesContainer');
+        const classEntry = document.createElement('div');
+        classEntry.className = 'class-entry mb-4 p-4 border border-gray-700 rounded-lg';
+
+        classEntry.innerHTML = `
+                    <div class="flex flex-col md:flex-row md:space-x-4 mb-2">
+                        <div class="flex-grow mb-2 md:mb-0">
+                            <label class="block text-sm font-medium text-neutral-300 mb-1">Class Name</label>
+                            <input type="text" 
+                                class="class-name w-full px-4 py-2 rounded-lg border border-gray-600 bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                                placeholder="Enter class name" onchange="checkForChanges()">
+                        </div>
+                        <div class="w-full md:w-1/3">
+                            <label class="block text-sm font-medium text-neutral-300 mb-1">Year</label>
+                            <select class="class-year w-full px-4 py-2 rounded-lg border border-gray-600 bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" onchange="checkForChanges()">
+                                <option>2025</option>
+                                <option>2026</option>
+                                <option>2027</option>
+                                <option>2028</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="text-red-500 hover:text-red-700 text-sm font-medium" onclick="removeClass(this)">
+                        Remove
+                    </button>
+                `;
+
+        container.appendChild(classEntry);
+        checkForChanges();
+    }
+
+    // Remove class
+    function removeClass(button) {
+        const classEntry = button.closest('.class-entry');
+        classEntry.remove();
+        checkForChanges();
+    }
+
+    // show toast, auto-hide, allow manual close
+    function showUnsavedChangesAlert() {
+        const saveButton = document.getElementById('saveChangesBtn');
+
+        // trigger reflow so shake always retriggers
+        saveButton.classList.remove('shake-animation');
+        void saveButton.offsetWidth;
+        saveButton.classList.add('shake-animation');
+
+    }
+
+    // save all changes in one go
+    async function saveChanges() {
+        // get references to inputs
+        const nameInput = document.getElementById("nameChangeInput");
+        const uidInput = document.getElementById("uidChangeInput");
+        const emailInput = document.getElementById("emailChangeInput");
+        const passwordInput = document.getElementById("password");
+        const kasmInput = document.getElementById("kasmChangeInput");
+
+        // get values
+        const name = nameInput.value.trim();
+        const uid = uidInput.value.trim();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+        const kasmServerNeeded = kasmInput ? kasmInput.checked : undefined;
+
+        // get class info
+        const classEntries = Array.from(document.querySelectorAll('.class-entry')).map(entry => ({
+            name: entry.querySelector('.class-name').value,
+            year: entry.querySelector('.class-year').value
+        }));
+
+        // import api helpers
+        const { putUpdate, postUpdate } = await import("{{site.baseurl}}/assets/js/api/profile.js");
+        const { javaURI, pythonURI } = await import("{{site.baseurl}}/assets/js/api/config.js");
+
+        // track if we need to reload or logout
+        let needsReload = false;
+        let needsLogout = false;
+
+        // save name (both backends)
+        if (name && name !== originalValues["nameChangeInput"]) {
+            try {
+                await Promise.all([
+                    putUpdate({
+                        URL: pythonURI + "/api/user",
+                        body: { name },
+                        message: 'name-message'
+                    }),
+                    postUpdate({
+                        URL: javaURI + "/api/person/update",
+                        body: { name }
+                    })
+                ]);
+                needsReload = true;
+            } catch (e) {
+                console.error("error saving name:", e.message);
+            }
+        }
+
+        // save uid (both backends, logs out)
+        if (uid && uid !== originalValues["uidChangeInput"]) {
+            try {
+                await Promise.all([
+                    putUpdate({
+                        URL: pythonURI + "/api/user",
+                        body: { uid },
+                        message: 'uid-message'
+                    }),
+                    postUpdate({
+                        URL: javaURI + "/api/person/update",
+                        body: { uid }
+                    })
+                ]);
+                needsLogout = true;
+            } catch (e) {
+                console.error("error saving uid:", e.message);
+            }
+        }
+
+        // save email (both backends)
+        if (email && email !== originalValues["emailChangeInput"]) {
+            try {
+                await Promise.all([
+                    putUpdate({
+                        URL: pythonURI + "/api/user",
+                        body: { email },
+                        message: 'email-message'
+                    }),
+                    postUpdate({
+                        URL: javaURI + "/api/person/update",
+                        body: { email }
+                    })
+                ]);
+            } catch (e) {
+                console.error("error saving email:", e.message);
+            }
+        }
+
+        // save password (both backends, logs out)
+        if (password) {
+            try {
+                await Promise.all([
+                    putUpdate({
+                        URL: pythonURI + "/api/user",
+                        body: { password },
+                        message: 'password-message'
+                    }),
+                    postUpdate({
+                        URL: javaURI + "/api/person/update",
+                        body: { password }
+                    })
+                ]);
+                needsLogout = true;
+            } catch (e) {
+                console.error("error saving password:", e.message);
+            }
+        }
+
+        // save kasm server status (both backends)
+        if (
+            typeof kasmServerNeeded !== "undefined" &&
+            kasmServerNeeded !== originalValues["kasmChangeInput"]
+        ) {
+            try {
+                await Promise.all([
+                    putUpdate({
+                        URL: pythonURI + "/api/user",
+                        body: { kasmServerNeeded },
+                        message: 'kasm-message'
+                    }),
+                    postUpdate({
+                        URL: javaURI + "/api/person/update",
+                        body: { kasmServerNeeded }
+                    })
+                ]);
+            } catch (e) {
+                console.error("error saving kasm server status:", e.message);
+            }
+        }
+
+        // save classes (implement as needed)
+        // you can add your own logic here to send classEntries to backend
+
+        // update original values and ui
+        saveOriginalValues();
+        formChanged = false;
+
+        const saveButton = document.getElementById('saveChangesBtn');
+        saveButton.disabled = true;
+        saveButton.classList.add('bg-neutral-300', 'text-neutral-500', 'cursor-not-allowed');
+        saveButton.classList.remove('bg-indigo-500', 'text-white', 'hover:bg-indigo-600');
+
+        // show success message
+        const originalButtonText = saveButton.innerHTML;
+        saveButton.innerHTML = `
+            <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            Saved!
+        `;
+
+        setTimeout(() => {
+            saveButton.innerHTML = originalButtonText;
+        }, 2000);
+
+        // handle reload or logout if needed
+        if (needsLogout) {
+            alert("you updated your github id or password, so you will be logged out. remember your new credentials!");
+            window.location.href = '{{site.baseurl}}';
+        } else if (needsReload) {
+            window.location.reload();
+        }
+    }
 </script>

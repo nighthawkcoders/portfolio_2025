@@ -8,7 +8,6 @@ class StatsManager {
     constructor(game) {
         this.game = game;
         this.initStatsUI();
-        this.createStopwatch();
     }
 
     async fetchStats(personId) {
@@ -85,14 +84,13 @@ class StatsManager {
 
     async updateStatsMCQ(questionId, choiceId, personId) {
         try {
-            console.log("Submitting answer with:", { questionId, choiceId, personId });
-            
             const response = await fetch(this.game.javaURI + '/rpg_answer/submitMCQAnswer', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ questionId, personId, choiceId })
             });
 
+            if (!response.ok) throw new Error("Network response was not ok");
             if (!response.ok) throw new Error("Network response was not ok");
             return response;
         } catch (error) {
@@ -114,290 +112,425 @@ class StatsManager {
     }
 
     initStatsUI() {
-        // Create theme colors for consistent UI
-        const themeColor = '#4a86e8'; // Main theme color (blue)
-        const themeShadow = 'rgba(74, 134, 232, 0.7)'; // Shadow color matching theme
-        
+        const TOTAL_NPCS = 10;
+        // Create wrapper for button and panel
+        const statsWrapper = document.createElement('div');
+        statsWrapper.id = 'stats-wrapper';
+        Object.assign(statsWrapper.style, {
+            position: 'fixed',
+            top: '80px',
+            right: '0',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'flex-start',
+        });
+
+        // Add pixel font if not present
+        if (!document.getElementById('pixel-font-link')) {
+            const fontLink = document.createElement('link');
+            fontLink.id = 'pixel-font-link';
+            fontLink.rel = 'stylesheet';
+            fontLink.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
+            document.head.appendChild(fontLink);
+        }
+
+        // Add retro stats styles
+        const style = document.createElement('style');
+        style.textContent = `
+            #stats-button {
+                background: #000;
+                border: 2px solid #fff;
+                padding: 8px;
+                cursor: pointer;
+                transition: all 0.3s;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+                animation: glowBorder 2s infinite alternate;
+            }
+
+            #stats-button::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: rgba(255, 255, 255, 0.5);
+                animation: scanline 2s linear infinite;
+            }
+
+            #stats-container {
+                background: #000;
+                border: 4px solid #fff;
+                padding: 20px;
+                margin-left: 10px;
+                min-width: 300px;
+                display: none;
+                font-family: 'Press Start 2P', cursive;
+                color: #fff;
+                position: relative;
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+                animation: glowBorder 2s infinite alternate;
+                opacity: 0;
+                transform: translateX(-20px);
+                transition: opacity 0.3s, transform 0.3s;
+            }
+
+            #stats-wrapper:hover #stats-container,
+            #stats-container:focus-within {
+                display: block;
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            #stats-wrapper.pinned #stats-container {
+                display: block !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+
+            #stats-button {
+                background: #000;
+                border: 2px solid #fff;
+                padding: 8px;
+                cursor: pointer;
+                transition: all 0.3s;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+                animation: glowBorder 2s infinite alternate;
+                z-index: 10001;
+            }
+
+            #stats-wrapper.pinned #stats-button {
+                display: none;
+            }
+
+            #stats-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(
+                    transparent 50%,
+                    rgba(0, 0, 0, 0.5) 50%
+                );
+                background-size: 100% 4px;
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            .pixel-title {
+                font-size: 16px;
+                margin-bottom: 20px;
+                text-align: center;
+                color: #ffeb3b;
+                text-shadow: 2px 2px #000;
+                position: relative;
+            }
+
+            .pixel-stat-box {
+                background: rgba(255, 255, 255, 0.1);
+                border: 2px solid #ffb300;
+                margin: 10px 0;
+                padding: 12px;
+                display: flex;
+                align-items: center;
+                font-size: 12px;
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s;
+            }
+
+            .pixel-stat-box:hover {
+                transform: translateX(5px);
+                background: rgba(255, 255, 255, 0.15);
+                border-color: #ffd700;
+            }
+
+            .pixel-stat-box::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent
+                );
+                animation: shine 2s infinite;
+            }
+
+            #npcs-progress-bar-container {
+                position: relative;
+                height: 24px;
+                background: #000;
+                border: 2px solid #ffb300;
+                margin-top: 15px;
+                overflow: hidden;
+            }
+
+            #npcs-progress-bar {
+                height: 100%;
+                background: repeating-linear-gradient(
+                    45deg,
+                    #ffd700,
+                    #ffd700 10px,
+                    #ffb300 10px,
+                    #ffb300 20px
+                );
+                transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                animation: progressPulse 2s infinite;
+            }
+
+            #npcs-progress-label {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                color: #fff;
+                text-shadow: 1px 1px #000;
+                z-index: 2;
+            }
+
+            @keyframes glowBorder {
+                0% { box-shadow: 0 0 5px #fff, inset 0 0 5px #fff; }
+                100% { box-shadow: 0 0 15px #fff, inset 0 0 8px #fff; }
+            }
+
+            @keyframes scanline {
+                0% { transform: translateY(-100%); }
+                100% { transform: translateY(100%); }
+            }
+
+            @keyframes shine {
+                0% { left: -100%; }
+                100% { left: 100%; }
+            }
+
+            @keyframes progressPulse {
+                0% { opacity: 0.8; }
+                50% { opacity: 1; }
+                100% { opacity: 0.8; }
+            }
+
+            .pixel-icon {
+                image-rendering: pixelated;
+                margin-right: 10px;
+                animation: iconFloat 2s infinite alternate;
+            }
+
+            @keyframes iconFloat {
+                0% { transform: translateY(0); }
+                100% { transform: translateY(-3px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Get NPCs talked to count from cookies
+        let npcsTalkedTo = 0;
+        const cookies = document.cookie.split(';');
+        const npcsCookie = cookies.find(cookie => cookie.trim().startsWith('npcsTalkedTo='));
+        if (npcsCookie) {
+            npcsTalkedTo = parseInt(npcsCookie.split('=')[1]) || 0;
+        }
+
+        // Pixel-art icons (using retro-style emojis)
+        const coinIcon = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1fa99.png';
+        const accuracyIcon = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f3af.png';
+        const npcIcon = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f9d1-200d-1f3a4.png';
+        const statsIcon = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f3ae.png';
+
+        // Create the button with retro styling
+        const statsButton = document.createElement('div');
+        statsButton.id = 'stats-button';
+        statsButton.innerHTML = `<img src="${statsIcon}" alt="Stats" title="Show Player Stats" style="width:38px;height:38px;image-rendering:pixelated;" />`;
+
+        // Create the panel with retro styling
         const statsContainer = document.createElement('div');
         statsContainer.id = 'stats-container';
-        statsContainer.style.position = 'fixed';
-        statsContainer.style.top = '75px';
-        statsContainer.style.right = '10px';
-        statsContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-        statsContainer.style.color = 'white';
-        statsContainer.style.padding = '15px';
-        statsContainer.style.borderRadius = '10px';
-        statsContainer.style.border = `2px solid ${themeColor}`;
-        statsContainer.style.boxShadow = `0 0 15px ${themeShadow}`;
-        statsContainer.style.fontFamily = "'Montserrat', sans-serif";
-    
+        statsContainer.tabIndex = 0;
+
+        // Add a pin button with retro styling
+        const pinButton = document.createElement('button');
+        pinButton.id = 'stats-pin-btn';
+        pinButton.innerHTML = '📌';
+        pinButton.title = 'Pin/unpin';
+        Object.assign(pinButton.style, {
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            background: 'none',
+            border: 'none',
+            fontSize: '22px',
+            cursor: 'pointer',
+            zIndex: '10002',
+            color: '#fff',
+            textShadow: '2px 2px #000',
+            transition: 'transform 0.2s, color 0.2s'
+        });
+
+        pinButton.addEventListener('mouseenter', () => {
+            pinButton.style.transform = 'scale(1.2)';
+            pinButton.style.color = '#ffd700';
+        });
+        pinButton.addEventListener('mouseleave', () => {
+            pinButton.style.transform = '';
+            pinButton.style.color = '#fff';
+        });
+        pinButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setPinnedState(!pinned);
+            // Play retro click sound
+            const click = new Audio('data:audio/wav;base64,UklGRXEAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YUQAAAB/f39/gICAgICAgH9/f39/f39/f39/f4CAgICAgIB/f39/f39/f39/f3+AgICAgICAgICAgH9/f39/f39/f39/f39/f39/f39/fw==');
+            click.volume = 0.3;
+            click.play();
+        });
+
         statsContainer.innerHTML = `
-            <div style="font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;">
-                <span style="margin-right: 8px;">💰</span>
-                <span>Balance: <span id="balance" style="color: ${themeColor}; font-weight: bold;">0</span></span>
+            <div class="pixel-title">
+                <img class="pixel-icon" src="${statsIcon}" alt="Game" style="width:22px;height:22px;margin-right:8px;vertical-align:middle;" />
+                <span>PLAYER STATS</span>
+                <img class="pixel-icon" src="${statsIcon}" alt="Game" style="width:22px;height:22px;margin-left:8px;vertical-align:middle;" />
             </div>
-            <div style="font-size: 14px; display: flex; align-items: center;">
-                <span style="margin-right: 8px;">📊</span>
-                <span>Accuracy: <span id="questionAccuracy" style="color: ${themeColor}; font-weight: bold;">0%</span></span>
+            <div class="pixel-stat-box">
+                <img class="pixel-icon" src="${coinIcon}" alt="Coin" style="width:22px;height:22px;vertical-align:middle;" />
+                <span style="color: #ffb300;">Balance:</span> <span id="balance" style="margin-left: 6px;">0</span>
+            </div>
+            <div class="pixel-stat-box">
+                <img class="pixel-icon" src="${accuracyIcon}" alt="Accuracy" style="width:22px;height:22px;vertical-align:middle;" />
+                <span style="color: #ffb300;">Question Accuracy:</span> <span id="questionAccuracy" style="margin-left: 6px;">0%</span>
+            </div>
+            <div class="pixel-stat-box">
+                <img class="pixel-icon" src="${npcIcon}" alt="NPC" style="width:22px;height:22px;vertical-align:middle;" />
+                <span style="color: #ffb300;">NPCs Talked To:</span> <span id="npcsTalkedTo" style="margin-left: 6px;">${npcsTalkedTo}</span>
+            </div>
+            <div id="npcs-progress-bar-container">
+                <div id="npcs-progress-bar" style="width: ${(Math.min(npcsTalkedTo, TOTAL_NPCS) / TOTAL_NPCS) * 100}%;"></div>
+                <span id="npcs-progress-label">${npcsTalkedTo} / ${TOTAL_NPCS}</span>
             </div>
         `;
-        
-        // Add Google font for better typography
-        const fontLink = document.createElement('link');
-        fontLink.href = 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap';
-        fontLink.rel = 'stylesheet';
-        document.head.appendChild(fontLink);
-        
-        document.body.appendChild(statsContainer);
 
-        // Show initial guidance
-        this.showNextStepGuidance();
-    }
-    
-    // Create a styled stopwatch
-    createStopwatch() {
-        // Use the theme color for consistent design
-        const themeColor = '#4a86e8';
-        const themeShadow = 'rgba(74, 134, 232, 0.7)';
-        
-        const stopwatchContainer = document.createElement('div');
-        stopwatchContainer.id = 'stopwatch-container';
-        stopwatchContainer.style.position = 'fixed';
-        stopwatchContainer.style.top = '10px';
-        stopwatchContainer.style.left = '50%';
-        stopwatchContainer.style.transform = 'translateX(-50%)';
-        stopwatchContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-        stopwatchContainer.style.borderRadius = '20px';
-        stopwatchContainer.style.padding = '12px 25px';
-        stopwatchContainer.style.boxShadow = `0 0 15px ${themeShadow}`;
-        stopwatchContainer.style.zIndex = '1000';
-        stopwatchContainer.style.display = 'none'; // Start hidden, will be shown in GameLevelEnd
-        stopwatchContainer.style.flexDirection = 'column';
-        stopwatchContainer.style.alignItems = 'center';
-        stopwatchContainer.style.justifyContent = 'center';
-        stopwatchContainer.style.border = `2px solid ${themeColor}`;
-        stopwatchContainer.style.fontFamily = "'Montserrat', sans-serif";
-        
-        // Create the display for the timer
-        const timerDisplay = document.createElement('div');
-        timerDisplay.id = 'timer-display';
-        timerDisplay.style.fontFamily = "'Digital-7', monospace";
-        timerDisplay.style.fontSize = '32px';
-        timerDisplay.style.fontWeight = 'bold';
-        timerDisplay.style.color = themeColor;
-        timerDisplay.style.textShadow = `0 0 10px ${themeShadow}`;
-        timerDisplay.textContent = '00:00.0';
-        
-        // Create a small container for best time display
-        const bestTimeContainer = document.createElement('div');
-        bestTimeContainer.id = 'best-time-container';
-        bestTimeContainer.style.fontSize = '12px';
-        bestTimeContainer.style.color = '#cccccc';
-        bestTimeContainer.style.marginTop = '5px';
-        
-        // Get best time from localStorage
-        const bestTime = localStorage.getItem('bestCompletionTime');
-        if (bestTime) {
-            const formattedBestTime = this.formatTime(parseFloat(bestTime));
-            bestTimeContainer.textContent = `BEST: ${formattedBestTime}`;
-        } else {
-            bestTimeContainer.textContent = 'BEST: --:--.-';
-        }
-        
-        // Label for the stopwatch
-        const timerLabel = document.createElement('div');
-        timerLabel.textContent = 'TIME';
-        timerLabel.style.fontSize = '12px';
-        timerLabel.style.fontWeight = 'bold';
-        timerLabel.style.color = 'white';
-        timerLabel.style.marginBottom = '5px';
-        timerLabel.style.letterSpacing = '1px';
-        
-        // Add custom font for digital look
-        const fontLink = document.createElement('link');
-        fontLink.href = 'https://fonts.cdnfonts.com/css/digital-7-mono';
-        fontLink.rel = 'stylesheet';
-        document.head.appendChild(fontLink);
-        
-        // Assemble the stopwatch
-        stopwatchContainer.appendChild(timerLabel);
-        stopwatchContainer.appendChild(timerDisplay);
-        stopwatchContainer.appendChild(bestTimeContainer);
-        document.body.appendChild(stopwatchContainer);
-    }
-    
-    // Helper method to format time consistently
-    formatTime(time) {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        const tenths = Math.floor((time * 10) % 10);
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${tenths}`;
-    }
-}
+        statsContainer.appendChild(pinButton);
+        statsWrapper.appendChild(statsButton);
+        statsWrapper.appendChild(statsContainer);
+        document.body.appendChild(statsWrapper);
 
-class TimeManager {
-    constructor(game) {
-        this.game = game;
-        this.gameTimer = 0;
-        this.timerInterval = null;
-        this.currentLevelInstance = null;
-        this.isStopwatch = true;
-        this.isActive = false; // Track if timer is active
-    }
+        // Add hover sound effect
+        const hoverSound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU');
+        hoverSound.volume = 0.2;
 
-    setCurrentLevelInstance(instance) {
-        this.currentLevelInstance = instance;
-        console.log("Current level instance set:", instance);
-        
-        // Check if we're in the GameLevelEnd level
-        if (instance && instance.constructor.name === 'GameLevelEnd') {
-            // Only start the timer in GameLevelEnd level
-            this.startStopwatch();
-        } else {
-            // Stop timer in other levels
-            this.stopStopwatch(false); // false = don't show success screen
-        }
-    }
-    
-    // Start the stopwatch - only called for GameLevelEnd
-        
-    startStopwatch() {
-        console.log("Starting stopwatch in GameLevelEnd");
-        
-        // Get the elements
-        const timerDisplay = document.getElementById('timer-display');
-        const stopwatchContainer = document.getElementById('stopwatch-container');
-        
-        if (!timerDisplay || !stopwatchContainer) {
-            console.error("Timer elements not found in the DOM");
-            console.log("Creating stopwatch elements directly");
-            
-            // Create stopwatch container if it doesn't exist
-            const newStopwatchContainer = document.createElement('div');
-            newStopwatchContainer.id = 'stopwatch-container';
-            newStopwatchContainer.style.position = 'fixed';
-            newStopwatchContainer.style.top = '10px';
-            newStopwatchContainer.style.left = '50%';
-            newStopwatchContainer.style.transform = 'translateX(-50%)';
-            newStopwatchContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-            newStopwatchContainer.style.color = 'white';
-            newStopwatchContainer.style.padding = '10px 20px';
-            newStopwatchContainer.style.borderRadius = '10px';
-            newStopwatchContainer.style.zIndex = '9999';
-            newStopwatchContainer.style.fontFamily = 'monospace';
-            newStopwatchContainer.style.fontSize = '20px';
-            newStopwatchContainer.style.fontWeight = 'bold';
-            newStopwatchContainer.style.border = '2px solid #4a86e8';
-            newStopwatchContainer.style.boxShadow = '0 0 10px rgba(74, 134, 232, 0.7)';
-            newStopwatchContainer.textContent = '00:00.0';
-            document.body.appendChild(newStopwatchContainer);
-            
-            // Use this new container
-            stopwatchContainer = newStopwatchContainer;
-            timerDisplay = newStopwatchContainer;
-        }
-        
-        // Make stopwatch visible - use inline style to override any CSS
-        stopwatchContainer.style.display = 'block';
-        
-        // Clear any existing interval
-        if (this.timerInterval) {
-            clearInterval(this.timerInterval);
-        }
-        
-        // Set timer to 0
-        this.gameTimer = 0;
-        if (timerDisplay !== stopwatchContainer) {
-            this.updateTimerDisplay(timerDisplay, this.gameTimer);
-        } else {
-            stopwatchContainer.textContent = '00:00.0';
-        }
-        
-        // Mark timer as active
-        this.isActive = true;
-        
-        // Start the stopwatch (updating every 100ms for smoother display)
-        this.timerInterval = setInterval(() => {
-            if (this.isActive) {
-                this.gameTimer += 0.1;
-                
-                // Update timer display every 100ms
-                if (timerDisplay !== stopwatchContainer) {
-                    this.updateTimerDisplay(timerDisplay, this.gameTimer);
-                } else {
-                    const minutes = Math.floor(this.gameTimer / 60);
-                    const seconds = Math.floor(this.gameTimer % 60);
-                    const tenths = Math.floor((this.gameTimer * 10) % 10);
-                    stopwatchContainer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${tenths}`;
-                }
+        // Add hover effects with sound
+        const statBoxes = statsContainer.querySelectorAll('.pixel-stat-box');
+        statBoxes.forEach(box => {
+            box.addEventListener('mouseenter', () => {
+                hoverSound.currentTime = 0;
+                hoverSound.play();
+            });
+        });
+
+        // --- PINNED STATE LOGIC ---
+        let pinned = false;
+        function setPinnedState(isPinned) {
+            pinned = isPinned;
+            if (pinned) {
+                statsWrapper.classList.add('pinned');
+                pinButton.classList.add('pinned');
+                statsContainer.style.position = 'fixed';
+                statsContainer.style.right = '0';
+                statsContainer.style.left = '';
+                statsContainer.style.display = 'block';
+                statsContainer.style.opacity = '1';
+                statsContainer.style.transform = 'none';
+                statsContainer.style.pointerEvents = 'auto';
+                statsContainer.style.padding = '18px 28px';
+                statsContainer.style.overflow = 'visible';
+                statsContainer.style.zIndex = '10002';
+            } else {
+                statsWrapper.classList.remove('pinned');
+                pinButton.classList.remove('pinned');
+                statsContainer.style.position = '';
+                statsContainer.style.right = '';
+                statsContainer.style.left = '';
+                statsContainer.style.display = '';
+                statsContainer.style.opacity = '';
+                statsContainer.style.transform = '';
+                statsContainer.style.pointerEvents = '';
+                statsContainer.style.padding = '';
+                statsContainer.style.overflow = '';
+                statsContainer.style.zIndex = '';
             }
-        }, 100);
-    }
-    
-    // Stop the stopwatch
-    stopStopwatch(completed = true) {
-        // Clear the timer interval
-        if (this.timerInterval) {
-            clearInterval(this.timerInterval);
-            this.timerInterval = null;
+            // Pin color/rotation
+            pinButton.style.color = pinned ? '#ffb300' : '#fff';
+            pinButton.style.transform = pinned ? 'rotate(-30deg)' : '';
         }
-        
-        // Mark timer as inactive
-        this.isActive = false;
-        
-        // Hide stopwatch if not in GameLevelEnd
-        if (!completed && this.currentLevelInstance?.constructor.name !== 'GameLevelEnd') {
-            const stopwatchContainer = document.getElementById('stopwatch-container');
-            if (stopwatchContainer) {
-                stopwatchContainer.style.display = 'none';
+
+        // If pinned, prevent hover from closing
+        statsWrapper.addEventListener('mouseleave', () => {
+            if (!pinned) {
+                statsContainer.style.display = 'none';
+                statsContainer.style.opacity = '0';
+                statsContainer.style.transform = 'translateX(-20px)';
             }
+        });
+
+        statsWrapper.addEventListener('mouseenter', () => {
+            statsContainer.style.display = 'block';
+            // Small delay to ensure display: block is applied before transition
+            requestAnimationFrame(() => {
+                statsContainer.style.opacity = '1';
+                statsContainer.style.transform = 'translateX(0)';
+            });
+        });
+
+        // Optional: clicking anywhere else unpins
+        document.addEventListener('click', (e) => {
+            if (pinned && !statsWrapper.contains(e.target)) {
+                setPinnedState(false);
+            }
+        });
+        // --- END PINNED STATE LOGIC ---
+    }
+
+    updateNpcsTalkedToUI(count) {
+        const npcsSpan = document.getElementById('npcsTalkedTo');
+        if (npcsSpan) {
+            npcsSpan.textContent = count;
         }
-        
-        // If completed, save the time
-        if (completed) {
-            this.saveCompletionTime(this.gameTimer);
+        // Update progress bar
+        const bar = document.getElementById('npcs-progress-bar');
+        const label = document.getElementById('npcs-progress-label');
+        if (bar && label) {
+            const TOTAL_NPCS = 10;
+            bar.style.width = `${(Math.min(count, TOTAL_NPCS) / TOTAL_NPCS) * 100}%`;
+            label.textContent = `${count} / ${TOTAL_NPCS}`;
         }
     }
-    
-    updateTimerDisplay(display, time) {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        const tenths = Math.floor((time * 10) % 10);
-        
-        display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${tenths}`;
-    }
-    
-    saveCompletionTime(time) {
-        // Get the current best time from localStorage
-        const currentBestTime = localStorage.getItem('bestCompletionTime');
-        
-        // If there's no current best time or the new time is better, save it
-        if (!currentBestTime || time < parseFloat(currentBestTime)) {
-            localStorage.setItem('bestCompletionTime', time.toString());
-            console.log(`New best time saved: ${time} seconds`);
-            
-            // Return true if this is a new best time
-            return true;
+
+    incrementNpcsTalkedTo() {
+        // Get current count from cookies
+        let npcsTalkedTo = 0;
+        const cookies = document.cookie.split(';');
+        const npcsCookie = cookies.find(cookie => cookie.trim().startsWith('npcsTalkedTo='));
+        if (npcsCookie) {
+            npcsTalkedTo = parseInt(npcsCookie.split('=')[1]) || 0;
         }
-        
-        // Return false if this is not a new best time
-        return false;
-    }
-    
-    getFormattedBestTime() {
-        const bestTime = localStorage.getItem('bestCompletionTime');
-        if (!bestTime) return 'None';
-        
-        const time = parseFloat(bestTime);
-        return this.formatTime(time);
-    }
-    
-    formatTime(time) {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        const tenths = Math.floor((time * 10) % 10);
-        
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${tenths}`;
+        npcsTalkedTo += 1;
+        // Update cookie (expires in 30 days)
+        document.cookie = `npcsTalkedTo=${npcsTalkedTo}; path=/; max-age=${60*60*24*30}`;
+        this.updateNpcsTalkedToUI(npcsTalkedTo);
     }
 }
 
@@ -405,11 +538,9 @@ class InventoryManager {
     constructor(game) {
         this.game = game;
         this.inventory = Inventory.getInstance();
-        this.giveStartingItems();
     }
 
     giveItem(itemId, quantity = 1) {
-        console.log("Giving item:", itemId, "quantity:", quantity);
         const item = defaultItems[itemId];
         if (!item) {
             console.error(`Item ${itemId} not found in defaultItems`);
@@ -421,7 +552,6 @@ class InventoryManager {
             quantity: quantity
         };
 
-        console.log("Adding item to inventory:", itemToAdd);
         return this.inventory.addItem(itemToAdd);
     }
 
@@ -439,27 +569,15 @@ class InventoryManager {
     }
 
     giveStartingItems() {
-        console.log("Giving starting items to player...");
-        
-        // Trading items
-        this.giveItem('stock_certificate', 5);  // 5 stock certificates
-        this.giveItem('bond', 3);               // 3 bonds
-        
-        // Power-ups
-        this.giveItem('trading_boost', 2);      // 2 trading boosts
-        this.giveItem('speed_boost', 2);        // 2 speed boosts
-        
-        // Tools
-        this.giveItem('calculator', 1);         // 1 calculator
-        this.giveItem('market_scanner', 1);     // 1 market scanner
-        
-        // Collectibles
-        this.giveItem('rare_coin', 1);          // 1 rare coin
-        this.giveItem('trading_manual', 1);     // 1 trading manual
-
-        // Add ROI Calculator
-        console.log("Adding ROI Calculator...");
-        this.giveItem('roi_calculator', 1);     // 1 ROI Calculator
+        this.giveItem('stock_certificate', 5);
+        this.giveItem('bond', 3);
+        this.giveItem('trading_boost', 2);
+        this.giveItem('speed_boost', 2);
+        this.giveItem('calculator', 1);
+        this.giveItem('market_scanner', 1);
+        this.giveItem('rare_coin', 1);
+        this.giveItem('trading_manual', 1);
+        this.giveItem('roi_calculator', 1);
     }
 }
 
@@ -478,7 +596,6 @@ class QuizManager {
     
             if (!response.ok) throw new Error("Failed to fetch questions");
             const questions = await response.json();
-            console.log(questions);
             return questions;
         } catch (error) {
             console.error("Error fetching question by category:", error);
@@ -499,7 +616,6 @@ class QuizManager {
             const quiz = new Quiz();
             quiz.initialize();
             quiz.openPanel(npcCategory, callback, allQuestions);
-    
         } catch (error) {
             console.error("Error during NPC quiz attempt:", error);
             alert("⚠️ There was a problem loading the quiz. Please try again.");
@@ -508,31 +624,7 @@ class QuizManager {
 }
 
 class Game {
-    constructor() {
-        console.log("Initializing game...");
-        this.environment = null;
-        this.path = null;
-        this.gameContainer = null;
-        this.gameCanvas = null;
-        this.pythonURI = null;
-        this.javaURI = null;
-        this.fetchOptions = null;
-        this.uid = null;
-        this.id = null;
-        this.gname = null;
-        this.gameControl = null;
-
-        // Manager instances
-        this.statsManager = null;
-        this.timeManager = null;
-        this.inventoryManager = null;
-        this.quizManager = null;
-    }
-
-    // Main initialization method
-    main(environment) {
-        console.log("Setting up game environment...");
-        // Store environment properties
+    constructor(environment) {
         this.environment = environment;
         this.path = environment.path;
         this.gameContainer = environment.gameContainer;
@@ -540,32 +632,25 @@ class Game {
         this.pythonURI = environment.pythonURI;
         this.javaURI = environment.javaURI;
         this.fetchOptions = environment.fetchOptions;
+        this.uid = null;
+        this.id = null;
+        this.gname = null;
 
-        // Initialize managers
         this.statsManager = new StatsManager(this);
-        this.timeManager = new TimeManager(this);
         this.inventoryManager = new InventoryManager(this);
         this.quizManager = new QuizManager(this);
-
-        // Initialize user and game components
+        
         this.initUser();
+        this.inventoryManager.giveStartingItems();
         
-        // Initialize the Game static reference
-        this.initialize();
-        
-        // Start the game
         const gameLevelClasses = environment.gameLevelClasses;
-        this.gameControl = new GameControl(this, gameLevelClasses);
-        this.gameControl.start();
-    }
-    
-    // Initialize static reference for GameLevelEnd to access
-    initialize() {
-        // Create a reference to timeManager that GameLevelEnd can access
-        Game.timeManager = this.timeManager;
+        new GameControl(this, gameLevelClasses).start();
     }
 
-    // Initialize user data
+    static main(environment) {
+        return new Game(environment);
+    }
+
     initUser() {
         const pythonURL = this.pythonURI + '/api/id';
         fetch(pythonURL, this.fetchOptions)
@@ -579,7 +664,6 @@ class Game {
             .then(data => {
                 if (!data) return;
                 this.uid = data.uid;
-                console.log("User ID:", this.uid);
 
                 const javaURL = this.javaURI + '/rpg_answer/person/' + this.uid;
                 return fetch(javaURL, this.fetchOptions);
@@ -600,20 +684,6 @@ class Game {
             });
     }
 
-    // Static methods to delegate to appropriate managers
-    static main(environment) {
-        const game = new Game();
-        game.main(environment);
-        return game;
-    }
-
-    static setCurrentLevelInstance(instance) {
-        if (Game.timeManager) {
-            Game.timeManager.setCurrentLevelInstance(instance);
-        }
-    }
-
-    // Delegate methods to appropriate managers
     giveItem(itemId, quantity = 1) {
         return this.inventoryManager.giveItem(itemId, quantity);
     }
@@ -632,31 +702,6 @@ class Game {
 
     attemptQuizForNpc(npcCategory, callback = null) {
         return this.quizManager.attemptQuizForNpc(npcCategory, callback);
-    }
-
-    // API wrapper methods
-    async createStats(stats, gname, uid) {
-        return this.statsManager.createStats(stats, gname, uid);
-    }
-
-    async getStats(uid) {
-        return this.statsManager.getStats(uid);
-    }
-
-    async updateStats(stats, gname, uid) {
-        return this.statsManager.updateStats(stats, gname, uid);
-    }
-
-    async updateStatsMCQ(questionId, choiceId, personId) {
-        return this.statsManager.updateStatsMCQ(questionId, choiceId, personId);
-    }
-
-    async transitionToWallstreet(personId) {
-        return this.statsManager.transitionToWallstreet(personId);
-    }
-
-    async fetchQuestionByCategory(category) {
-        return this.quizManager.fetchQuestionByCategory(category);
     }
 }
 

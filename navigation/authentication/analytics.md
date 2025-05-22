@@ -1,7 +1,7 @@
 ---
-layout: post
-title: Your Analytics
-permalink: /analytics
+layout: dashboard
+title: Dashboard
+permalink: /dashboard
 search_exclude: true
 ---
 

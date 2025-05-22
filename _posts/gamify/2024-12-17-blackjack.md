@@ -128,30 +128,44 @@ permalink: /gamify/blackjack
 
     const API_URL = `${javaURI}/api/casino/blackjack`;
     let uid = "";
+    let personId = null;
     let currentBalance = 0;
 
-    async function getUID() {
-        console.log("Fetching UID...");
+    async function fetchUserData() {
+        console.log("Fetching user data...");
         try {
-            const response = await fetch(`${javaURI}/api/person/get`, fetchOptions);
-            if (!response.ok) throw new Error(`Server response: ${response.status}`);
+            // First get the personId from the user session
+            const personResponse = await fetch(`${javaURI}/api/person/get`, fetchOptions);
+            if (!personResponse.ok) throw new Error(`Server response: ${personResponse.status}`);
 
-            const data = await response.json();
-            if (!data || !data.uid) throw new Error("UID not found in response");
+            const personData = await personResponse.json();
+            if (!personData || !personData.uid) throw new Error("UID not found in response");
 
-            uid = data.uid;
-            currentBalance = data.balanceDouble || 0;
+            uid = personData.uid;
+            personId = personData.id;
+            console.log("UID:", uid, "Person ID:", personId);
+            
+            // Now fetch bank account data using personId
+            const bankResponse = await fetch(`${javaURI}/bank/analytics/person/${personId}`, fetchOptions);
+            if (!bankResponse.ok) throw new Error(`Bank data error: ${bankResponse.status}`);
+            
+            const bankData = await bankResponse.json();
+            if (!bankData.success) {
+                throw new Error("Failed to load bank data");
+            }
+            
+            currentBalance = Number(bankData.data.balance);
             document.getElementById("balance").innerText = `$${currentBalance.toLocaleString()}`;
-            console.log("UID:", uid);
+            
         } catch (error) {
-            console.error("Error fetching UID:", error);
-            document.getElementById("gameStatus").innerText = "Error fetching UID. Please log in.";
+            console.error("Error fetching user data:", error);
+            document.getElementById("gameStatus").innerText = "Error fetching user data. Please log in.";
             document.getElementById("gameStatus").classList.add("text-danger");
         }
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        getUID();
+        fetchUserData();
         
         document.getElementById("betAmount").addEventListener("input", function() {
             let betValue = this.value;
@@ -165,7 +179,7 @@ permalink: /gamify/blackjack
 
     document.getElementById("startGame").addEventListener("click", async function () {
         try {
-            await getUID();
+            await fetchUserData();
             const bet = parseInt(document.getElementById("betAmount").value);
             
             if (bet > currentBalance) {
@@ -254,10 +268,13 @@ permalink: /gamify/blackjack
         displayCards(gameState.playerHand, "playerHand");
         displayCards(gameState.dealerHand, "dealerHand");
 
-        // Update balance if available
-        if (data.balance !== undefined) {
-            currentBalance = data.balance;
+        // Update balance when game results come back
+        if (data.success && data.bank) {
+            currentBalance = data.bank.balance;
             document.getElementById("balance").innerText = `$${currentBalance.toLocaleString()}`;
+        } else {
+            // Refresh the balance from the bank API directly
+            fetchUserData();
         }
 
         // Enable/disable buttons based on game state
