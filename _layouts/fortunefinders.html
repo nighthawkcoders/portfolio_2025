@@ -172,31 +172,37 @@ layout: base
       }
     }
   }
+
   async function getNpcProgress(personId) {
-      try {
-          const response = await fetch(`${javaURI}/bank/${personId}/npcProgress`, this.fetchOptions);
-          if (!response.ok) {
-              throw new Error("Failed to fetch questions");
-          }
-          const npcProgressDictionary = await response.json();
-          console.log(npcProgressDictionary);
-          return npcProgressDictionary
-      } catch (error) {
-          console.error("Error fetching Npc Progress:", error);
-          return null;
+    try {
+      const response = await fetch(`${javaURI}/bank/${personId}/npcProgress`, fetchOptions);
+      if (!response.ok) {
+        throw new Error("Failed to fetch questions");
       }
+      const npcProgressDictionary = await response.json();
+      return npcProgressDictionary;
+    } catch (error) {
+      console.error("Error fetching Npc Progress:", error);
+      return null;
+    }
   }
 
-  async function applyNpcLocks(game) {
-   
+  // Only lock Bank, Casino, Stocks, and Crypto
+  const lockNpcIds = ["Bank-NPC", "Casino-NPC", "Stock-NPC", "Crypto-NPC"];
+
+  async function applyNpcLocks(personId) {
     try {
-      const npcProgress = await getNpcProgress(game.id);
+      const npcProgress = await getNpcProgress(personId);
       document.querySelectorAll('.dropdown-item[data-npc]').forEach(el => {
         const key = el.getAttribute('data-npc');
-        if (npcProgress[key] === false) {
-          el.classList.add('locked');
+        if (lockNpcIds.includes(key)) {
+          if (npcProgress && npcProgress[key] === false) {
+            el.classList.add('locked');
+          } else {
+            el.classList.remove('locked');
+          }
         } else {
-          el.classList.remove('locked');
+          el.classList.remove('locked'); // Never lock Fidelity/Schwab
         }
       });
     } catch (err) {
@@ -204,14 +210,32 @@ layout: base
     }
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    applyNpcLocks(window.game);
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Try to get the personId from a global game object or fetch it
+    let personId = null;
+    if (window.game && window.game.id) {
+      personId = window.game.id;
+    } else {
+      // Fallback: fetch personId from backend
+      try {
+        const response = await fetch(`${javaURI}/api/id`, fetchOptions);
+        if (response.ok) {
+          const data = await response.json();
+          personId = data.uid || data.id;
+        }
+      } catch (e) {
+        console.error("Could not fetch personId for NPC lock", e);
+      }
+    }
+    if (personId) {
+      applyNpcLocks(personId);
+    }
   });
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadGameBalance();
-  setInterval(loadGameBalance, 30000);
-});
+  document.addEventListener("DOMContentLoaded", () => {
+    loadGameBalance();
+    setInterval(loadGameBalance, 30000);
+  });
 </script>
 
 

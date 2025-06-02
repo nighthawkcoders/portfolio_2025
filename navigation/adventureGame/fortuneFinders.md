@@ -11,7 +11,8 @@ permalink: /gamify/fortuneFinders
 
 <script type="module">
     // Adnventure Game assets locations
-    import Game from "{{site.baseurl}}/assets/js/adventureGame/Game.js";
+    // import Game from "{{site.baseurl}}/assets/js/adventureGame/Game.js";
+    import FinTech from "{{site.baseurl}}/assets/js/adventureGame/FinTech.js";
     import GameLevelAirport from "{{site.baseurl}}/assets/js/adventureGame/GameLevelAirport.js";
     import GameLevelWallstreet from "{{site.baseurl}}/assets/js/adventureGame/GameLevelWallstreet.js";
     import { pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
@@ -30,5 +31,5 @@ permalink: /gamify/fortuneFinders
 
     }
     // Launch Adventure Game
-    Game.main(environment);
+    FinTech.main(environment);
 </script>

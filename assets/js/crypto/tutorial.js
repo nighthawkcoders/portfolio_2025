@@ -7,40 +7,20 @@ window.startTutorial = startTutorial;
 window.skipTutorial = skipTutorial;
 window.neverShowTutorial = neverShowTutorial;
 
-document.addEventListener('DOMContentLoaded', async function() {
-    // Check login status first
-    try {
-        const response = await fetch(`${javaURI}/api/auth/status`, {
-            ...fetchOptions,
-            method: 'GET'
-        });
-        const data = await response.json();
-        if (!data.isLoggedIn) {
-            showNotification('Please log in to access the tutorial');
-            return;
-        }
-        // Check if user has seen the tutorial
-        const lastLogin = localStorage.getItem('lastLogin');
-        const now = new Date().getTime();
-        const oneWeek = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-        // Show tutorial if:
-        // 1. Tutorial has never been seen, or
-        // 2. Last login was more than a week ago, or
-        // 3. User hasn't chosen to never show it
-        if (!localStorage.getItem('tutorialSeen') || 
-            (lastLogin && (now - parseInt(lastLogin)) > oneWeek)) {
-            if (!localStorage.getItem('neverShowTutorial')) {
-                document.getElementById('tutorial-welcome').classList.remove('hidden');
-            }
-        }
-    } catch (error) {
-        console.error('Error checking login status:', error);
-        showNotification('Error checking login status');
+document.addEventListener('DOMContentLoaded', function() {
+    // Only check if user has chosen to never show the tutorial
+    if (!localStorage.getItem('neverShowTutorial')) {
+        document.getElementById('tutorial-welcome').classList.remove('hidden');
     }
 });
 function startTutorial() {
     document.getElementById('tutorial-welcome').classList.add('hidden');
-    const tour = introJs().setOptions({
+    const tour = introJs();
+    tour.setOptions({
+        scrollToElement: true,
+        scrollTo: 'element',
+        scrollContainer: '.main-content',
+        tooltipPosition: 'bottom',
         steps: [
             {
                 title: 'Wallet Overview',
@@ -94,13 +74,13 @@ function startTutorial() {
                 title: 'GPU Management',
                 intro: 'Visit the GPU Shop to upgrade your mining power. Better GPUs = Higher hashrate!',
                 element: document.getElementById('gpu-shop'),
-                position: 'left'
+                position: 'bottom'
             },
             {
                 title: 'Performance Monitoring',
                 intro: 'Monitor your mining performance and earnings with real-time charts.',
                 element: document.querySelector('.chart-container'),
-                position: 'top'
+                position: 'bottom'
             }
         ],
         showProgress: true,

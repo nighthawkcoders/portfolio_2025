@@ -432,7 +432,7 @@ title: Leaderboard
 
             // Redirect with a slight delay for visual feedback
             setTimeout(() => {
-                window.location.href = `/portfolio_2025/gamify/bankanalytics?userId=${userId}`;
+                window.location.href = `/pages/gamify/bankanalytics?userId=${userId}`;
             }, 500);
         }
 

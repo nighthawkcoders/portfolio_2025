@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Set API URI based on environment
 const javaURI = (location.hostname === "localhost" || location.hostname === "127.0.0.1") 
-    ? "http://localhost:8085" 
-    : "https://spring2025.nighthawkcodingsociety.com";
+    ? "http://localhost:8585" 
+    : "https://spring.opencodingsociety.com";
     const baseFetchOptions = {
         mode: 'cors',
         cache: 'default',

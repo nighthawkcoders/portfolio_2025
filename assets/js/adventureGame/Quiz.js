@@ -1,6 +1,7 @@
 import Game from "./Game.js";
 class Quiz {
-    constructor() {
+    constructor(game = null) {
+        this.game = game;
         this.isOpen = false;
         this.dim = false;
         this.currentNpc = null;
@@ -474,94 +475,96 @@ class Quiz {
         // Wait half a second so the star confetti starts
         // after the squares, creating a 2-wave effect
     }
-    async openPanel(npcData, callback, preFetchedQuestions = null) {
-        console.log("Opening quiz panel with data:", npcData);
-    
-        if (this.isOpen) {
-            this.closePanel();
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-    
-        let promptDropDown = document.getElementById("promptDropDown");
-        if (!promptDropDown) {
-            this.initialize();
-            promptDropDown = document.getElementById("promptDropDown");
-        } else {
-            promptDropDown.innerHTML = "";
-        }
-    
-        this.isOpen = true;
-    
-        let formattedQuestion;
-        try {
-            const questionList = preFetchedQuestions ??
-                (await Game.fetchQuestionByCategory(npcData)).questions;
-    
-            if (!questionList || questionList.length === 0) {
-                console.error("No questions found for category:", npcData);
-                this.isOpen = false;
-                return;
-            }
-    
-            if (!this.answeredQuestionsByNpc[npcData]) {
-                this.answeredQuestionsByNpc[npcData] = new Set();
-            }
-            const answered = this.answeredQuestionsByNpc[npcData];
-    
-            const availableQuestions = questionList.filter(
-                q => !answered.has(q.question.id)
-            );
-    
-            if (availableQuestions.length === 0) {
-                alert("You've answered all available questions from this NPC!");
-                this.isOpen = false;
-                return;
-            }
-    
-            const questionEntry = availableQuestions[0];
-    
-            formattedQuestion = {
-                title: npcData + " Quiz",
-                npcCategory: npcData,
-                question: questionEntry.question.content,
-                type: "multiple-choice",
-                options: questionEntry.choices.map(c => c.choice),
-                correctAnswer: questionEntry.choices.findIndex(c => c.is_correct),
-                questionId: questionEntry.question.id,
-                choiceIds: questionEntry.choices.map(c => c.id)
-            };
-        } catch (error) {
-            console.error("Error fetching question:", error);
-            this.isOpen = false;
-            return;
-        }
-    
-        this.currentNpc = formattedQuestion;
-        this.callback = callback;
-    
-        // Setup quiz UI
-        promptDropDown.style.display = "block";
-        promptDropDown.style.position = "fixed";
-        promptDropDown.style.width = "50%";
-        promptDropDown.style.left = "50%";
-        promptDropDown.style.top = "15%";
-        promptDropDown.style.transform = "translateX(-50%)";
-        promptDropDown.style.zIndex = "9999";
-    
-        const newPromptTitle = document.createElement("div");
-        newPromptTitle.id = "promptTitle";
-        newPromptTitle.style.display = "block";
-        newPromptTitle.innerHTML = formattedQuestion.title;
-        promptDropDown.appendChild(newPromptTitle);
-    
-        const scrollEdge = document.createElement("div");
-        scrollEdge.className = "scroll-edge";
-        scrollEdge.appendChild(this.updateTable());
-        promptDropDown.appendChild(scrollEdge);
-    
-        this.backgroundDim.create();
-        promptDropDown.classList.add("quiz-popup");
+async openPanel(npcData, callback) {
+  console.log("Opening quiz panel with data:", npcData);
+
+  if (this.isOpen) {
+    this.closePanel();
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
+  let promptDropDown = document.getElementById("promptDropDown");
+  if (!promptDropDown) {
+    this.initialize();
+    promptDropDown = document.getElementById("promptDropDown");
+  } else {
+    promptDropDown.innerHTML = "";
+  }
+
+  this.isOpen = true;
+
+  let formattedQuestion;
+  try {
+
+    const response = await this.game.quizManager.fetchQuestionByCategory(npcData);
+    const questions = response?.questions || [];
+
+    if (questions.length === 0) {
+      console.error("No questions found for category:", npcData);
+      this.isOpen = false;
+      return;
     }
+
+
+    if (!this.answeredQuestionsByNpc[npcData]) {
+      this.answeredQuestionsByNpc[npcData] = new Set();
+    }
+    const answered = this.answeredQuestionsByNpc[npcData];
+
+    const availableQuestions = questions.filter(
+      q => !answered.has(q.question.id)
+    );
+
+    if (availableQuestions.length === 0) {
+      alert("You've answered all available questions from this NPC!");
+      this.isOpen = false;
+      return;
+    }
+
+    const questionEntry = availableQuestions[0];
+
+    formattedQuestion = {
+      title: npcData + " Quiz",
+      npcCategory: npcData,
+      question: questionEntry.question.content,
+      type: "multiple-choice",
+      options: questionEntry.choices.map(c => c.choice),
+      correctAnswer: questionEntry.choices.findIndex(c => c.is_correct),
+      questionId: questionEntry.question.id,
+      choiceIds: questionEntry.choices.map(c => c.id)
+    };
+  } catch (error) {
+    console.error("Error fetching question:", error);
+    this.isOpen = false;
+    return;
+  }
+
+  this.currentNpc = formattedQuestion;
+  this.callback   = callback;
+
+  promptDropDown.style.display   = "block";
+  promptDropDown.style.position  = "fixed";
+  promptDropDown.style.width     = "50%";
+  promptDropDown.style.left      = "50%";
+  promptDropDown.style.top       = "15%";
+  promptDropDown.style.transform = "translateX(-50%)";
+  promptDropDown.style.zIndex    = "9999";
+
+  const newPromptTitle = document.createElement("div");
+  newPromptTitle.id = "promptTitle";
+  newPromptTitle.style.display = "block";
+  newPromptTitle.innerHTML = formattedQuestion.title;
+  promptDropDown.appendChild(newPromptTitle);
+
+  const scrollEdge = document.createElement("div");
+  scrollEdge.className = "scroll-edge";
+  scrollEdge.appendChild(this.updateTable());
+  promptDropDown.appendChild(scrollEdge);
+
+  this.backgroundDim.create();
+  promptDropDown.classList.add("quiz-popup");
+}
+
     
     
 
@@ -578,14 +581,11 @@ class Quiz {
     
                 const questionId = this.currentNpc.questionId; 
                 const choiceId = this.currentNpc.choiceIds?.[answerIndex]; 
-                const personId = Game.id;
+                const personId = 1;
     
                 try {
-                    if (questionId && choiceId && personId) {
-                        await Game.updateStatsMCQ(questionId, choiceId, personId);
-                        Game.fetchStats(personId); 
-                    } else {
-                        console.error("Missing required data for MCQ submission:", { questionId, choiceId, personId });
+                    if (this.game && this.game.statsManager) {
+                        await this.game.statsManager.updateStatsMCQ(questionId, choiceId, personId);
                     }
                 } catch (error) {
                     console.error("Error updating MCQ stats:", error);
@@ -616,6 +616,16 @@ class Quiz {
                 this.answeredQuestionsByNpc[npcCategory] = new Set();
             }
             this.answeredQuestionsByNpc[npcCategory].add(this.currentNpc.questionId);
+            
+            // Award NPC cookie for correct answer
+            try {
+                if (this.game && this.game.giveNpcCookie) {
+                    this.game.giveNpcCookie(npcCategory, "completed", "Great job answering the quiz questions! You've demonstrated your knowledge.");
+                    console.log(`NPC Cookie awarded for ${npcCategory}`);
+                }
+            } catch (error) {
+                console.error("Error awarding NPC cookie:", error);
+            }
         }
         
     

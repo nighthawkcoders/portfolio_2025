@@ -1,6 +1,6 @@
 ---
 layout: post 
-title: Course Descriptions
+title: Open Coding Society
 description: An Open Pathway to Computer Science
 image: /images/mario_animation.png
 hide: true
@@ -37,6 +37,10 @@ hide: true
   */
   #mario {
     background-position: calc({{animations[0].col}} * {{pixels}} * -1px) calc({{animations[0].row}} * {{pixels}}* -1px);
+  }
+
+  .social-icon {
+    filter: invert(1);
   }
 </style>
 
@@ -240,36 +244,45 @@ hide: true
 
 </script>
 
-## Technical Future
+## About
 
-Computer Science can be "Wild Card" for all Majors and Careers.
+Empower yourself to solve real-world problems, unlock creativity, and open doors to every field—because coding is the language of innovation.
 
 > Invest in your technical skills through Project-based learning.
 
-<div style="display: flex; align-items: flex-start;">
+<div style="display: flex; align-items: flex-start; justify-content: center; gap: 40px; flex-wrap: wrap;">
 
-<table>
-<tr>
-  <td>
-    <div style="flex: 65%; text-align: left;">
-      <p>All Open Coding Society materials are designed to provide real-world development experiences.</p>
-      <ul>
-        <li> Project talks between instructor and students</li>
-        <li> Teaching through interactive Tech talks (versus lectures) </li>
-        <li> Peer collaboration using GitHub Issues and Kanban boards </li>
-        <li> Critical thinking while learning fundamentals of coding </li>
-        <li> Creativity and designs in projects, as well as code </li>
-      </ul>
-    </div>
-  </td>
-  <td>
-    <div style="flex: 35%; text-align: center;">
-      <img src="{{site.baseurl}}/images/course-brag/qr.png" alt="QR Code" style="width: 100%; max-width: 300px; height: auto; margin-left: 10px;">
-    </div>
-  </td>
-</tr>
-</table>
+  <!-- Logo -->
+  <div style="text-align: center;">
+    <img src="{{site.baseurl}}/images/logo-framed.png" alt="Logo" style="width: 180px; max-width: 100%;">
+  </div>
 
+  <!-- QR Code -->
+  <div style="text-align: center;">
+    <img src="{{site.baseurl}}/images/course-brag/qr.png" alt="QR Code" style="width: 180px; max-width: 100%;">
+  </div>
+
+  <!-- Socials -->
+  <div style="min-width: 220px;">
+    <ul style="list-style: none; padding: 0; font-size: 1.1em;">
+      <li>
+        <img class="social-icon" src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/gmail.svg" alt="Gmail" style="width: 20px; vertical-align: middle; margin-right: 8px;">
+        <a href="mailto:open.coding.society@gmail.com">open.coding.society@gmail.com</a>
+      </li>
+      <li>
+        <img class="social-icon" src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" style="width: 20px; vertical-align: middle; margin-right: 8px;">
+        <a href="https://linkedin.com/company/open-coding-society" target="_blank">LinkedIn</a>
+      </li>
+      <li>
+        <img class="social-icon" src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="X" style="width: 20px; vertical-align: middle; margin-right: 8px;">
+        <a href="https://x.com/Open_Coding" target="_blank">@Open_Coding</a>
+      </li>
+      <li>
+        <img class="social-icon" src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube" style="width: 20px; vertical-align: middle; margin-right: 8px;">
+        <a href="https://www.youtube.com/@OpenCodingSociety" target="_blank">@OpenCodingSociety</a>
+      </li>
+    </ul>
+  </div>
 </div>
 
 ## Project-based learning

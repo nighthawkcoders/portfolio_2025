@@ -353,7 +353,7 @@ class GameLevelDesert {
                   
                   // Add button functionality
                   yesButton.onclick = () => {
-                      window.location.href = "https://nighthawkcoders.github.io/portfolio_2025/stocks/home";
+                      window.location.href = "https://open-coding-society.github.io/pages/stocks/home";
                   };
                   
                   noButton.onclick = () => {
@@ -381,7 +381,7 @@ class GameLevelDesert {
                   // Original functionality as fallback
                   const confirmTeleport = window.confirm("Teleport to the stock market?");
                   if (confirmTeleport) {
-                      window.location.href = "https://nighthawkcoders.github.io/portfolio_2025/stocks/home";
+                      window.location.href = "https://open-coding-society.github.io/pages/stocks/home";
                   }
               }
           }
@@ -469,7 +469,11 @@ class GameLevelDesert {
                 
                 // Add button functionality
                 yesButton.onclick = () => {
-                    window.location.href = "https://nighthawkcoders.github.io/portfolio_2025/gamify/casinohomepage";
+                    // Give NPC cookie for visiting the casino from Bitcoin NPC
+                    if (gameEnv.game && gameEnv.game.giveNpcCookie) {
+                        gameEnv.game.giveNpcCookie("Bitcoin", "casino_visited", "Try your luck at the casino games! Play responsibly and remember - the house always has an edge.");
+                    }
+                    window.location.href = "https://open-coding-society.github.io/pages/gamify/casinohomepage";
                 };
                 
                 noButton.onclick = () => {
@@ -497,7 +501,11 @@ class GameLevelDesert {
                 // Original functionality as fallback
                 const confirmTeleport = window.confirm("Teleport to gambling hub?");
                 if (confirmTeleport) {
-                    window.location.href = "https://nighthawkcoders.github.io/portfolio_2025/gamify/casinohomepage";
+                    // Give NPC cookie for visiting the casino from Bitcoin NPC
+                    if (gameEnv.game && gameEnv.game.giveNpcCookie) {
+                        gameEnv.game.giveNpcCookie("Bitcoin", "casino_visited", "Try your luck at the casino games! Play responsibly and remember - the house always has an edge.");
+                    }
+                    window.location.href = "https://open-coding-society.github.io/pages/gamify/casinohomepage";
                 }
             }
         }

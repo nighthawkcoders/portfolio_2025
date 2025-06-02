@@ -132,7 +132,7 @@ window.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             if (data.success) {
                 alert(`Welcome back, ${data.user.name || data.user.uid}!`);
-                window.location.href = '/portfolio_2025/gamify'; // Redirect on success
+                window.location.href = '/pages/gamify'; // Redirect on success
             } else {
                 alert('Face not recognized. Please try again.');
             }

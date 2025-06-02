@@ -167,5 +167,5 @@ Use this checklist to track your progress as you create the required accounts:
   * This will be a public website indexed by Google and Google Analytics.
 
 * **Open Society Account**: Create an account on the course's Open Society platform  
-  * **Sign Up**: [Open Coding Society](https://nighthawkcoders.github.io/portfolio_2025/)
+  * **Sign Up**: [Open Coding Society](https://open-coding-society.github.io/pages/)
   * Using your GitHub ID an account will be created to build course lists, provide compute services (e.g., AWS, KASM), and aggregate analytics for your instructor.
