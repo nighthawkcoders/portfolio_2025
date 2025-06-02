@@ -421,6 +421,7 @@ class GameLevelAirport {
         const npcProgressSystem = new NpcProgressSystem();
         const allowed = await npcProgressSystem.checkNpcProgress(game, sprite_data_fidelity.id);
         if (allowed) {
+          gameEnv.game.updateNpcProgress(gameEnv.game.id, sprite_data_fidelity.id);
           const dialogFunctions = sprite_data_fidelity.reaction();
           dialogFunctions.intro();
         }
@@ -451,6 +452,7 @@ class GameLevelAirport {
         const npcProgressSystem = new NpcProgressSystem();
         const allowed = await npcProgressSystem.checkNpcProgress(game, sprite_data_schwab.id);
         if (allowed) {
+          gameEnv.game.updateNpcProgress(gameEnv.game.id, sprite_data_schwab.id);
           const dialogFunctions = sprite_data_schwab.reaction();
           dialogFunctions.intro();
         }
