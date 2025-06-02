@@ -1979,7 +1979,7 @@ class FinTech extends Game {
         const modal = document.createElement('div');
         modal.style.cssText = `
             position: fixed;
-            top: 60%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: #000;
@@ -1988,13 +1988,17 @@ class FinTech extends Game {
             color: white;
             z-index: 10000;
             max-width: 600px;
+            max-height: 90vh;
             width: 90%;
+            overflow-y: auto;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
             font-family: 'Press Start 2P', cursive;
             animation: glowBorder 2s infinite alternate;
-            position: relative;
-            overflow: hidden;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.95);
         `;
+
 
         // Add content
         modal.innerHTML = `

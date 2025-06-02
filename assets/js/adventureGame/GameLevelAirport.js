@@ -588,9 +588,9 @@ class GameLevelAirport {
       interact: async function () {
         const game = gameEnv.game;
         const npcProgressSystem = new NpcProgressSystem();
-        const allowed = await npcProgressSystem.checkNpcProgress(game, sprite_data_casino.id);
+        const allowed = await npcProgressSystem.checkNpcProgress(game, sprite_data_bank.id);
         if (allowed) {
-          const dialogFunctions = sprite_data_casino.reaction();
+          const dialogFunctions = sprite_data_bank.reaction();
           dialogFunctions.intro();
         }
       }
@@ -605,7 +605,6 @@ class GameLevelAirport {
       { class: Npc, data: sprite_data_casino},
       { class: Npc, data: sprite_data_fidelity },
       { class: Npc, data: sprite_data_schwab },
-      { class: Npc, data: sprite_data_computer },
       { class: Npc, data: sprite_data_bank},
       { class: Npc, data: sprite_data_mining}
     ];
